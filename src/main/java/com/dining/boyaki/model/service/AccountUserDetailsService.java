@@ -27,6 +27,7 @@ public class AccountUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Account account = Optional.ofNullable(loginMapper.findAccount(username))
 				                  .orElseThrow(() -> new UsernameNotFoundException("User not found."));
+		                                    //オーソリティをGrantedAuthorityオブジェクトのリストに変換
 		return new AccountUserDetails(account,AuthorityUtils.createAuthorityList(account.getRole()));
 	}
 
