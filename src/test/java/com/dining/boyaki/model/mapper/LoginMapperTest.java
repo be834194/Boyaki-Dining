@@ -30,7 +30,7 @@ public class LoginMapperTest {
 	void findAccountでユーザを一人見つける() throws Exception{
 		Account existAccount = loginMapper.findAccount("加藤健");
 		assertEquals(existAccount.getUserName(), "加藤健");
-		assertEquals(existAccount.getPassword(), "pinballs");
+		assertEquals(existAccount.getPassword(), "$2a$10$56/AV51uDcWs7qsdHD98U.IdXVkae9CrrvtKbNaj8sJNaRGsvNBqK");
 		assertEquals(existAccount.getRole(), "ROLE_USER");
 	}
 

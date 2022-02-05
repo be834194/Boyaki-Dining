@@ -45,9 +45,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	    .successHandler(successHandler)
     	    .failureUrl("/login?error")
     	    .permitAll();
+    	http.logout()
+    	    .logoutUrl("/logout")
+    	    .logoutSuccessUrl("/login?logout")
+    	    .permitAll();
     	http.authorizeRequests()// アクセス権限の設定
-    	.antMatchers("/admin/**").hasRole("ROLE_ADMIN")
-        .antMatchers("/index/**").hasRole("ROLE_USER")
+    	.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+        .antMatchers("/index/**").hasAuthority("ROLE_USER")
         .anyRequest().authenticated();
     }
 

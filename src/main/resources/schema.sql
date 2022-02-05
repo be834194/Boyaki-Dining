@@ -1,3 +1,5 @@
+DROP ALL OBJECTS;
+
 CREATE TABLE IF NOT EXISTS account (
  username varchar(255) ,
  password varchar(255) not null,
