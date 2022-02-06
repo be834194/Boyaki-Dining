@@ -7,3 +7,10 @@ CREATE TABLE IF NOT EXISTS account (
  role     varchar(255) not null,
  primary key(username)
 );
+
+create table IF NOT EXISTS password_history(
+ username    varchar(255) ,
+ password    varchar(255) ,
+ useday      datetime     ,
+ primary key(username,useday)
+)
