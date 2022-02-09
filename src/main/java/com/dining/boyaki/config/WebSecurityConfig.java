@@ -50,9 +50,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	    .logoutSuccessUrl("/login?logout")
     	    .permitAll();
     	http.authorizeRequests()// アクセス権限の設定
-    	.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-        .antMatchers("/index/**").hasAuthority("ROLE_USER")
-        .anyRequest().authenticated();
+    	    .antMatchers("/registration").permitAll()
+		    .antMatchers("/regist").permitAll()
+    	    .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+            .antMatchers("/index/**").hasAuthority("ROLE_USER")
+            .anyRequest().authenticated();
     }
 
     @Override //認証方法の実装の設定を行う

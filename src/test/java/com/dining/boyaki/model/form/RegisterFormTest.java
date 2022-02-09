@@ -67,22 +67,20 @@ public class RegisterFormTest {
 		assertTrue(bindingResult.getFieldError("mail")
                                 .toString().contains("メールアドレスは必須項目です"));
 		assertTrue(bindingResult.getFieldError("password")
-                                .toString().contains("パスワードは8文字以上の半角英数字で入力してください"));
+                                .toString().contains("パスワードは8文字以上で入力してください"));
 		assertTrue(bindingResult.getFieldError("confirmPassword")
                                 .toString().contains("パスワードが一致していません"));
 	}
 	
 	@Test
-	void メール形式とパスワード形式でフィールドエラー発生() throws Exception{
+	void メール形式でフィールドエラー発生() throws Exception{
 		form.setUserName("竹内");
-		form.setPassword("竹内");
-		form.setConfirmPassword("竹内");
+		form.setPassword("hogetaro");
+		form.setConfirmPassword("hogetaro");
 		form.setMail("メールアドレス");
 		validator.validate(form, bindingResult);
 		assertTrue(bindingResult.getFieldError("mail")
                                 .toString().contains("メールアドレスの形式で入力してください"));
-		assertTrue(bindingResult.getFieldError("password")
-                                .toString().contains("パスワードは8文字以上の半角英数字で入力してください"));
 	}
 	
 	@Test

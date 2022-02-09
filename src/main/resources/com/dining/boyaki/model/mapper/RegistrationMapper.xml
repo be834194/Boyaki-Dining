@@ -13,9 +13,9 @@
            USERNAME = #{userName}
     </select>
     
-    <insert id = "insertAccount">
+    <insert id = "insertAccount" parameterType="com.dining.boyaki.model.entity.Account">
         INSERT INTO
-            ACCOUNT(USERNAME, PASSWORD, MAIl, ROLE)
+            ACCOUNT(USERNAME, PASSWORD, MAIL, ROLE)
         VALUES(
                #{userName},
                #{password},
@@ -23,7 +23,7 @@
                #{role})
     </insert>
     
-    <insert id = "insertPasswordHistory">
+    <insert id = "insertPasswordHistory" parameterType="com.dining.boyaki.model.entity.Account">
         INSERT INTO
             Password_History(USERNAME, PASSWORD, USEDAY)
         VALUES(

@@ -2,7 +2,6 @@ package com.dining.boyaki.model.form;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import com.dining.boyaki.model.form.validation.ConfirmPassword;
 
@@ -16,8 +15,7 @@ public class RegisterForm {
 	@NotEmpty(message="メールアドレスは必須項目です")
 	private String mail;
 	
-	@Size(min=8,message="パスワードは8文字以上の半角英数字で入力してください")
-	@Pattern(regexp="[a-zA-z0-9]+",message="パスワードは8文字以上の半角英数字で入力してください")
+	@Size(min=8,message="パスワードは8文字以上で入力してください")
 	private String password;
 	
 	private String confirmPassword;
