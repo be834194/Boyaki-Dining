@@ -7,6 +7,7 @@
 <body>
 <div th:if="${param.error}">ユーザーネーム又はパスワードが違います</div>
 <div th:if="${param.logout}">You have been logged out.</div>
+<div th:text="${register}"></div>
 <form th:action="@{/authenticate}" method="post">
 <table>
     <tr>

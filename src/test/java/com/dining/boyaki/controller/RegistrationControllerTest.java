@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,6 +23,7 @@ import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -73,9 +75,11 @@ public class RegistrationControllerTest {
 		
 		this.mockMvc.perform(post("/regist")
 				            .flashAttr("registerForm", form)
-				            .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				            .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		            .andExpect(status().is3xxRedirection())
-		            .andExpect(redirectedUrl("/login"));
+		            .andExpect(redirectedUrl("/login"))
+		            .andExpect(flash().attribute("register", "ユーザ登録が完了しました"));
 		verify(registrationService,times(1)).insertAccount(form);
 		
 	}
@@ -91,7 +95,8 @@ public class RegistrationControllerTest {
 		
 		this.mockMvc.perform(post("/regist")
 	                        .flashAttr("registerForm", form)
-	                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+	                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+	                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		            .andExpect(status().is2xxSuccessful()) 
 		            .andExpect(view().name("Login/Registration"))
 		            .andExpect(model().hasErrors())

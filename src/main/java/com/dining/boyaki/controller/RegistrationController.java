@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dining.boyaki.model.form.RegisterForm;
 import com.dining.boyaki.model.form.validation.UniqueUsernameValidator;
@@ -40,11 +41,12 @@ public class RegistrationController {
 	
 	@PostMapping("/regist")
 	String regist(@ModelAttribute("registerForm") @Validated RegisterForm form,
-                  BindingResult result, Model model) {
+                  BindingResult result, RedirectAttributes model) {
 		if(result.hasErrors()) {
 			return "Login/Registration";
 		}
 		registrationService.insertAccount(form);
+		model.addFlashAttribute("register", "ユーザ登録が完了しました");
 		return "redirect:/login";
 	}
 
