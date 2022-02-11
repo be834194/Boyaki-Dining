@@ -1,9 +1,10 @@
 package com.dining.boyaki.model.service;
 
 import java.time.LocalDateTime;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,20 +71,6 @@ public class RegistrationServiceTest {
 		verify(changeEntitySharedService,times(1)).setToPasswordHistory(form);
 		verify(registrationMapper,times(1)).insertAccount(account);
 		verify(registrationMapper,times(1)).insertPasswordHistory(history);
-	}
-	
-	@Test
-	void findUserNameでユーザ名を取得する() throws Exception{
-		when(registrationMapper.findUserName("糸井")).thenReturn("糸井");
-		String userName = registrationService.findUserName("糸井");
-		assertEquals(userName,"糸井");
-	}
-	
-	@Test
-	void findUserNameでユーザ名が見つからない場合はNullが返ってくる() throws Exception{
-		when(registrationMapper.findUserName("hogehoge")).thenReturn(null);
-		String userName = registrationService.findUserName("hogehoge");
-		assertEquals(userName,null);
 	}
 
 }

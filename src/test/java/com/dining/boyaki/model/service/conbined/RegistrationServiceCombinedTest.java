@@ -1,7 +1,5 @@
 package com.dining.boyaki.model.service.conbined;
 
-import static org.junit.Assert.assertEquals;
-
 import java.time.LocalDateTime;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
@@ -66,20 +64,6 @@ public class RegistrationServiceCombinedTest {
 		form.setConfirmPassword("sun-flan-sis");
 		
 		registrationService.insertAccount(form);
-	}
-	
-	@Test
-	@DatabaseSetup(value="/service/Registration/setup/")
-	void findUserNameでユーザ名を取得する() throws Exception{
-		String userName = registrationService.findUserName("糸井");
-		assertEquals(userName,"糸井");
-	}
-	
-	@Test
-	@DatabaseSetup(value="/service/Registration/setup/")
-	void findUserNameでユーザ名が見つからない場合はNullが返ってくる() throws Exception{
-		String userName = registrationService.findUserName("hogehoge");
-		assertEquals(userName,null);
 	}
 
 }

@@ -23,11 +23,6 @@ public class RegistrationService {
 		this.passwordEncoder = passwordEncoder;
 	}
 	
-	@Transactional(readOnly = true)
-	public String findUserName(String userName) {
-		return registrationMapper.findUserName(userName);
-	}
-	
 	@Transactional(readOnly = false)
 	public void insertAccount(RegisterForm form) {
 		form.setPassword(passwordEncoder.encode(form.getPassword()));

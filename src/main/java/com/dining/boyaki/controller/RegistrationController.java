@@ -12,6 +12,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dining.boyaki.model.form.RegisterForm;
+import com.dining.boyaki.model.form.validation.UniqueMailValidator;
 import com.dining.boyaki.model.form.validation.UniqueUsernameValidator;
 import com.dining.boyaki.model.service.RegistrationService;
 
@@ -20,17 +21,22 @@ public class RegistrationController {
 	
 	private final RegistrationService registrationService;
 	
+	private final UniqueMailValidator uniqueMailValidator;
+	
 	private final UniqueUsernameValidator uniqueUsernameValidator;
 	
 	public RegistrationController(RegistrationService registrationService,
+			                      UniqueMailValidator uniqueMailValidator,
 			                      UniqueUsernameValidator uniqueUsernameValidator) {
 		this.registrationService = registrationService;
+		this.uniqueMailValidator = uniqueMailValidator;
 		this.uniqueUsernameValidator = uniqueUsernameValidator;
 	}
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		binder.addValidators(this.uniqueUsernameValidator);
+		binder.addValidators(this.uniqueUsernameValidator,
+				             this.uniqueMailValidator);
 	}
 	
 	@GetMapping("/registration")

@@ -19,6 +19,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
+import com.dining.boyaki.model.form.validation.UniqueMailValidator;
 import com.dining.boyaki.model.form.validation.UniqueUsernameValidator;
 import com.dining.boyaki.util.CsvDataSetLoader;
 
@@ -32,6 +33,9 @@ public class RegisterFormTest {
 	
 	@Autowired
 	Validator validator;
+	
+	@Autowired
+	UniqueMailValidator uniqueMailValidator;
 	
 	@Autowired
 	UniqueUsernameValidator uniqueUsernameValidator;
@@ -48,6 +52,8 @@ public class RegisterFormTest {
 		form.setConfirmPassword("hogetaro");
 		form.setMail("disney@gmail.com");
 		validator.validate(form, bindingResult);
+		assertNull(bindingResult.getFieldError());
+		uniqueMailValidator.validate(form, bindingResult);
 		assertNull(bindingResult.getFieldError());
 		uniqueUsernameValidator.validate(form, bindingResult);
 		assertNull(bindingResult.getFieldError());
@@ -96,12 +102,15 @@ public class RegisterFormTest {
 	
 	@Test
 	@DatabaseSetup(value = "/form/Register/setup/")
-	void ユーザ名の重複でフィールドエラー発生() throws Exception{
+	void ユーザ名やメールアドレスの重複でフィールドエラー発生() throws Exception{
 		form.setUserName("加藤健");
 		form.setPassword("pinballs");
 		form.setConfirmPassword("pinballs");
 		form.setMail("example@ezweb.ne.jp");
 		validator.validate(form, bindingResult);
+		uniqueMailValidator.validate(form, bindingResult);
+		assertTrue(bindingResult.getFieldError("mail")
+				                .toString().contains("入力されたメールアドレスは既に使われています"));
 		uniqueUsernameValidator.validate(form, bindingResult);
 		assertTrue(bindingResult.getFieldError("userName")
                                 .toString().contains("入力されたユーザ名は既に使われています"));

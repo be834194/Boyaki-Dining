@@ -91,8 +91,8 @@ public class RegistrationControllerCombinedTest {
 	@DatabaseSetup(value="/controller/Registration/setup/")
 	void registで新規登録が失敗する() throws Exception{
 		RegisterForm form = new RegisterForm();
-		form.setUserName("");
-		form.setMail("");
+		form.setUserName("加藤健");
+		form.setMail("example@ezweb.ne.jp");
 		form.setPassword("");
 		form.setConfirmPassword("sun-flan-sis");
 		this.mockMvc.perform(post("/regist")

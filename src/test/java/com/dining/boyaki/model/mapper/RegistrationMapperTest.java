@@ -6,8 +6,6 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -39,13 +37,6 @@ public class RegistrationMapperTest {
 	@AfterEach
 	void tearDown() {
 		session.flushStatements(); 
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/mapper/Registration/setup/")
-	void findUserNameでユーザを一人見つける() throws Exception{
-		String userName = registrationMapper.findUserName("糸井");
-		assertEquals(userName,"糸井");
 	}
 	
 	@Test

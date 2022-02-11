@@ -8,11 +8,11 @@ import com.dining.boyaki.model.form.RegisterForm;
 import com.dining.boyaki.model.service.FindDataSharedService;
 
 @Component
-public class UniqueUsernameValidator implements Validator {
+public class UniqueMailValidator implements Validator {
 	
 	private final FindDataSharedService findDataSharedService;
 	
-	public UniqueUsernameValidator(FindDataSharedService findDataSharedService) {
+	public UniqueMailValidator(FindDataSharedService findDataSharedService) {
 		this.findDataSharedService = findDataSharedService;
 	}
 
@@ -23,16 +23,16 @@ public class UniqueUsernameValidator implements Validator {
 
 	@Override
 	public void validate(Object target, Errors errors) {
-		RegisterForm form = (RegisterForm) target;
-		if(form.getUserName() == null || form.getUserName().equals("")) {
+		RegisterForm form = (RegisterForm)target;
+		if(form.getMail() == null || form.getMail().equals("")) {
 			return;
 		}
 		
-		String existName = findDataSharedService.findUserName(form.getUserName());
-		if(existName != null) {
-			errors.rejectValue("userName",
-			                   "RegisterForm.userName",
-			                   "入力されたユーザ名は既に使われています");
+		String existMail = findDataSharedService.findMail(form.getMail());
+		if(existMail != null) {
+			errors.rejectValue("mail",
+			                   "RegisterForm.mail",
+			                   "入力されたメールアドレスは既に使われています");
 		}
 	}
 
