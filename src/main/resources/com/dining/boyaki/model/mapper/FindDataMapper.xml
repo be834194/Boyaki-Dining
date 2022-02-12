@@ -9,7 +9,16 @@
         FROM
             ACCOUNT
         WHERE
-           USERNAME = #{userName}
+            USERNAME = #{userName}
+    </select>
+    
+    <select id="findUserNameFromMail" resultType="String" parameterType="String">
+        SELECT
+            USERNAME
+        FROM
+            ACCOUNT
+        WHERE
+            MAIL = #{mail}
     </select>
     
     <select id="findMail" resultType="String" parameterType="String">
@@ -18,7 +27,7 @@
         FROM
             ACCOUNT
         WHERE
-           MAIL = #{mail}
+            MAIL = #{mail}
     </select>
 
 </mapper>

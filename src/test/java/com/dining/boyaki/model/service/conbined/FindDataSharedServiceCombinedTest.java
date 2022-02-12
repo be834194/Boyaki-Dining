@@ -43,6 +43,19 @@ public class FindDataSharedServiceCombinedTest {
 	
 	@Test
 	@DatabaseSetup(value = "/service/FindData/setup/")
+	void findUserNameFromMailでユーザ名を取得する() throws Exception{
+		String userName = findDataSharedService.findUserNameFromMail("miho@gmail.com");
+		assertEquals("miho",userName);
+	}
+	
+	@Test
+	void findUserNameFromMailでユーザ名が見つからない場合はNullが返ってくる() throws Exception{
+		String userName = findDataSharedService.findUserNameFromMail("hogehoge@gmail.com");
+		assertEquals(null,userName);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/FindData/setup/")
 	void findMailでメールアドレスを取得する() throws Exception{
 		String mail = findDataSharedService.findMail("example@ezweb.ne.jp");
 		assertEquals("example@ezweb.ne.jp",mail);

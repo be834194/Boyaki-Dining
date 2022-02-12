@@ -42,6 +42,20 @@ public class FindDataSharedServiceTest {
 	}
 	
 	@Test
+	void findUserNameFromMailでユーザ名を取得する() throws Exception{
+		when(findDataMapper.findUserNameFromMail("miho@gmail.com")).thenReturn("miho");
+		String userName = findDataSharedService.findUserNameFromMail("miho@gmail.com");
+		assertEquals("miho",userName);
+	}
+	
+	@Test
+	void findUserNameFromMailでユーザ名が見つからない場合はNullが返ってくる() throws Exception{
+		when(findDataMapper.findUserNameFromMail("hogehoge@gmail.com")).thenReturn(null);
+		String userName = findDataSharedService.findUserNameFromMail("hogehoge@gmail.com");
+		assertEquals(null,userName);
+	}
+	
+	@Test
 	void findMailでメールアドレスを取得する() throws Exception{
 		when(findDataMapper.findMail("example@ezweb.ne.jp")).thenReturn("example@ezweb.ne.jp");
 		String mail = findDataSharedService.findMail("example@ezweb.ne.jp");

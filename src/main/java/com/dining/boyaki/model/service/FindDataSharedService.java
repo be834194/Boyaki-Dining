@@ -19,6 +19,11 @@ public class FindDataSharedService {
 	}
 	
 	@Transactional(readOnly = true)
+	public String findUserNameFromMail(String mail) {
+		return findDataMapper.findUserNameFromMail(mail);
+	}
+	
+	@Transactional(readOnly = true)
 	public String findMail(String mail) {
 		return findDataMapper.findMail(mail);
 	}

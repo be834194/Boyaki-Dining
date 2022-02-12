@@ -44,6 +44,13 @@ public class FindDataMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/FindData/setup/")
+	void findUserNameFromMailでユーザを一人見つける() throws Exception{
+		String userName = findDataMapper.findUserNameFromMail("miho@gmail.com");
+		assertEquals("miho",userName);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/mapper/FindData/setup/")
 	void findMailでメールアドレスを一見見つける() throws Exception{
 		String mail = findDataMapper.findMail("example@ezweb.ne.jp");
 		assertEquals("example@ezweb.ne.jp",mail);

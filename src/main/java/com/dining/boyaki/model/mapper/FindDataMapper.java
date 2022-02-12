@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface FindDataMapper {
 	
 	public String findUserName(String userName);
+	public String findUserNameFromMail(String mail);
 	public String findMail(String mail);
 
 }
