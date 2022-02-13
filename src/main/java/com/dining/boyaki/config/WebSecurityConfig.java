@@ -50,8 +50,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	    .logoutSuccessUrl("/login?logout")
     	    .permitAll();
     	http.authorizeRequests()// アクセス権限の設定
-    	    .antMatchers("/registration").permitAll()
-		    .antMatchers("/regist").permitAll()
+    	    .antMatchers("/registration","/regist").permitAll()
+		    .antMatchers("/resetpassword","/updatePassword").permitAll()
     	    .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
             .antMatchers("/index/**").hasAuthority("ROLE_USER")
             .anyRequest().authenticated();
