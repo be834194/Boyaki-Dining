@@ -54,7 +54,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		    .antMatchers("/resetpassword","/updatePassword").permitAll()
     	    .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
             .antMatchers("/index/**").hasAuthority("ROLE_USER")
-            .anyRequest().authenticated();
+            .anyRequest().authenticated()
+            .and()
+            .exceptionHandling().accessDeniedPage("/accessdenied");
     }
 
     @Override //認証方法の実装の設定を行う
