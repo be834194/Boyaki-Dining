@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>新規登録画面</title>
+</head>
+<body>
+<h1>新規登録</h1>
+<form th:action="@{/regist}" method="post" th:object="${registerForm}">
+<table>
+    <tr>
+        <td>ユーザ名</td>
+        <td>
+            <label for="userName"></label>
+            <input type="text" id="userName" name="userName" 
+                   th:value="*{userName}" th:errorclass="err"
+                   placeholder="2文字以上15字以下で入力してください">
+            <div th:if="${#fields.hasErrors('userName')}" 
+                 th:errors="*{userName}" th:errorclass="err"></div>
+        </td>
+    </tr>
+    <tr>
+    　　　　<td>メールアドレス</td>
+        <td>
+            <label for="mail"></label>
+            <input type="text" id="mail" name="mail"
+                   th:value="*{mail}" th:errorclass="err" />
+            <div th:if="${#fields.hasErrors('mail')}" 
+                 th:errors="*{mail}" th:errorclass="err">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>パスワード</td>
+        <td>
+            <label for="password"></label>
+            <input type="password" id="password" name="password"
+                   th:value="*{password}" th:errorclass="err"
+                   placeholder="8文字以上の半角英数字で入力してください">
+            <div th:if="${#fields.hasErrors('password')}" 
+                 th:errors="*{password}" th:errorclass="err">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>パスワード(再入力)</td>
+        <td>
+            <label for="confirmPassword"></label>
+            <input type="password" id="confirmPassword" name="confirmPassword"
+                   th:value="*{confirmPassword}" th:errorclass="err"
+                   placeholder="パスワードを再入力してください">
+            <div th:if="${#fields.hasErrors('confirmPassword')}" 
+                 th:errors="*{confirmPassword}" th:errorclass="err">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button type="submit">登録</button>
+        </td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

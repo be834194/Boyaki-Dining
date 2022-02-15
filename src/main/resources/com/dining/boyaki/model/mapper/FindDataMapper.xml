@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dining.boyaki.model.mapper.FindDataMapper">
+
+    <select id="findUserName" resultType="String" parameterType="String">
+        SELECT
+            USERNAME
+        FROM
+            ACCOUNT
+        WHERE
+            USERNAME = #{userName}
+    </select>
+    
+    <select id="findUserNameFromMail" resultType="String" parameterType="String">
+        SELECT
+            USERNAME
+        FROM
+            ACCOUNT
+        WHERE
+            MAIL = #{mail}
+    </select>
+    
+    <select id="findMail" resultType="String" parameterType="String">
+        SELECT
+            MAIL
+        FROM
+            ACCOUNT
+        WHERE
+            MAIL = #{mail}
+    </select>
+
+</mapper>
