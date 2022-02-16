@@ -13,4 +13,17 @@ create table IF NOT EXISTS password_history(
  password    varchar(255) ,
  useday      datetime     ,
  primary key(username,useday)
-)
+);
+
+create table IF NOT EXISTS diary_record(
+ username     varchar(255) not null,
+ categoryid   int          not null,
+ diaryday     date        not null,
+ record1      varchar(255) ,
+ record2      varchar(255) ,
+ record3      varchar(255) ,
+ price        int,
+ memo         varchar(255),
+ primary key(username,categoryid,diaryday),
+ foreign key(username) references account(username)
+ )

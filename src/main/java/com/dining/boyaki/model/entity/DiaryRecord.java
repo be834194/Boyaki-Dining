@@ -2,13 +2,13 @@ package com.dining.boyaki.model.entity;
 
 import java.util.Date;
 
-public class DiaryRecords {
+public class DiaryRecord {
 	
 	private String userName;
 	
-	private Category category;
+	private int categoryId;
 	
-	private Date start;
+	private Date diaryDay;
 	
 	private String record1;
 	
@@ -28,20 +28,20 @@ public class DiaryRecords {
 		this.userName = userName;
 	}
 
-	public String getCategory() {
-		return category.name();
+	public int getCategoryId() {
+		return categoryId;
 	}
 
-	public void setCategory(String category) {
-		this.category = Category.valueOf(category);
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
 	}
 
-	public Date getStart() {
-		return start;
+	public Date getDiaryday() {
+		return diaryDay;
 	}
 
-	public void setStart(Date start) {
-		this.start = start;
+	public void setDiaryDay(Date diaryDay) {
+		this.diaryDay = diaryDay;
 	}
 
 	public String getRecord1() {

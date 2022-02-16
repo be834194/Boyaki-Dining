@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dining.boyaki.model.mapper.DiaryRecordMapper">
+
+    <select id="findOneDiaryRecord" resultType="com.dining.boyaki.model.entity.DiaryRecord">
+        SELECT
+            USERNAME,CATEGORYID,DIARYDAY,RECORD1,RECORD2,RECORD3,PRICE,MEMO
+        FROM
+            DIARY_RECORD
+        WHERE
+            USERNAME = #{userName}
+        AND CATEGORYID = #{categoryId}
+        AND DIARYDAY = #{diaryDay}
+    </select>
+    
+    <insert id="insertDiaryRecord">
+        INSERT INTO
+            DIARY_RECORD(USERNAME,CATEGORYID,DIARYDAY,RECORD1,RECORD2,RECORD3,PRICE,MEMO)
+        VALUES
+           (#{userName},
+            #{categoryId},
+            #{diaryDay},
+            #{record1},
+            #{record2},
+            #{record3},
+            #{price},
+            #{memo})
+    </insert>
+    
+    <update id="updateDiaryRecord">
+        UPDATE
+            DIARY_RECORD
+        SET
+            USERNAME = #{userName},
+            CATEGORYID = #{categoryId},
+            DIARYDAY = #{diaryDay},
+            RECORD1 = #{record1},
+            RECORD2 = #{record2},
+            RECORD3 = #{record3},
+            PRICE = #{price},
+            MEMO = #{memo}
+        WHERE 
+            USERNAME = #{userName}
+        AND CATEGORYID = #{categoryId}
+        AND DIARYDAY = #{diaryDay}
+    </update>
+    
+    <delete id="deleteDiaryRecord">
+        DELETE
+        FROM
+            DIARY_RECORD
+        WHERE
+            USERNAME = #{userName}
+        AND CATEGORYID = #{categoryId}
+        AND DIARYDAY = #{diaryDay}
+    </delete>
+
+</mapper>
