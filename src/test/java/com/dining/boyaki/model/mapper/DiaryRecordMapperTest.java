@@ -1,5 +1,6 @@
 package com.dining.boyaki.model.mapper;
 
+import java.util.List;
 import java.sql.Date;
 import static org.junit.Assert.assertEquals;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
@@ -37,6 +38,14 @@ public class DiaryRecordMapperTest {
 	@AfterEach
 	void tearDown() {
 		session.flushStatements();
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/mapper/DiaryRecord/setup/")
+	void findAllDiaryRecordsでユーザ一人の投稿を全て取得する() throws Exception{
+		List<DiaryRecord> records = diaryRecordMapper.findAllDiaryRecords("加藤健");
+		assertEquals(records.size(),3);
+		assertEquals(records.get(0).getUserName(),"加藤健");
 	}
 	
 	@Test
