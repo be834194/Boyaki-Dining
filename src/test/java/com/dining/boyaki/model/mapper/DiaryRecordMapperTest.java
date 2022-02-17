@@ -44,8 +44,14 @@ public class DiaryRecordMapperTest {
 	@DatabaseSetup(value = "/mapper/DiaryRecord/setup/")
 	void findAllDiaryRecordsでユーザ一人の投稿を全て取得する() throws Exception{
 		List<DiaryRecord> records = diaryRecordMapper.findAllDiaryRecords("加藤健");
-		assertEquals(records.size(),3);
-		assertEquals(records.get(0).getUserName(),"加藤健");
+		assertEquals(3,records.size());
+		assertEquals("加藤健",records.get(0).getUserName());
+		assertEquals(Date.valueOf("2022-02-11"),records.get(0).getDiaryday());
+		assertEquals(Date.valueOf("2022-02-11"),records.get(1).getDiaryday());
+		assertEquals(Date.valueOf("2022-02-14"),records.get(2).getDiaryday());
+		assertEquals(1,records.get(0).getCategoryId());
+		assertEquals(2,records.get(1).getCategoryId());
+		assertEquals(3,records.get(2).getCategoryId());
 	}
 	
 	@Test

@@ -10,6 +10,8 @@
             DIARY_RECORD
         WHERE
             USERNAME = #{userName}
+        ORDER BY
+            DIARYDAY,CATEGORYID
     </select>
 
     <select id="findOneDiaryRecord" resultType="com.dining.boyaki.model.entity.DiaryRecord">
