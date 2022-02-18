@@ -20,28 +20,37 @@ public class DiaryRecordService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<CalendarRecord> retun(String userName) {
+	public List<CalendarRecord> findAllCalendarRecords(String userName) {
 		List<DiaryRecord> diaryRecords = diaryRecordMapper.findAllDiaryRecords(userName);
 		List<CalendarRecord> calendarRecords = new ArrayList<CalendarRecord>();
 		for(int i = 0; i < diaryRecords.size(); i++) {
 			DiaryRecord diary = diaryRecords.get(i);
 			CalendarRecord calendar = new CalendarRecord();
-			switch(diary.getCategoryId()) {
-			case 1:
-				calendar.setTitle("朝食:" + returnTitle(diary));
-				break;
-			case 2:
-				calendar.setTitle("昼食:" + returnTitle(diary));
-				break;
-			case 3:
-				calendar.setTitle("夕食:" + returnTitle(diary));
-				break;
-			case 4:
-				calendar.setTitle("飲酒-間食-運動");
-				break;
-			}
 			calendar.setStart(diary.getDiaryday().toString());
 			calendar.setEnd(diary.getDiaryday().toString());
+			
+			switch(diary.getCategoryId()) {
+			case 1:
+				calendar.setTitle
+				("<a href=\"/index/record/" + calendar.getStart() + "/1\">" 
+				 +"朝食:"+ returnTitle(diary) + "</a>");
+				break;
+			case 2:
+				calendar.setTitle
+				("<a href=\"/index/record/" + calendar.getStart() + "/2\">" 
+				 +"昼食:"+ returnTitle(diary) + "</a>");
+				break;
+			case 3:
+				calendar.setTitle
+				("<a href=\"/index/record/" + calendar.getStart() + "/3\">" 
+				 +"夕食:"+ returnTitle(diary) + "</a>");
+				break;
+			case 4:
+				calendar.setTitle
+				("<a href=\"/index/record/" + calendar.getStart() + "/4\">" 
+				 +"飲酒ー間食ー運動" + "</a>");
+				break;
+			}
 			calendarRecords.add(calendar);
 		}
 		return calendarRecords;
