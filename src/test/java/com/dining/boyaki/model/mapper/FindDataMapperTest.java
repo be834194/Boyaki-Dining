@@ -61,10 +61,15 @@ public class FindDataMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/FindData/setup/")
-	void findOneDiaryRecordでメールアドレスを一見見つける() throws Exception{
+	void findOneDiaryRecordで食事投稿を1件見つける() throws Exception{
 		DiaryRecord record = findDataMapper.findOneDiaryRecord("加藤健", 1, Date.valueOf("2022-02-11"));
 		assertEquals("加藤健",record.getUserName());
 		assertEquals(1,record.getCategoryId());
 		assertEquals(Date.valueOf("2022-02-11"),record.getDiaryday());
+		assertEquals("玄米ご飯",record.getRecord1());
+		assertEquals("ウインナー",record.getRecord2());
+		assertEquals("小松菜のお浸し",record.getRecord3());
+		assertEquals(0,record.getPrice());
+		assertEquals(null,record.getMemo());
 	}
 }
