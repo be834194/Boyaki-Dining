@@ -133,7 +133,7 @@ public class DiaryRecordServiceTest {
 		DiaryRecord result = diaryRecordService.findOneDiaryRecord("miho", 0, Date.valueOf("2022-02-15"));
 		assertEquals("miho",result.getUserName());
 		assertEquals(1,result.getCategoryId());
-		assertEquals("2022-02-15",result.getDiaryday().toString());
+		assertEquals("2022-02-15",result.getDiaryDay().toString());
 		assertEquals("食パン2枚",result.getRecord1());
 		assertEquals("目玉焼き",result.getRecord2());
 		assertNull(result.getRecord3());

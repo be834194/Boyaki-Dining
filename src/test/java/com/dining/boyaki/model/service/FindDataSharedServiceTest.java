@@ -96,7 +96,7 @@ public class FindDataSharedServiceTest {
 		DiaryRecord result = findDataSharedService.findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-15"));
 		assertEquals("miho",result.getUserName());
 		assertEquals(4,result.getCategoryId());
-		assertEquals(Date.valueOf("2022-02-15"),result.getDiaryday());
+		assertEquals(Date.valueOf("2022-02-15"),result.getDiaryDay());
 		assertEquals("",result.getRecord1());
 		assertEquals("ポテトチップス",result.getRecord2());
 		assertEquals("腕立て伏せ15回×3セット",result.getRecord3());

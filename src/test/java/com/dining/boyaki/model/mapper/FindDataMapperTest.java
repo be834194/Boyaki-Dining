@@ -65,7 +65,7 @@ public class FindDataMapperTest {
 		DiaryRecord record = findDataMapper.findOneDiaryRecord("加藤健", 1, Date.valueOf("2022-02-11"));
 		assertEquals("加藤健",record.getUserName());
 		assertEquals(1,record.getCategoryId());
-		assertEquals(Date.valueOf("2022-02-11"),record.getDiaryday());
+		assertEquals(Date.valueOf("2022-02-11"),record.getDiaryDay());
 		assertEquals("玄米ご飯",record.getRecord1());
 		assertEquals("ウインナー",record.getRecord2());
 		assertEquals("小松菜のお浸し",record.getRecord3());

@@ -46,9 +46,9 @@ public class DiaryRecordMapperTest {
 		List<DiaryRecord> records = diaryRecordMapper.findAllDiaryRecords("加藤健");
 		assertEquals(3,records.size());
 		assertEquals("加藤健",records.get(0).getUserName());
-		assertEquals(Date.valueOf("2022-02-11"),records.get(0).getDiaryday());
-		assertEquals(Date.valueOf("2022-02-11"),records.get(1).getDiaryday());
-		assertEquals(Date.valueOf("2022-02-14"),records.get(2).getDiaryday());
+		assertEquals(Date.valueOf("2022-02-11"),records.get(0).getDiaryDay());
+		assertEquals(Date.valueOf("2022-02-11"),records.get(1).getDiaryDay());
+		assertEquals(Date.valueOf("2022-02-14"),records.get(2).getDiaryDay());
 		assertEquals(1,records.get(0).getCategoryId());
 		assertEquals(2,records.get(1).getCategoryId());
 		assertEquals(3,records.get(2).getCategoryId());
@@ -60,7 +60,7 @@ public class DiaryRecordMapperTest {
 		DiaryRecord records= diaryRecordMapper.findOneDiaryRecord("miho",1,Date.valueOf("2021-12-26"));
 		assertEquals(records.getUserName(),"miho");
 		assertEquals(records.getCategoryId(),1);
-		assertEquals(records.getDiaryday(),Date.valueOf("2021-12-26"));
+		assertEquals(records.getDiaryDay(),Date.valueOf("2021-12-26"));
 		assertEquals(records.getRecord1(),"グラノーラ");
 		assertEquals(records.getRecord2(),null);
 		assertEquals(records.getRecord3(),"ヨーグルト");

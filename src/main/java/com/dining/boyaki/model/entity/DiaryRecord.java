@@ -36,7 +36,7 @@ public class DiaryRecord {
 		this.categoryId = categoryId;
 	}
 
-	public Date getDiaryday() {
+	public Date getDiaryDay() {
 		return diaryDay;
 	}
 

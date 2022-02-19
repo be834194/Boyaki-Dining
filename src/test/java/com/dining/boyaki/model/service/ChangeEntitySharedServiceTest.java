@@ -78,12 +78,32 @@ public class ChangeEntitySharedServiceTest {
 		DiaryRecord record = changeEntitySharedService.setToDiaryRecord(form);
 		assertEquals(null,record.getUserName());
 		assertEquals(3,record.getCategoryId());
-		assertEquals(Date.valueOf("2022-02-04"),record.getDiaryday());
+		assertEquals(Date.valueOf("2022-02-04"),record.getDiaryDay());
 		assertEquals("冷麺",record.getRecord1());
 		assertEquals("焼肉",record.getRecord2());
 		assertEquals("もやしナムル",record.getRecord3());
 		assertEquals(2980,record.getPrice());
 		assertEquals("焼肉屋で外食",record.getMemo());
+	}
+	
+	@Test
+    void setToDiaryRecordFormでDiaryRecordをDiaryRecordFormに詰め替える() throws Exception{
+		DiaryRecord record = new DiaryRecord();
+		record.setCategoryId(3);
+		record.setDiaryDay(Date.valueOf("2022-02-04"));
+		record.setRecord1("冷麺");
+		record.setRecord2("焼肉");
+		record.setRecord3("もやしナムル");
+		record.setPrice(2980);
+		record.setMemo("焼肉屋で外食");
+		DiaryRecordForm form = changeEntitySharedService.setToDiaryRecordForm(record);
+		assertEquals(3,form.getCategoryId());
+		assertEquals(Date.valueOf("2022-02-04"),form.getDiaryDay());
+		assertEquals("冷麺",form.getRecord1());
+		assertEquals("焼肉",form.getRecord2());
+		assertEquals("もやしナムル",form.getRecord3());
+		assertEquals(2980,form.getPrice());
+		assertEquals("焼肉屋で外食",form.getMemo());
 	}
 
 }

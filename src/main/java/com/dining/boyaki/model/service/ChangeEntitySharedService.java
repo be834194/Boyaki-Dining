@@ -39,5 +39,17 @@ public class ChangeEntitySharedService {
 		record.setMemo(form.getMemo());
 		return record;
 	}
+	
+	public DiaryRecordForm setToDiaryRecordForm(DiaryRecord record) {
+		DiaryRecordForm form = new DiaryRecordForm();
+		form.setCategoryId(record.getCategoryId());
+		form.setDiaryDay(record.getDiaryDay());
+		form.setRecord1(record.getRecord1());
+		form.setRecord2(record.getRecord2());
+		form.setRecord3(record.getRecord3());
+		form.setPrice(record.getPrice());
+		form.setMemo(record.getMemo());
+		return form;
+	}
 
 }

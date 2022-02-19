@@ -26,8 +26,8 @@ public class DiaryRecordService {
 		for(int i = 0; i < diaryRecords.size(); i++) {
 			DiaryRecord diary = diaryRecords.get(i);
 			CalendarRecord calendar = new CalendarRecord();
-			calendar.setStart(diary.getDiaryday().toString());
-			calendar.setEnd(diary.getDiaryday().toString());
+			calendar.setStart(diary.getDiaryDay().toString());
+			calendar.setEnd(diary.getDiaryDay().toString());
 			
 			switch(diary.getCategoryId()) {
 			case 1:
