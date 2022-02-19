@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.model.entity.CalendarRecord;
 import com.dining.boyaki.model.entity.DiaryRecord;
+import com.dining.boyaki.model.form.DiaryRecordForm;
 import com.dining.boyaki.model.mapper.DiaryRecordMapper;
 
 @RunWith(SpringRunner.class)
@@ -30,12 +31,33 @@ public class DiaryRecordServiceTest {
 	@Mock
 	DiaryRecordMapper diaryRecordMapper;
 	
+	@Mock
+	ChangeEntitySharedService changeEntitySharedService;
+	
 	@InjectMocks
 	DiaryRecordService diaryRecordService;
 	
-	@BeforeEach //Mockオブジェクトの初期化
+	DiaryRecord diary = new DiaryRecord();
+	DiaryRecordForm form = new DiaryRecordForm();
+	
+	@BeforeEach
     void setUp() {
     	MockitoAnnotations.openMocks(this);
+    	diary.setUserName("miho");
+		diary.setCategoryId(1);
+		diary.setDiaryDay(Date.valueOf("2022-02-15"));
+		diary.setRecord1("食パン2枚");
+		diary.setRecord2("目玉焼き");
+		diary.setRecord3(null);
+		diary.setPrice(0);
+		diary.setMemo(null);
+		form.setCategoryId(1);
+		form.setDiaryDay(Date.valueOf("2022-02-15"));
+		form.setRecord1("食パン2枚");
+		form.setRecord2("目玉焼き");
+		form.setRecord3(null);
+		form.setPrice(0);
+		form.setMemo(null);
     }
 	
 	@Test
@@ -118,20 +140,11 @@ public class DiaryRecordServiceTest {
 	
 	@Test
 	void findOneDiaryRecordでDiaryRecordを1件取得する() throws Exception{
-		DiaryRecord diary = new DiaryRecord();
-		diary.setUserName("miho");
-		diary.setCategoryId(1);
-		diary.setDiaryDay(Date.valueOf("2022-02-15"));
-		diary.setRecord1("食パン2枚");
-		diary.setRecord2("目玉焼き");
-		diary.setRecord3(null);
-		diary.setPrice(0);
-		diary.setMemo(null);
 		when(diaryRecordMapper.findOneDiaryRecord("miho", 0, Date.valueOf("2022-02-15")))
 		   .thenReturn(diary);
+		when(changeEntitySharedService.setToDiaryRecordForm(diary)).thenReturn(form);
 		
-		DiaryRecord result = diaryRecordService.findOneDiaryRecord("miho", 0, Date.valueOf("2022-02-15"));
-		assertEquals("miho",result.getUserName());
+		DiaryRecordForm result = diaryRecordService.findOneDiaryRecord("miho", 0, Date.valueOf("2022-02-15"));
 		assertEquals(1,result.getCategoryId());
 		assertEquals("2022-02-15",result.getDiaryDay().toString());
 		assertEquals("食パン2枚",result.getRecord1());
@@ -139,57 +152,49 @@ public class DiaryRecordServiceTest {
 		assertNull(result.getRecord3());
 		assertEquals(0,result.getPrice());
 		assertNull(result.getMemo());
+		verify(changeEntitySharedService,times(1)).setToDiaryRecordForm(diary);
 		verify(diaryRecordMapper,times(1)).findOneDiaryRecord("miho", 0, Date.valueOf("2022-02-15"));
 	}
 	
 	@Test
+	void findOneDiaryRecordでDiaryRecordが取得できない場合nullが返ってくる() throws Exception{
+		when(diaryRecordMapper.findOneDiaryRecord("加藤健", 4, Date.valueOf("2022-02-01")))
+		   .thenReturn(null);
+		when(changeEntitySharedService.setToDiaryRecordForm(diary)).thenReturn(form);
+		
+		DiaryRecordForm result = diaryRecordService.findOneDiaryRecord("加藤健", 4, Date.valueOf("2022-02-01"));
+		assertNull(result);
+		verify(changeEntitySharedService,times(0)).setToDiaryRecordForm(diary);
+		verify(diaryRecordMapper,times(1)).findOneDiaryRecord("加藤健", 4, Date.valueOf("2022-02-01"));
+	}
+	
+	@Test
 	void insertDiaryRecordでDiaryRecordを1件追加する() throws Exception{
-		DiaryRecord diary = new DiaryRecord();
-		diary.setUserName("糸井");
-		diary.setCategoryId(2);
-		diary.setDiaryDay(Date.valueOf("2022-02-14"));
-		diary.setRecord1("ラーメン");
-		diary.setRecord2(null);
-		diary.setRecord3(null);
-		diary.setPrice(460);
-		diary.setMemo("外食");
+		when(changeEntitySharedService.setToDiaryRecord(form)).thenReturn(diary);
 		doNothing().when(diaryRecordMapper).insertDiaryRecord(diary);
 		
-		diaryRecordService.insertDiaryRecord(diary);
+		diaryRecordService.insertDiaryRecord(form);
+		verify(changeEntitySharedService,times(1)).setToDiaryRecord(form);
 		verify(diaryRecordMapper,times(1)).insertDiaryRecord(diary);
 	}
 	
 	@Test
-	void updateDiaryRecordでDiaryRecordを1件追加する() throws Exception{
-		DiaryRecord diary = new DiaryRecord();
-		diary.setUserName("加藤健");
-		diary.setCategoryId(1);
-		diary.setDiaryDay(Date.valueOf("2022-02-16"));
-		diary.setRecord1("チョコパン");
-		diary.setRecord2("");
-		diary.setRecord3("昨日のサラダ");
-		diary.setPrice(100);
-		diary.setMemo("コンビニのコーヒー");
+	void updateDiaryRecordでDiaryRecordを1件更新する() throws Exception{
+		when(changeEntitySharedService.setToDiaryRecord(form)).thenReturn(diary);
 		doNothing().when(diaryRecordMapper).updateDiaryRecord(diary);
 		
-		diaryRecordService.updateDiaryRecord(diary);
+		diaryRecordService.updateDiaryRecord(form);
+		verify(changeEntitySharedService,times(1)).setToDiaryRecord(form);
 		verify(diaryRecordMapper,times(1)).updateDiaryRecord(diary);
 	}
 	
 	@Test
 	void deleteDiaryRecordでDiaryRecordを1件削除する() throws Exception{
-		DiaryRecord diary = new DiaryRecord();
-		diary.setUserName("miho");
-		diary.setCategoryId(1);
-		diary.setDiaryDay(Date.valueOf("2022-02-15"));
-		diary.setRecord1("食パン2枚");
-		diary.setRecord2("目玉焼き");
-		diary.setRecord3(null);
-		diary.setPrice(0);
-		diary.setMemo(null);
+		when(changeEntitySharedService.setToDiaryRecord(form)).thenReturn(diary);
 		doNothing().when(diaryRecordMapper).deleteDiaryRecord(diary);
 		
-		diaryRecordService.deleteDiaryRecord(diary);
+		diaryRecordService.deleteDiaryRecord(form);
+		verify(changeEntitySharedService,times(1)).setToDiaryRecord(form);
 		verify(diaryRecordMapper,times(1)).deleteDiaryRecord(diary);
 	}
 	

@@ -30,6 +30,7 @@ public class ChangeEntitySharedService {
 	
 	public DiaryRecord setToDiaryRecord(DiaryRecordForm form) {
 		DiaryRecord record = new DiaryRecord();
+		record.setUserName(form.getUserName());
 		record.setCategoryId(form.getCategoryId());
 		record.setDiaryDay(form.getDiaryDay());
 		record.setRecord1(form.getRecord1());
@@ -42,6 +43,7 @@ public class ChangeEntitySharedService {
 	
 	public DiaryRecordForm setToDiaryRecordForm(DiaryRecord record) {
 		DiaryRecordForm form = new DiaryRecordForm();
+		form.setUserName(record.getUserName());
 		form.setCategoryId(record.getCategoryId());
 		form.setDiaryDay(record.getDiaryDay());
 		form.setRecord1(record.getRecord1());

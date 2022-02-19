@@ -1,13 +1,16 @@
 package com.dining.boyaki.model.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.model.entity.CalendarRecord;
 import com.dining.boyaki.model.entity.DiaryRecord;
+import com.dining.boyaki.model.form.DiaryRecordForm;
 import com.dining.boyaki.model.mapper.DiaryRecordMapper;
 
 @Service
@@ -15,19 +18,24 @@ public class DiaryRecordService {
 	
 	private final DiaryRecordMapper diaryRecordMapper;
 	
-	public DiaryRecordService(DiaryRecordMapper diaryRecordMapper) {
+	private final ChangeEntitySharedService changeEntitySharedService;
+	
+	public DiaryRecordService(DiaryRecordMapper diaryRecordMapper,
+			                  ChangeEntitySharedService changeEntitySharedService) {
 		this.diaryRecordMapper = diaryRecordMapper;
+		this.changeEntitySharedService = changeEntitySharedService;
 	}
 	
 	@Transactional(readOnly = true)
 	public List<CalendarRecord> findAllCalendarRecords(String userName) {
 		List<DiaryRecord> diaryRecords = diaryRecordMapper.findAllDiaryRecords(userName);
 		List<CalendarRecord> calendarRecords = new ArrayList<CalendarRecord>();
+		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
 		for(int i = 0; i < diaryRecords.size(); i++) {
 			DiaryRecord diary = diaryRecords.get(i);
 			CalendarRecord calendar = new CalendarRecord();
-			calendar.setStart(diary.getDiaryDay().toString());
-			calendar.setEnd(diary.getDiaryDay().toString());
+			calendar.setStart(simpleDate.format(diary.getDiaryDay()));
+			calendar.setEnd(simpleDate.format(diary.getDiaryDay()));
 			
 			switch(diary.getCategoryId()) {
 			case 1:
@@ -67,23 +75,28 @@ public class DiaryRecordService {
     }
     
     @Transactional(readOnly = true)
-    public DiaryRecord findOneDiaryRecord(String userName,int categoryId,Date diaryDay) {
-    	return diaryRecordMapper.findOneDiaryRecord(userName, categoryId, diaryDay);
+    public DiaryRecordForm findOneDiaryRecord(String userName,int categoryId,Date diaryDay) {
+    	DiaryRecord diary = diaryRecordMapper.findOneDiaryRecord(userName, categoryId, diaryDay);
+    	if(Objects.isNull(diary)) {
+    		return null;
+    	}
+    	return changeEntitySharedService.setToDiaryRecordForm(diary);
+    	
     }
     
     @Transactional(readOnly = false)
-    public void insertDiaryRecord(DiaryRecord diary) {
-    	diaryRecordMapper.insertDiaryRecord(diary);
+    public void insertDiaryRecord(DiaryRecordForm form) {
+    	diaryRecordMapper.insertDiaryRecord(changeEntitySharedService.setToDiaryRecord(form));
     }
     
     @Transactional(readOnly = false)
-    public void updateDiaryRecord(DiaryRecord diary) {
-    	diaryRecordMapper.updateDiaryRecord(diary);
+    public void updateDiaryRecord(DiaryRecordForm form) {
+    	diaryRecordMapper.updateDiaryRecord(changeEntitySharedService.setToDiaryRecord(form));
     }
     
     @Transactional(readOnly = false)
-    public void deleteDiaryRecord(DiaryRecord diary) {
-    	diaryRecordMapper.deleteDiaryRecord(diary);
+    public void deleteDiaryRecord(DiaryRecordForm form) {
+    	diaryRecordMapper.deleteDiaryRecord(changeEntitySharedService.setToDiaryRecord(form));
     }
 
 }

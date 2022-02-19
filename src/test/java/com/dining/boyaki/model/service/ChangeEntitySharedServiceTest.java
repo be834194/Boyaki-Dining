@@ -68,6 +68,7 @@ public class ChangeEntitySharedServiceTest {
 	@Test
     void setToDiaryRecordでDiaryRecordFormをDiaryRecordに詰め替える() throws Exception{
 		DiaryRecordForm form = new DiaryRecordForm();
+		form.setUserName("糸井");
 		form.setCategoryId(3);
 		form.setDiaryDay(Date.valueOf("2022-02-04"));
 		form.setRecord1("冷麺");
@@ -76,7 +77,7 @@ public class ChangeEntitySharedServiceTest {
 		form.setPrice(2980);
 		form.setMemo("焼肉屋で外食");
 		DiaryRecord record = changeEntitySharedService.setToDiaryRecord(form);
-		assertEquals(null,record.getUserName());
+		assertEquals("糸井",record.getUserName());
 		assertEquals(3,record.getCategoryId());
 		assertEquals(Date.valueOf("2022-02-04"),record.getDiaryDay());
 		assertEquals("冷麺",record.getRecord1());
@@ -89,6 +90,7 @@ public class ChangeEntitySharedServiceTest {
 	@Test
     void setToDiaryRecordFormでDiaryRecordをDiaryRecordFormに詰め替える() throws Exception{
 		DiaryRecord record = new DiaryRecord();
+		record.setUserName("糸井");
 		record.setCategoryId(3);
 		record.setDiaryDay(Date.valueOf("2022-02-04"));
 		record.setRecord1("冷麺");
@@ -97,6 +99,7 @@ public class ChangeEntitySharedServiceTest {
 		record.setPrice(2980);
 		record.setMemo("焼肉屋で外食");
 		DiaryRecordForm form = changeEntitySharedService.setToDiaryRecordForm(record);
+		assertEquals("糸井",form.getUserName());
 		assertEquals(3,form.getCategoryId());
 		assertEquals(Date.valueOf("2022-02-04"),form.getDiaryDay());
 		assertEquals("冷麺",form.getRecord1());

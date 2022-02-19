@@ -11,6 +11,8 @@ import com.dining.boyaki.model.form.validation.ConfirmDiaryRecord;
 @ConfirmDiaryRecord(records = {"record1","record2","record3"})
 public class DiaryRecordForm {
 	
+	private String userName;
+	
 	@Min(value=1,message="カテゴリを選んでください")
 	private int categoryId;
 	
@@ -27,6 +29,14 @@ public class DiaryRecordForm {
 	private int price;
 	
 	private String memo;
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
 	public int getCategoryId() {
 		return categoryId;
