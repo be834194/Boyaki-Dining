@@ -1,5 +1,6 @@
 package com.dining.boyaki.model.mapper;
 
+import java.sql.Date;
 import static org.junit.Assert.assertEquals;
 import com.dining.boyaki.util.CsvDataSetLoader;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
@@ -9,12 +10,14 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.dining.boyaki.model.entity.DiaryRecord;
 
 @DbUnitConfiguration(dataSetLoader = CsvDataSetLoader.class)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
@@ -54,5 +57,14 @@ public class FindDataMapperTest {
 	void findMailでメールアドレスを一見見つける() throws Exception{
 		String mail = findDataMapper.findMail("example@ezweb.ne.jp");
 		assertEquals("example@ezweb.ne.jp",mail);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/mapper/FindData/setup/")
+	void findOneDiaryRecordでメールアドレスを一見見つける() throws Exception{
+		DiaryRecord record = findDataMapper.findOneDiaryRecord("加藤健", 1, Date.valueOf("2022-02-11"));
+		assertEquals("加藤健",record.getUserName());
+		assertEquals(1,record.getCategoryId());
+		assertEquals(Date.valueOf("2022-02-11"),record.getDiaryday());
 	}
 }

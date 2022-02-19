@@ -29,5 +29,16 @@
         WHERE
             MAIL = #{mail}
     </select>
+    
+    <select id="findOneDiaryRecord" resultType="com.dining.boyaki.model.entity.DiaryRecord">
+        SELECT
+            USERNAME,CATEGORYID,DIARYDAY,RECORD1,RECORD2,RECORD3,PRICE,MEMO
+        FROM
+            DIARY_RECORD
+        WHERE
+            USERNAME = #{userName}
+        AND CATEGORYID = #{categoryId}
+        AND DIARYDAY = #{diaryDay}
+    </select>
 
 </mapper>
