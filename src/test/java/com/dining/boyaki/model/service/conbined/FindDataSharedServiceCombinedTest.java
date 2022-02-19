@@ -1,6 +1,10 @@
 package com.dining.boyaki.model.service.conbined;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import java.sql.Date;
+
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
@@ -13,6 +17,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dining.boyaki.model.entity.DiaryRecord;
 import com.dining.boyaki.model.service.FindDataSharedService;
 import com.dining.boyaki.util.CsvDataSetLoader;
 
@@ -68,5 +73,25 @@ public class FindDataSharedServiceCombinedTest {
 		assertEquals(null,mail);
 	}
 	
+	@Test
+	@DatabaseSetup(value = "/service/FindData/setup/")
+	void findOneDiaryRecordで食事投稿を取得する() throws Exception{
+		DiaryRecord result = findDataSharedService.findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-15"));
+		assertEquals("miho",result.getUserName());
+		assertEquals(4,result.getCategoryId());
+		assertEquals(Date.valueOf("2022-02-15"),result.getDiaryday());
+		assertEquals(null,result.getRecord1());
+		assertEquals("ポテトチップス",result.getRecord2());
+		assertEquals("腕立て伏せ15回×3セット",result.getRecord3());
+		assertEquals(0,result.getPrice());
+		assertNull(result.getMemo());
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/FindData/setup/")
+	void findOneDiaryRecordで食事投稿が見つからない場合はNullが返ってくる() throws Exception{
+		DiaryRecord result = findDataSharedService.findOneDiaryRecord("糸井", 2, Date.valueOf("2022-02-09"));
+		assertNull(result);
+	}
 
 }
