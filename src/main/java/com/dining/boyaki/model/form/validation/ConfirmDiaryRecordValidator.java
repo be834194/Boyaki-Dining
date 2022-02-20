@@ -1,6 +1,7 @@
 package com.dining.boyaki.model.form.validation;
 
 import java.util.Arrays;
+import java.util.Objects;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -26,7 +27,7 @@ public class ConfirmDiaryRecordValidator implements ConstraintValidator<ConfirmD
 			objects[i] = beanWrapper.getPropertyValue(this.records[i]);
 		}
 		
-		boolean matched = Arrays.stream(objects).allMatch(s -> s=="");
+		boolean matched = Arrays.stream(objects).allMatch(Objects::isNull);
 		if (!matched) {
 			return true;
         }

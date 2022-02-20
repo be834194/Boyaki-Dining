@@ -12,7 +12,8 @@ create table IF NOT EXISTS password_history(
  username    varchar(255) ,
  password    varchar(255) ,
  useday      datetime     ,
- primary key(username,useday)
+ primary key(username,useday),
+ CONSTRAINT unique_username_passwordhistory foreign key(username) references account(username)
 );
 
 create table IF NOT EXISTS diary_record(
@@ -25,5 +26,5 @@ create table IF NOT EXISTS diary_record(
  price        int,
  memo         varchar(255),
  primary key(username,categoryid,diaryday),
- CONSTRAINT unique_username foreign key(username) references account(username)
+ CONSTRAINT unique_username_diaryrecord foreign key(username) references account(username)
  );

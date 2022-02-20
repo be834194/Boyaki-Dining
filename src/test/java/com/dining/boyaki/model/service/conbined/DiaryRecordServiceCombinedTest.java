@@ -37,15 +37,15 @@ public class DiaryRecordServiceCombinedTest {
 	@DatabaseSetup(value = "/service/DiaryRecord/setup/")
 	void findAllCalendarRecordsで取得したDiaryRecordをCalendarRecordに詰め替える() throws Exception{
 		List<CalendarRecord> calendarRecords = diaryRecordService.findAllCalendarRecords("miho");
-		assertEquals("<a href=\"/index/record/2021-12-26/1\">朝食:グラノーラ</a>",calendarRecords.get(0).getTitle());
-		assertEquals("2021-12-26",calendarRecords.get(0).getStart());
-		assertEquals("2021-12-26",calendarRecords.get(0).getEnd());
-		assertEquals("<a href=\"/index/record/2021-12-26/2\">昼食:グラタン</a>",calendarRecords.get(1).getTitle());
-		assertEquals("2021-12-26",calendarRecords.get(1).getStart());
-		assertEquals("2021-12-26",calendarRecords.get(1).getEnd());
-		assertEquals("<a href=\"/index/record/2021-12-26/3\">夕食:チキンステーキ</a>",calendarRecords.get(2).getTitle());
-		assertEquals("2021-12-26",calendarRecords.get(2).getStart());
-		assertEquals("2021-12-26",calendarRecords.get(2).getEnd());
+		assertEquals("<a href=\"/index/record/2022-01-26/1\">朝食:グラノーラ</a>",calendarRecords.get(0).getTitle());
+		assertEquals("2022-01-26",calendarRecords.get(0).getStart());
+		assertEquals("2022-01-26",calendarRecords.get(0).getEnd());
+		assertEquals("<a href=\"/index/record/2022-01-26/2\">昼食:グラタン</a>",calendarRecords.get(1).getTitle());
+		assertEquals("2022-01-26",calendarRecords.get(1).getStart());
+		assertEquals("2022-01-26",calendarRecords.get(1).getEnd());
+		assertEquals("<a href=\"/index/record/2022-01-26/3\">夕食:チキンステーキ</a>",calendarRecords.get(2).getTitle());
+		assertEquals("2022-01-26",calendarRecords.get(2).getStart());
+		assertEquals("2022-01-26",calendarRecords.get(2).getEnd());
 		assertEquals("<a href=\"/index/record/2022-02-15/4\">飲酒ー間食ー運動</a>",calendarRecords.get(3).getTitle());
 		assertEquals("2022-02-15",calendarRecords.get(3).getStart());
 		assertEquals("2022-02-15",calendarRecords.get(3).getEnd());	
@@ -110,7 +110,7 @@ public class DiaryRecordServiceCombinedTest {
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setUserName("miho");
 		form.setCategoryId(3);
-		form.setDiaryDay(Date.valueOf("2021-12-26"));
+		form.setDiaryDay(Date.valueOf("2022-01-26"));
 		form.setRecord1(null);
 		form.setRecord2("チキンステーキ");
 		form.setRecord3("余りもの野菜炒め");
