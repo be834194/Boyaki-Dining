@@ -11,7 +11,7 @@ public class UserCalendarController {
 	@GetMapping("/index")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public String showUserCalendar(Model model) {
-		return "UserCalendar/UserCalendar";
+		return "UserCalendar/index";
 	}
 
 }

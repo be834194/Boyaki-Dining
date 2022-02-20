@@ -1,6 +1,6 @@
 DROP ALL OBJECTS;
 
-CREATE TABLE IF NOT EXISTS account (
+create table IF NOT EXISTS account (
  username varchar(255) ,
  password varchar(255) not null,
  mail     varchar(255) not null,
@@ -25,5 +25,5 @@ create table IF NOT EXISTS diary_record(
  price        int,
  memo         varchar(255),
  primary key(username,categoryid,diaryday),
- foreign key(username) references account(username)
- )
+ CONSTRAINT unique_username foreign key(username) references account(username)
+ );
