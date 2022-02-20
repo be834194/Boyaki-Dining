@@ -57,10 +57,10 @@ public class DiaryRecordMapperTest {
 	@Test
 	@DatabaseSetup(value = "/mapper/DiaryRecord/setup/")
 	void findOneDiaryRecordsで一つの投稿を取得する() throws Exception{
-		DiaryRecord records= diaryRecordMapper.findOneDiaryRecord("miho",1,Date.valueOf("2021-12-26"));
+		DiaryRecord records= diaryRecordMapper.findOneDiaryRecord("miho",1,Date.valueOf("2022-01-26"));
 		assertEquals(records.getUserName(),"miho");
 		assertEquals(records.getCategoryId(),1);
-		assertEquals(records.getDiaryDay(),Date.valueOf("2021-12-26"));
+		assertEquals(records.getDiaryDay(),Date.valueOf("2022-01-26"));
 		assertEquals(records.getRecord1(),"グラノーラ");
 		assertEquals(records.getRecord2(),null);
 		assertEquals(records.getRecord3(),"ヨーグルト");
@@ -107,7 +107,7 @@ public class DiaryRecordMapperTest {
 		DiaryRecord record = new DiaryRecord();
 		record.setUserName("miho");
 		record.setCategoryId(3);
-		record.setDiaryDay(Date.valueOf("2021-12-26"));
+		record.setDiaryDay(Date.valueOf("2022-01-26"));
 		diaryRecordMapper.deleteDiaryRecord(record);
 	}
 

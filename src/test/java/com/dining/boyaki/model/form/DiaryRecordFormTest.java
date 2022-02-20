@@ -2,9 +2,7 @@ package com.dining.boyaki.model.form;
 
 import java.sql.Date;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
-import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
-import com.github.springtestdbunit.annotation.ExpectedDatabase;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -39,9 +37,9 @@ public class DiaryRecordFormTest {
 	
 	@Test
 	void バリデーション問題あり() throws Exception{
-		form.setRecord1("");
-		form.setRecord2("");
-		form.setRecord3("");
+		form.setRecord1(null);
+		form.setRecord2(null);
+		form.setRecord3(null);
 		validator.validate(form, bindingResult);
 		assertTrue(bindingResult.getFieldError("categoryId")
                 .toString().contains("カテゴリを選んでください"));

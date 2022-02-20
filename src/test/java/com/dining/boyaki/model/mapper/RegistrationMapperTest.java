@@ -56,8 +56,8 @@ public class RegistrationMapperTest {
 	@ExpectedDatabase(value = "/mapper/Registration/insert/password_history/",table="password_history")
 	void insertPasswordHistoryでPW履歴レコードが1件追加される() throws Exception{
 		PasswordHistory history = new PasswordHistory();
-		history.setUserName("マクベイ");
-		history.setPassword("sun-flan-sis");
+		history.setUserName("糸井");
+		history.setPassword("sigeSATO");
 		history.setUseDay(LocalDateTime.parse("2022-02-08T11:00:52"));
 		registrationMapper.insertPasswordHistory(history);
 	}
