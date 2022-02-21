@@ -1,6 +1,8 @@
 package com.dining.boyaki.model.service;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.times;
@@ -91,6 +93,7 @@ public class FindDataSharedServiceTest {
 		diary.setRecord3("腕立て伏せ15回×3セット");
 		diary.setPrice(0);
 		diary.setMemo(null);
+		diary.setCreateAt(LocalDateTime.parse("2022-02-15T23:30:34"));
 		when(findDataMapper.findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-15"))).thenReturn(diary);
 		
 		DiaryRecord result = findDataSharedService.findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-15"));
@@ -102,6 +105,7 @@ public class FindDataSharedServiceTest {
 		assertEquals("腕立て伏せ15回×3セット",result.getRecord3());
 		assertEquals(0,result.getPrice());
 		assertNull(result.getMemo());
+		assertEquals(LocalDateTime.parse("2022-02-15T23:30:34"),result.getCreateAt());
 		verify(findDataMapper,times(1)).findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-15"));
 	}
 	

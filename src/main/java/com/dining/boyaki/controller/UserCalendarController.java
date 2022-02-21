@@ -63,7 +63,7 @@ public class UserCalendarController {
 		return "redirect:/index";
 	}
 	
-	@PostMapping("/index/edit/update")
+	@PostMapping("/index/edit/delete")
 	public String deleteContent(@AuthenticationPrincipal AccountUserDetails details,
 			                    @ModelAttribute DiaryRecordForm form) {
 		form.setUserName(details.getUsername());

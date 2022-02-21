@@ -1,6 +1,8 @@
 package com.dining.boyaki.model.mapper;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+
 import static org.junit.Assert.assertEquals;
 import com.dining.boyaki.util.CsvDataSetLoader;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
@@ -71,5 +73,7 @@ public class FindDataMapperTest {
 		assertEquals("小松菜のお浸し",record.getRecord3());
 		assertEquals(0,record.getPrice());
 		assertEquals(null,record.getMemo());
+		assertEquals(LocalDateTime.parse("2022-02-11T21:37:19"),record.getCreateAt());
+		assertEquals(LocalDateTime.parse("2022-02-11T21:37:19"),record.getUpdateAt());
 	}
 }

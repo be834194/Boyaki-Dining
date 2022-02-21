@@ -38,6 +38,7 @@ public class ChangeEntitySharedService {
 		record.setRecord3(form.getRecord3());
 		record.setPrice(form.getPrice());
 		record.setMemo(form.getMemo());
+		record.setCreateAt(form.getCreateAt());
 		return record;
 	}
 	
@@ -51,6 +52,7 @@ public class ChangeEntitySharedService {
 		form.setRecord3(record.getRecord3());
 		form.setPrice(record.getPrice());
 		form.setMemo(record.getMemo());
+		form.setCreateAt(record.getCreateAt());
 		return form;
 	}
 
