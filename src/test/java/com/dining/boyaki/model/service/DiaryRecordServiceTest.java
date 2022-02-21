@@ -8,13 +8,18 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +32,10 @@ import com.dining.boyaki.model.mapper.DiaryRecordMapper;
 @RunWith(SpringRunner.class)
 @Transactional
 public class DiaryRecordServiceTest {
+	
+	private static LocalDateTime datetime;
+	
+	private static MockedStatic<LocalDateTime> mock;
 	
 	@Mock
 	DiaryRecordMapper diaryRecordMapper;
@@ -43,6 +52,8 @@ public class DiaryRecordServiceTest {
 	@BeforeEach
     void setUp() {
     	MockitoAnnotations.openMocks(this);
+    	mock = Mockito.mockStatic(LocalDateTime.class,Mockito.CALLS_REAL_METHODS);
+		
     	diary.setUserName("miho");
 		diary.setCategoryId(1);
 		diary.setDiaryDay(Date.valueOf("2022-02-15"));
@@ -51,6 +62,7 @@ public class DiaryRecordServiceTest {
 		diary.setRecord3(null);
 		diary.setPrice(0);
 		diary.setMemo(null);
+		diary.setCreateAt(LocalDateTime.parse("2022-02-15T11:22:33"));
 		form.setCategoryId(1);
 		form.setDiaryDay(Date.valueOf("2022-02-15"));
 		form.setRecord1("食パン2枚");
@@ -58,7 +70,13 @@ public class DiaryRecordServiceTest {
 		form.setRecord3(null);
 		form.setPrice(0);
 		form.setMemo(null);
+		form.setCreateAt(LocalDateTime.parse("2022-02-15T11:22:33"));
     }
+	
+	@AfterEach
+	void tearDown() throws Exception{
+		mock.close();
+	}
 	
 	@Test
 	void returnTitleでRecord2を返す() throws Exception{
@@ -152,6 +170,7 @@ public class DiaryRecordServiceTest {
 		assertNull(result.getRecord3());
 		assertEquals(0,result.getPrice());
 		assertNull(result.getMemo());
+		assertEquals(LocalDateTime.parse("2022-02-15T11:22:33"),result.getCreateAt());
 		verify(changeEntitySharedService,times(1)).setToDiaryRecordForm(diary);
 		verify(diaryRecordMapper,times(1)).findOneDiaryRecord("miho", 0, Date.valueOf("2022-02-15"));
 	}
@@ -170,20 +189,28 @@ public class DiaryRecordServiceTest {
 	
 	@Test
 	void insertDiaryRecordでDiaryRecordを1件追加する() throws Exception{
+		datetime = LocalDateTime.parse("2022-02-15T13:15:52");
+		mock.when(LocalDateTime::now).thenReturn(datetime);
 		when(changeEntitySharedService.setToDiaryRecord(form)).thenReturn(diary);
 		doNothing().when(diaryRecordMapper).insertDiaryRecord(diary);
 		
 		diaryRecordService.insertDiaryRecord(form);
+		assertEquals(LocalDateTime.parse("2022-02-15T13:15:52"),diary.getCreateAt());
+		assertEquals(LocalDateTime.parse("2022-02-15T13:15:52"),diary.getUpdateAt());
 		verify(changeEntitySharedService,times(1)).setToDiaryRecord(form);
 		verify(diaryRecordMapper,times(1)).insertDiaryRecord(diary);
 	}
 	
 	@Test
 	void updateDiaryRecordでDiaryRecordを1件更新する() throws Exception{
+		datetime = LocalDateTime.parse("2022-02-15T16:44:52");
+		mock.when(LocalDateTime::now).thenReturn(datetime);
 		when(changeEntitySharedService.setToDiaryRecord(form)).thenReturn(diary);
 		doNothing().when(diaryRecordMapper).updateDiaryRecord(diary);
 		
 		diaryRecordService.updateDiaryRecord(form);
+		assertEquals(LocalDateTime.parse("2022-02-15T11:22:33"),diary.getCreateAt());
+		assertEquals(LocalDateTime.parse("2022-02-15T16:44:52"),diary.getUpdateAt());
 		verify(changeEntitySharedService,times(1)).setToDiaryRecord(form);
 		verify(diaryRecordMapper,times(1)).updateDiaryRecord(diary);
 	}

@@ -24,7 +24,9 @@ create table IF NOT EXISTS diary_record(
  record2      varchar(255) ,
  record3      varchar(255) ,
  price        int,
- memo         varchar(255),
+ memo         varchar(255) ,
+ createat     datetime     ,
+ updateat     datetime     ,
  primary key(username,categoryid,diaryday),
  CONSTRAINT unique_username_diaryrecord foreign key(username) references account(username)
  );

@@ -76,6 +76,7 @@ public class ChangeEntitySharedServiceTest {
 		form.setRecord3("もやしナムル");
 		form.setPrice(2980);
 		form.setMemo("焼肉屋で外食");
+		form.setCreateAt(datetime);
 		DiaryRecord record = changeEntitySharedService.setToDiaryRecord(form);
 		assertEquals("糸井",record.getUserName());
 		assertEquals(3,record.getCategoryId());
@@ -85,6 +86,7 @@ public class ChangeEntitySharedServiceTest {
 		assertEquals("もやしナムル",record.getRecord3());
 		assertEquals(2980,record.getPrice());
 		assertEquals("焼肉屋で外食",record.getMemo());
+		assertEquals(datetime,record.getCreateAt());
 	}
 	
 	@Test
@@ -98,6 +100,7 @@ public class ChangeEntitySharedServiceTest {
 		record.setRecord3("もやしナムル");
 		record.setPrice(2980);
 		record.setMemo("焼肉屋で外食");
+		record.setCreateAt(datetime);
 		DiaryRecordForm form = changeEntitySharedService.setToDiaryRecordForm(record);
 		assertEquals("糸井",form.getUserName());
 		assertEquals(3,form.getCategoryId());
@@ -107,6 +110,7 @@ public class ChangeEntitySharedServiceTest {
 		assertEquals("もやしナムル",form.getRecord3());
 		assertEquals(2980,form.getPrice());
 		assertEquals("焼肉屋で外食",form.getMemo());
+		assertEquals(datetime,form.getCreateAt());
 	}
 
 }

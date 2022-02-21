@@ -1,6 +1,7 @@
 package com.dining.boyaki.model.service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -86,12 +87,17 @@ public class DiaryRecordService {
     
     @Transactional(readOnly = false)
     public void insertDiaryRecord(DiaryRecordForm form) {
-    	diaryRecordMapper.insertDiaryRecord(changeEntitySharedService.setToDiaryRecord(form));
+    	DiaryRecord diary = changeEntitySharedService.setToDiaryRecord(form);
+    	diary.setCreateAt(LocalDateTime.now());
+    	diary.setUpdateAt(diary.getCreateAt());
+    	diaryRecordMapper.insertDiaryRecord(diary);
     }
     
     @Transactional(readOnly = false)
     public void updateDiaryRecord(DiaryRecordForm form) {
-    	diaryRecordMapper.updateDiaryRecord(changeEntitySharedService.setToDiaryRecord(form));
+    	DiaryRecord diary = changeEntitySharedService.setToDiaryRecord(form);
+    	diary.setUpdateAt(LocalDateTime.now());
+    	diaryRecordMapper.updateDiaryRecord(diary);
     }
     
     @Transactional(readOnly = false)

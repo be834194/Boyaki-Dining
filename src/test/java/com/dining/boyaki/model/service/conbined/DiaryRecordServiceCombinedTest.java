@@ -1,6 +1,7 @@
 package com.dining.boyaki.model.service.conbined;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -9,7 +10,11 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestExecutionListeners;
@@ -30,8 +35,22 @@ import com.dining.boyaki.util.CsvDataSetLoader;
 @Transactional
 public class DiaryRecordServiceCombinedTest {
 	
+	private static LocalDateTime datetime;
+	
+	private static MockedStatic<LocalDateTime> mock;
+	
 	@Autowired
 	DiaryRecordService diaryRecordService;
+	
+	@BeforeEach
+    void setUp() {
+		mock = Mockito.mockStatic(LocalDateTime.class,Mockito.CALLS_REAL_METHODS);
+	}
+	
+	@AfterEach
+    void tearDown() throws Exception {
+        mock.close();
+	}
 	
 	@Test
 	@DatabaseSetup(value = "/service/DiaryRecord/setup/")
@@ -62,6 +81,7 @@ public class DiaryRecordServiceCombinedTest {
 		assertEquals("腕立て伏せ15回×3セット",result.getRecord3());
 		assertEquals(0,result.getPrice());
 		assertNull(result.getMemo());
+		assertEquals(LocalDateTime.parse("2022-02-15T23:30:34"),result.getCreateAt());
 	}
 	
 	@Test
@@ -75,6 +95,8 @@ public class DiaryRecordServiceCombinedTest {
 	@DatabaseSetup(value = "/service/DiaryRecord/setup/")
 	@ExpectedDatabase(value = "/service/DiaryRecord/insert/",table="diary_record")
 	void insertDiaryRecordでDiaryRecordを1件追加する() throws Exception{
+		datetime = LocalDateTime.parse("2022-02-26T14:01:25");
+		mock.when(LocalDateTime::now).thenReturn(datetime);
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setUserName("加藤健");
 		form.setCategoryId(2);
@@ -84,6 +106,7 @@ public class DiaryRecordServiceCombinedTest {
 		form.setRecord3("きのこのマリネ");
 		form.setPrice(0);
 		form.setMemo(null);
+		form.setCreateAt(datetime);
 		diaryRecordService.insertDiaryRecord(form);
 	}
 	
@@ -91,6 +114,8 @@ public class DiaryRecordServiceCombinedTest {
 	@DatabaseSetup(value = "/service/DiaryRecord/setup/")
 	@ExpectedDatabase(value = "/service/DiaryRecord/update/",table="diary_record")
 	void updateDiaryRecordでDiaryRecordを1件更新する() throws Exception{
+		datetime = LocalDateTime.parse("2022-02-02T16:23:33");
+		mock.when(LocalDateTime::now).thenReturn(datetime);
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setUserName("糸井");
 		form.setCategoryId(3);
@@ -100,6 +125,7 @@ public class DiaryRecordServiceCombinedTest {
 		form.setRecord3(null);
 		form.setPrice(320);
 		form.setMemo("冷凍食品");
+		form.setCreateAt(LocalDateTime.parse("2022-02-02T10:22:57"));
 		diaryRecordService.updateDiaryRecord(form);
 	}
 	
@@ -116,6 +142,7 @@ public class DiaryRecordServiceCombinedTest {
 		form.setRecord3("余りもの野菜炒め");
 		form.setPrice(0);
 		form.setMemo(null);
+		form.setCreateAt(LocalDateTime.parse("2022-01-26T18:42:15"));
 		diaryRecordService.deleteDiaryRecord(form);
 	}
 

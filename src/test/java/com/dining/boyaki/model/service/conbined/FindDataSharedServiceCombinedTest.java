@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
@@ -85,6 +86,8 @@ public class FindDataSharedServiceCombinedTest {
 		assertEquals("腕立て伏せ15回×3セット",result.getRecord3());
 		assertEquals(0,result.getPrice());
 		assertNull(result.getMemo());
+		assertEquals(LocalDateTime.parse("2022-02-15T23:30:34"),result.getCreateAt());
+		assertEquals(LocalDateTime.parse("2022-02-15T23:30:34"),result.getUpdateAt());
 	}
 	
 	@Test

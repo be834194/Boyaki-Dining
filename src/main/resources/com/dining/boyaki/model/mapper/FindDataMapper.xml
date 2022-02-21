@@ -32,7 +32,7 @@
     
     <select id="findOneDiaryRecord" resultType="com.dining.boyaki.model.entity.DiaryRecord">
         SELECT
-            USERNAME,CATEGORYID,DIARYDAY,RECORD1,RECORD2,RECORD3,PRICE,MEMO
+            USERNAME,CATEGORYID,DIARYDAY,RECORD1,RECORD2,RECORD3,PRICE,MEMO,CREATEAT,UPDATEAT
         FROM
             DIARY_RECORD
         WHERE

@@ -1,5 +1,6 @@
 package com.dining.boyaki.model.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class DiaryRecord {
@@ -19,6 +20,10 @@ public class DiaryRecord {
 	private int price;
 	
 	private String memo;
+	
+	private LocalDateTime createAt;
+	
+	private LocalDateTime updateAt;
 
 	public String getUserName() {
 		return userName;
@@ -82,6 +87,22 @@ public class DiaryRecord {
 
 	public void setMemo(String memo) {
 		this.memo = memo;
+	}
+
+	public LocalDateTime getCreateAt() {
+		return createAt;
+	}
+
+	public void setCreateAt(LocalDateTime createAt) {
+		this.createAt = createAt;
+	}
+
+	public LocalDateTime getUpdateAt() {
+		return updateAt;
+	}
+
+	public void setUpdateAt(LocalDateTime updateAt) {
+		this.updateAt = updateAt;
 	}
 
 }

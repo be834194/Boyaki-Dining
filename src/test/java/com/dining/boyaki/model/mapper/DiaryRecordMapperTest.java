@@ -2,6 +2,8 @@ package com.dining.boyaki.model.mapper;
 
 import java.util.List;
 import java.sql.Date;
+import java.time.LocalDateTime;
+
 import static org.junit.Assert.assertEquals;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -58,14 +60,16 @@ public class DiaryRecordMapperTest {
 	@DatabaseSetup(value = "/mapper/DiaryRecord/setup/")
 	void findOneDiaryRecordsで一つの投稿を取得する() throws Exception{
 		DiaryRecord records= diaryRecordMapper.findOneDiaryRecord("miho",1,Date.valueOf("2022-01-26"));
-		assertEquals(records.getUserName(),"miho");
-		assertEquals(records.getCategoryId(),1);
-		assertEquals(records.getDiaryDay(),Date.valueOf("2022-01-26"));
-		assertEquals(records.getRecord1(),"グラノーラ");
-		assertEquals(records.getRecord2(),null);
-		assertEquals(records.getRecord3(),"ヨーグルト");
-		assertEquals(records.getPrice(),0);
-		assertEquals(records.getMemo(),null);
+		assertEquals("miho",records.getUserName());
+		assertEquals(1,records.getCategoryId());
+		assertEquals(Date.valueOf("2022-01-26"),records.getDiaryDay());
+		assertEquals("グラノーラ",records.getRecord1());
+		assertEquals(null,records.getRecord2());
+		assertEquals("ヨーグルト",records.getRecord3());
+		assertEquals(0,records.getPrice());
+		assertEquals(null,records.getMemo());
+		assertEquals(LocalDateTime.parse("2022-01-26T09:55:41"),records.getCreateAt());
+		assertEquals(LocalDateTime.parse("2022-01-26T09:55:41"),records.getUpdateAt());
 	}
 	
 	@Test
@@ -81,6 +85,8 @@ public class DiaryRecordMapperTest {
 		record.setRecord3("きのこのマリネ");
 		record.setPrice(0);
 		record.setMemo(null);
+		record.setCreateAt(LocalDateTime.parse("2022-02-26T14:01:25"));
+		record.setUpdateAt(LocalDateTime.parse("2022-02-26T14:01:25"));
 		diaryRecordMapper.insertDiaryRecord(record);
 	}
 	
@@ -97,6 +103,8 @@ public class DiaryRecordMapperTest {
 		record.setRecord3(null);
 		record.setPrice(320);
 		record.setMemo("冷凍食品");
+		record.setCreateAt(LocalDateTime.parse("2022-02-02T10:22:57"));
+		record.setUpdateAt(LocalDateTime.parse("2022-02-02T16:23:33"));
 		diaryRecordMapper.updateDiaryRecord(record);
 	}
 	
