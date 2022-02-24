@@ -30,7 +30,7 @@ public class RestCalendarController {
         try {
         	jsonMsg =  mapper.writerWithDefaultPrettyPrinter().writeValueAsString(records);
         } catch(JsonProcessingException e){
-        	//return "Commom/404";
+        	e.printStackTrace();
         }
         return jsonMsg;
 	}

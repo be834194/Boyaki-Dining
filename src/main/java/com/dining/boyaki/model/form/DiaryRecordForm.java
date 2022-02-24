@@ -31,6 +31,7 @@ public class DiaryRecordForm {
 	
 	private String memo;
 	
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createAt;
 
 	public String getUserName() {

@@ -41,7 +41,7 @@
             #{updateAt})
     </insert>
     
-    <update id="updateDiaryRecord">
+    <update id="updateDiaryRecord" parameterType="com.dining.boyaki.model.entity.DiaryRecord">
         UPDATE
             DIARY_RECORD
         SET

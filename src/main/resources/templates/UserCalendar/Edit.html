@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>食事記録編集画面</title>
+<meta charset="UTF-8">
+<script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+<h1>トップページ</h1>
+<a th:href="@{/index/mypage}">マイページへ</a>
+
+<form th:action="@{/index/record/commit}" method="POST" th:object="${diaryRecordForm}">
+<p th:text="${message}"><p>
+<div id="category">
+    <div>
+        <label for="cateogryId">カテゴリ</label>
+        <select id="categoryId" name="categoryId" v-model="vueId" v-on:click="doDisabled">
+        <option th:each="list:${lists}"
+                th:value="${list.categoryId}" th:text="${list.categoryName}"
+                th:selected="${list.categoryId} == *{categoryId}">
+                </option>
+        </select>
+        <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" th:errorclass="err"></div>
+    </div>
+    <div>
+        <label for="diaryDay">日付</label> 
+        <input type="date" id="diaryDay" name="diaryDay" th:field="*{diaryDay}" v-on:click="doDisabled">
+        <div th:if="${#fields.hasErrors('diaryDay')}" th:errors="*{diaryDay}" th:errorclass="err"></div>
+    </div>
+    <div>
+        <label for="record1">
+            <div v-if='vueId != 4'>主食</div>
+            <div v-else>飲酒</div>
+        </label> 
+            <input type="text" id="record1" name="record1" th:field="*{record1}" v-on:click="doDisabled">
+            <div th:if="${#fields.hasErrors('record1')}" th:errors="*{record1}" th:errorclass="err"></div>
+    </div>
+    <div>
+        <label for="record2">
+            <div v-if='vueId != 4'>主菜</div>
+            <div v-else>間食</div>
+        </label> 
+        <input type="text" id="record2" name="record2" th:field="*{record2}" v-on:click="doDisabled">
+        <div th:if="${#fields.hasErrors('record2')}" th:errors="*{record2}" th:errorclass="err"></div>
+    </div>
+    <div>
+        <label for="record3">
+        　　　　<div v-if='vueId != 4'>副菜</div>
+        　　　　<div v-else>運動</div>
+        </label> 
+        <input type="text" id="record3" name="record3" th:field="*{record3}" v-on:click="doDisabled">
+        <div th:if="${#fields.hasErrors('record3')}" th:errors="*{record3}" th:errorclass="err"></div>
+    </div>
+    <div>
+    　　　　<label for="price">金額</label> 
+        <input type="number" id="price" name="price" th:field="*{price}" v-on:click="doDisabled">
+    </div>
+    <div>
+    　　　　<label for="memo">メモ</label> 
+        <input type="textarea" id="memo" name="memo" th:field="*{memo}" v-on:click="doDisabled">
+    </div>
+    <div>
+        <input type="hidden" id="createAt" name="createAt" th:field="*{createAt}">
+    </div>
+    <button type="submit" id="update" name="update" value="update">保存</button>
+    <button type="submit" id="delete" name="delete" value="delete" v-bind:disabled="disabled">削除</button>
+</div>
+</form>
+
+<script>
+var getId = document.getElementById('categoryId').value;
+var category = {
+	data(){
+		return{
+			vueId:getId,
+			disabled:false
+		}
+	},
+	methods:{
+		doDisabled(){
+			this.disabled = true
+		}
+	}
+};
+Vue.createApp(category).mount('#category');
+</script>
+</body>
+
+</html>
