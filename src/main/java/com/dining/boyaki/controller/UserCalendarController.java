@@ -1,7 +1,7 @@
 package com.dining.boyaki.controller;
 
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
+import java.util.Date;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -44,7 +44,7 @@ public class UserCalendarController {
 	}
 	
 	@GetMapping("/index/create")
-	public String showUserCreateContent(@ModelAttribute DiaryRecordForm form,Model model) {
+	public String showCreateContent(@ModelAttribute DiaryRecordForm form,Model model) {
 		model.addAttribute("lists", DiaryRecordCategory.values());
 		return "UserCalendar/Create";
 	}
@@ -74,16 +74,13 @@ public class UserCalendarController {
 			                          @PathVariable("diaryDay")String diaryDay,
 			                          Model model) throws Exception{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		DiaryRecordForm form;
-		try{
-			form = diaryRecordService.findOneDiaryRecord(details.getUsername(), id, format.parse(diaryDay));
-		} catch(ParseException error) {
-			error.printStackTrace();
-			return "Common/404";
-		}
+		Date parsedDate =  format.parse(diaryDay);
+
+		DiaryRecordForm form = diaryRecordService.findOneDiaryRecord(details.getUsername(), id, parsedDate);
 		if(form == null) {
 			return "Common/404";
 		}
+		
 		model.addAttribute("diaryRecordForm", form);
 		model.addAttribute("lists", DiaryRecordCategory.values());
 		return "UserCalendar/Edit";
@@ -97,12 +94,14 @@ public class UserCalendarController {
 			model.addAttribute("lists", DiaryRecordCategory.values());
 			return "UserCalendar/Edit";
 		}
+		
 		DiaryRecordForm exist = diaryRecordService.findOneDiaryRecord(details.getUsername(), form.getCategoryId(), form.getDiaryDay());
 		if(exist != null && exist != null && !exist.getCreateAt().equals(form.getCreateAt()) ) {
 			model.addAttribute("lists", DiaryRecordCategory.values());
 			model.addAttribute("message","既に同じカテゴリ、同じ日付で登録されています");
 			return "UserCalendar/Create";
 		}
+		
 		form.setUserName(details.getUsername());
 		diaryRecordService.updateDiaryRecord(form);
 		return "redirect:/index";
