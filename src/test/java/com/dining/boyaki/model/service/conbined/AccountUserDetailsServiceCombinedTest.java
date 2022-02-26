@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.model.entity.AccountUserDetails;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 @SpringBootTest
 @Transactional
@@ -20,6 +21,7 @@ public class AccountUserDetailsServiceCombinedTest {
 	AccountUserDetailsService accountUserDetailsService;
 	
 	@Test
+	@DatabaseSetup(value="/service/AccountUserDetails/setup/")
     void loadUserByUsernameでユーザが一人見つかる() throws Exception{
 		AccountUserDetails details = (AccountUserDetails)accountUserDetailsService.loadUserByUsername("加藤健");
 		assertEquals(true,details instanceof AccountUserDetails);
@@ -30,6 +32,7 @@ public class AccountUserDetailsServiceCombinedTest {
 	}
 	
 	@Test
+	@DatabaseSetup(value="/service/AccountUserDetails/setup/")
     void loadUserByUsernameでユーザが見つからない場合に例外を投げる() throws Exception{
 		try{
 			accountUserDetailsService.loadUserByUsername("加藤健");

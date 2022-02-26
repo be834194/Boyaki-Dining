@@ -1,2 +1,3 @@
 account
 password_history
+diary_record
