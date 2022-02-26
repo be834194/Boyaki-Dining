@@ -264,7 +264,8 @@ public class UserCalendarControllerTest {
 	                       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 	               .andExpect(status().is2xxSuccessful())
 			       .andExpect(model().attributeHasFieldErrors("diaryRecordForm"
-			    		   ,"diaryDay","record1","record2","record3"));
+			    		   ,"diaryDay","record1","record2","record3"))
+			       .andExpect(view().name("UserCalendar/Edit"));
 			verify(diaryRecordService,times(0)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
 		}
@@ -292,6 +293,7 @@ public class UserCalendarControllerTest {
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
 		}
 	}
+	
 	@Test
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
 	void deleteContentで食事記録を削除する() throws Exception{

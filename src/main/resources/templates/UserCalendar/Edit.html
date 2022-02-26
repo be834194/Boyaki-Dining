@@ -61,7 +61,7 @@
         <input type="textarea" id="memo" name="memo" th:field="*{memo}" v-on:click="doDisabled">
     </div>
     <div>
-        <input type="text" id="createAt" name="createAt" th:field="*{createAt}">
+        <input type="hidden" id="createAt" name="createAt" th:field="*{createAt}">
     </div>
     <button type="submit" id="update" name="update" value="update">保存</button>
     <button type="submit" id="delete" name="delete" value="delete" v-bind:disabled="disabled">削除</button>

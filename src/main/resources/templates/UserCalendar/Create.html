@@ -17,8 +17,7 @@
             <label for="cateogryId">カテゴリ</label> 
             <select id="categoryId" name="categoryId" v-model="vueId">
             <option th:each="list:${lists}" 
-                    th:value="${list.categoryId}" th:text="${list.categoryName}"
-                    th:selected="${list.categoryId == selectedId}"></option>
+                    th:value="${list.categoryId}" th:text="${list.categoryName}"></option>
             </select>
             <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" th:errorclass="err"></div>
         </div>
