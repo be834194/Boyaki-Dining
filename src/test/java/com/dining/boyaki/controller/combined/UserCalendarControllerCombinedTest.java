@@ -22,9 +22,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
@@ -35,18 +38,31 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dining.boyaki.config.BeanConfig;
+import com.dining.boyaki.config.SuccessHandler;
+import com.dining.boyaki.config.WebSecurityConfig;
+import com.dining.boyaki.controller.UserCalendarController;
 import com.dining.boyaki.model.entity.DiaryRecordCategory;
 import com.dining.boyaki.model.form.DiaryRecordForm;
+import com.dining.boyaki.model.service.AccountUserDetailsService;
+import com.dining.boyaki.model.service.ChangeEntitySharedService;
+import com.dining.boyaki.model.service.DiaryRecordService;
 import com.dining.boyaki.util.CsvDataSetLoader;
 import com.dining.boyaki.util.WithMockCustomUser;
 
+@AutoConfigureMockMvc
+@AutoConfigureMybatis
 @DbUnitConfiguration(dataSetLoader = CsvDataSetLoader.class)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
 	                     TransactionalTestExecutionListener.class,
 	                     DbUnitTestExecutionListener.class,
 	                     WithSecurityContextTestExecutionListener.class})
-@AutoConfigureMockMvc
-@SpringBootTest
+@WebMvcTest(controllers = UserCalendarController.class,
+includeFilters = @ComponentScan.Filter
+                (type = FilterType.ASSIGNABLE_TYPE,
+                 value = {AccountUserDetailsService.class,BeanConfig.class,
+		                  SuccessHandler.class,WebSecurityConfig.class,
+		                  ChangeEntitySharedService.class,DiaryRecordService.class}))
 @Transactional
 public class UserCalendarControllerCombinedTest {
 	
@@ -101,11 +117,13 @@ public class UserCalendarControllerCombinedTest {
 		form.setMemo(null);
 		datetime = LocalDateTime.of(2022, 2, 26, 14, 01, 25);
 		mock.when(LocalDateTime::now).thenReturn(datetime);
+		
 		mockMvc.perform(post("/index/create/insert")
 		           	   .flashAttr("diaryRecordForm", form)
 		               .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 		               .with(SecurityMockMvcRequestPostProcessors.csrf()))
 			   .andExpect(status().is3xxRedirection())
+			   .andExpect(model().hasNoErrors())
 	           .andExpect(redirectedUrl("/index"));
 		}
 	
@@ -118,6 +136,7 @@ public class UserCalendarControllerCombinedTest {
 		form.setRecord1(null);
 		form.setRecord2(null);
 		form.setRecord3(null);
+		
 		mockMvc.perform(post("/index/create/insert")
    		       		   .flashAttr("diaryRecordForm", form)
 		   		       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -140,6 +159,7 @@ public class UserCalendarControllerCombinedTest {
 		form.setRecord3("きのこのマリネ");
 		form.setPrice(0);
 		form.setMemo(null);
+		
 		mockMvc.perform(post("/index/create/insert")
 				       .flashAttr("diaryRecordForm", form)
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -206,6 +226,7 @@ public class UserCalendarControllerCombinedTest {
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 	           .andExpect(status().is3xxRedirection())
+	           .andExpect(model().hasNoErrors())
 	           .andExpect(redirectedUrl("/index"));
 	}
 	
@@ -218,6 +239,7 @@ public class UserCalendarControllerCombinedTest {
 		form.setRecord1(null);
 		form.setRecord2(null);
 		form.setRecord3(null);
+		
 		mockMvc.perform(post("/index/record/commit")
 		               .flashAttr("diaryRecordForm", form)
 		               .param("update", "update")

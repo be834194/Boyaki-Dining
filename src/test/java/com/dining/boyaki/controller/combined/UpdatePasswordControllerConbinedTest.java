@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
+
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
@@ -22,7 +24,9 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.TestExecutionListeners;
@@ -31,15 +35,31 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dining.boyaki.config.BeanConfig;
+import com.dining.boyaki.config.SuccessHandler;
+import com.dining.boyaki.config.WebSecurityConfig;
+import com.dining.boyaki.controller.UpdatePasswordController;
+import com.dining.boyaki.model.form.validation.ExistMailValidator;
 import com.dining.boyaki.model.form.RegisterForm;
+import com.dining.boyaki.model.service.AccountUserDetailsService;
+import com.dining.boyaki.model.service.ChangeEntitySharedService;
+import com.dining.boyaki.model.service.FindDataSharedService;
+import com.dining.boyaki.model.service.UpdatePasswordService;
 import com.dining.boyaki.util.CsvDataSetLoader;
 
+@AutoConfigureMockMvc
+@AutoConfigureMybatis
 @DbUnitConfiguration(dataSetLoader = CsvDataSetLoader.class)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
 	                     TransactionalTestExecutionListener.class,
 	                     DbUnitTestExecutionListener.class})
-@AutoConfigureMockMvc
-@SpringBootTest
+@WebMvcTest(controllers = UpdatePasswordController.class,
+			includeFilters = @ComponentScan.Filter
+			                (type = FilterType.ASSIGNABLE_TYPE,
+			                 value = {AccountUserDetailsService.class,BeanConfig.class,
+					                  SuccessHandler.class,WebSecurityConfig.class,
+					                  ChangeEntitySharedService.class,UpdatePasswordService.class,
+					                  FindDataSharedService.class,ExistMailValidator.class}))
 @Transactional
 public class UpdatePasswordControllerConbinedTest {
 	
@@ -65,6 +85,7 @@ public class UpdatePasswordControllerConbinedTest {
 	@Test
 	void showResettingPasswordでPW更新画面が表示される() throws Exception{
     	this.mockMvc.perform(get("/resetpassword"))
+    	            .andExpect(status().is2xxSuccessful())
     	            .andExpect(view().name("Login/ResettingPassword"))
     	            .andExpect(model().attributeExists("registerForm"));
     }
