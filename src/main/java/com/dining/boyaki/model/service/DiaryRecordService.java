@@ -57,7 +57,7 @@ public class DiaryRecordService {
 			case 4:
 				calendar.setTitle
 				("<a href=\"/index/record/" + calendar.getStart() + "/4\">" 
-				 +"飲酒ー間食ー運動" + "</a>");
+				 +"飲酒-間食-運動" + "</a>");
 				break;
 			}
 			calendarRecords.add(calendar);

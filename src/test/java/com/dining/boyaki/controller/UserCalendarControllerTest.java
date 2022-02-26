@@ -288,7 +288,7 @@ public class UserCalendarControllerTest {
 	               .andExpect(status().is2xxSuccessful())
 	               .andExpect(model().hasNoErrors())
 	               .andExpect(model().attribute("message", "既に同じカテゴリ、同じ日付で登録されています"))
-	               .andExpect(view().name("UserCalendar/Create"));
+	               .andExpect(view().name("UserCalendar/Edit"));
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
 		}

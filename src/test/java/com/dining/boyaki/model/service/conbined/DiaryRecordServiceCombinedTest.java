@@ -65,7 +65,7 @@ public class DiaryRecordServiceCombinedTest {
 		assertEquals("<a href=\"/index/record/2022-01-26/3\">夕食:チキンステーキ</a>",calendarRecords.get(2).getTitle());
 		assertEquals("2022-01-26",calendarRecords.get(2).getStart());
 		assertEquals("2022-01-26",calendarRecords.get(2).getEnd());
-		assertEquals("<a href=\"/index/record/2022-02-15/4\">飲酒ー間食ー運動</a>",calendarRecords.get(3).getTitle());
+		assertEquals("<a href=\"/index/record/2022-02-15/4\">飲酒-間食-運動</a>",calendarRecords.get(3).getTitle());
 		assertEquals("2022-02-15",calendarRecords.get(3).getStart());
 		assertEquals("2022-02-15",calendarRecords.get(3).getEnd());	
 	}

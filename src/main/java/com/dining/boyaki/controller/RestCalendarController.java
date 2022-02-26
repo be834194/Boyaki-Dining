@@ -22,16 +22,14 @@ public class RestCalendarController {
 		this.diaryRecordService = diaryRecordService;
 	}
 	
-	@GetMapping(value = "/all")
-    public String getEvents(@AuthenticationPrincipal AccountUserDetails details) {
+	@GetMapping(value = "/all",produces="application/json;charset=UTF-8")
+    public String getCalendarRecord(@AuthenticationPrincipal AccountUserDetails details) throws JsonProcessingException{
         String jsonMsg = null;
         List<CalendarRecord> records = diaryRecordService.findAllCalendarRecords(details.getUsername());
+        
         ObjectMapper mapper = new ObjectMapper();
-        try {
-        	jsonMsg =  mapper.writerWithDefaultPrettyPrinter().writeValueAsString(records);
-        } catch(JsonProcessingException e){
-        	e.printStackTrace();
-        }
+        jsonMsg =  mapper.writerWithDefaultPrettyPrinter().writeValueAsString(records);
+        
         return jsonMsg;
 	}
 

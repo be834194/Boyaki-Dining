@@ -251,7 +251,7 @@ public class UserCalendarControllerCombinedTest {
 			   .andExpect(status().is2xxSuccessful())
 			   .andExpect(model().hasNoErrors())
 			   .andExpect(model().attribute("message", "既に同じカテゴリ、同じ日付で登録されています"))
-			   .andExpect(view().name("UserCalendar/Create"));
+			   .andExpect(view().name("UserCalendar/Edit"));
 	}
 	
 	@Test

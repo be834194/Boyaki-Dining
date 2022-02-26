@@ -99,7 +99,7 @@ public class UserCalendarController {
 		if(exist != null && exist != null && !exist.getCreateAt().equals(form.getCreateAt()) ) {
 			model.addAttribute("lists", DiaryRecordCategory.values());
 			model.addAttribute("message","既に同じカテゴリ、同じ日付で登録されています");
-			return "UserCalendar/Create";
+			return "UserCalendar/Edit";
 		}
 		
 		form.setUserName(details.getUsername());

@@ -150,7 +150,7 @@ public class DiaryRecordServiceTest {
 		assertEquals("<a href=\"/index/record/2022-02-18/3\">夕食:牛丼</a>",calendarRecords.get(2).getTitle());
 		assertEquals("2022-02-18",calendarRecords.get(2).getStart());
 		assertEquals("2022-02-18",calendarRecords.get(2).getEnd());
-		assertEquals("<a href=\"/index/record/2022-02-18/4\">飲酒ー間食ー運動</a>",calendarRecords.get(3).getTitle());
+		assertEquals("<a href=\"/index/record/2022-02-18/4\">飲酒-間食-運動</a>",calendarRecords.get(3).getTitle());
 		assertEquals("2022-02-18",calendarRecords.get(3).getStart());
 		assertEquals("2022-02-18",calendarRecords.get(3).getEnd());
 		verify(diaryRecordMapper,times(1)).findAllDiaryRecords("加藤健");
