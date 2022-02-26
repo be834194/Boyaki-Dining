@@ -19,7 +19,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -32,7 +31,6 @@ import com.dining.boyaki.model.form.RegisterForm;
 import com.dining.boyaki.model.form.validation.UniqueUsernameValidator;
 import com.dining.boyaki.model.service.RegistrationService;
 
-@AutoConfigureMybatis
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
 public class RegistrationControllerTest {
@@ -60,6 +58,7 @@ public class RegistrationControllerTest {
 	@Test
 	void showRegistrationで新規登録画面が表示される() throws Exception{
     	this.mockMvc.perform(get("/registration"))
+    	            .andExpect(status().is2xxSuccessful())
     	            .andExpect(view().name("Login/Registration"))
     	            .andExpect(model().attributeExists("registerForm"));
     }
@@ -78,6 +77,7 @@ public class RegistrationControllerTest {
 				            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				            .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		            .andExpect(status().is3xxRedirection())
+		            .andExpect(model().hasNoErrors())
 		            .andExpect(redirectedUrl("/login"))
 		            .andExpect(flash().attribute("register", "ユーザ登録が完了しました"));
 		verify(registrationService,times(1)).insertAccount(form);

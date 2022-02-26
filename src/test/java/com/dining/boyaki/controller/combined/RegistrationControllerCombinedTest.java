@@ -37,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
-import com.dining.boyaki.config.WebSecurityConfig;
 import com.dining.boyaki.controller.RegistrationController;
 import com.dining.boyaki.model.form.RegisterForm;
 import com.dining.boyaki.model.form.validation.UniqueMailValidator;
@@ -57,8 +56,7 @@ import com.dining.boyaki.util.CsvDataSetLoader;
 @WebMvcTest(controllers = RegistrationController.class,
 			includeFilters = @ComponentScan.Filter
 			                (type = FilterType.ASSIGNABLE_TYPE,
-			                 value = {AccountUserDetailsService.class,BeanConfig.class,
-				                      SuccessHandler.class,WebSecurityConfig.class,
+			                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
 			                          ChangeEntitySharedService.class,RegistrationService.class,
 			                          FindDataSharedService.class,
 			                          UniqueMailValidator.class,UniqueUsernameValidator.class}))

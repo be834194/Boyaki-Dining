@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
-import com.dining.boyaki.config.WebSecurityConfig;
 import com.dining.boyaki.controller.RestCalendarController;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
 import com.dining.boyaki.model.service.ChangeEntitySharedService;
@@ -45,9 +44,8 @@ import com.dining.boyaki.util.WithMockCustomUser;
 @WebMvcTest(controllers = RestCalendarController.class,
             includeFilters = @ComponentScan.Filter
                             (type = FilterType.ASSIGNABLE_TYPE,
-                             value = {AccountUserDetailsService.class,BeanConfig.class,
-		                              SuccessHandler.class,WebSecurityConfig.class,
-		                              ChangeEntitySharedService.class,DiaryRecordService.class}))
+                             value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
+                            		  ChangeEntitySharedService.class,DiaryRecordService.class}))
 @Transactional
 public class RestCalendarControllerCombinedTest {
 	

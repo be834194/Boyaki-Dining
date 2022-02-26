@@ -57,6 +57,7 @@ public class UpdatePasswordControllerTest {
 	@Test
 	void showResettingPasswordでPW更新画面が表示される() throws Exception{
     	this.mockMvc.perform(get("/resetpassword"))
+    	            .andExpect(status().is2xxSuccessful())
     	            .andExpect(view().name("Login/ResettingPassword"))
     	            .andExpect(model().attributeExists("registerForm"));
     }

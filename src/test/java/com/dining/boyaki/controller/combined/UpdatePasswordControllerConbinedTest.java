@@ -37,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
-import com.dining.boyaki.config.WebSecurityConfig;
 import com.dining.boyaki.controller.UpdatePasswordController;
 import com.dining.boyaki.model.form.validation.ExistMailValidator;
 import com.dining.boyaki.model.form.RegisterForm;
@@ -56,10 +55,9 @@ import com.dining.boyaki.util.CsvDataSetLoader;
 @WebMvcTest(controllers = UpdatePasswordController.class,
 			includeFilters = @ComponentScan.Filter
 			                (type = FilterType.ASSIGNABLE_TYPE,
-			                 value = {AccountUserDetailsService.class,BeanConfig.class,
-					                  SuccessHandler.class,WebSecurityConfig.class,
-					                  ChangeEntitySharedService.class,UpdatePasswordService.class,
-					                  FindDataSharedService.class,ExistMailValidator.class}))
+			                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
+			                		  ChangeEntitySharedService.class,UpdatePasswordService.class,
+			                		  FindDataSharedService.class,ExistMailValidator.class}))
 @Transactional
 public class UpdatePasswordControllerConbinedTest {
 	

@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
-import com.dining.boyaki.config.WebSecurityConfig;
 import com.dining.boyaki.controller.UserCalendarController;
 import com.dining.boyaki.model.entity.DiaryRecordCategory;
 import com.dining.boyaki.model.form.DiaryRecordForm;
@@ -58,11 +57,10 @@ import com.dining.boyaki.util.WithMockCustomUser;
 	                     DbUnitTestExecutionListener.class,
 	                     WithSecurityContextTestExecutionListener.class})
 @WebMvcTest(controllers = UserCalendarController.class,
-includeFilters = @ComponentScan.Filter
-                (type = FilterType.ASSIGNABLE_TYPE,
-                 value = {AccountUserDetailsService.class,BeanConfig.class,
-		                  SuccessHandler.class,WebSecurityConfig.class,
-		                  ChangeEntitySharedService.class,DiaryRecordService.class}))
+			includeFilters = @ComponentScan.Filter
+			                (type = FilterType.ASSIGNABLE_TYPE,
+			                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
+					                  ChangeEntitySharedService.class,DiaryRecordService.class}))
 @Transactional
 public class UserCalendarControllerCombinedTest {
 	

@@ -8,18 +8,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
+import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-@SpringBootTest
+import com.dining.boyaki.config.BeanConfig;
+import com.dining.boyaki.config.SuccessHandler;
+import com.dining.boyaki.model.service.AccountUserDetailsService;
+
 @AutoConfigureMockMvc
-@Transactional
+@AutoConfigureMybatis
+@WebMvcTest(controllers = AccessDeniedController.class,
+			includeFilters = @ComponentScan.Filter
+							(type = FilterType.ASSIGNABLE_TYPE,
+							 value = {AccountUserDetailsService.class,BeanConfig.class,
+							          SuccessHandler.class}))
 public class AccessDeniedControllerTest {
 	
 	@Autowired
@@ -31,10 +41,9 @@ public class AccessDeniedControllerTest {
 	@BeforeEach()
 	void setUp() {
 		MockitoAnnotations.openMocks(this);
-		this.mockMvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
+				                      .apply(springSecurity())
+				                      .build();
 	}
 	
 	@Test
