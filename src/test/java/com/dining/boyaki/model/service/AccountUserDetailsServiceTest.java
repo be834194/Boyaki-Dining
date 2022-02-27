@@ -47,15 +47,17 @@ public class AccountUserDetailsServiceTest {
 		assertEquals(details.getUsername(),"加藤健");
 		assertEquals(details.getPassword(),"pinballs");
 		assertEquals(details.getAuthorities().toString(),"[ROLE_USER]");
+		verify(loginmapper,times(1)).findAccount("加藤健");
 	}
 	
 	@Test
     void loadUserByUsernameでユーザが見つからない場合に例外を投げる() throws Exception{
 		try{
-			accountUserDetailsService.loadUserByUsername("加藤健");
+			accountUserDetailsService.loadUserByUsername("佐藤健");
 		} catch(UsernameNotFoundException e) {
 			assertEquals(e.getMessage(),"User not found.");
 		}
+		verify(loginmapper,times(1)).findAccount("佐藤健");
 	}
 
 }

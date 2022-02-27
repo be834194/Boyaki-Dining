@@ -31,6 +31,7 @@ public class DiaryRecordService {
 	public List<CalendarRecord> findAllCalendarRecords(String userName) {
 		List<DiaryRecord> diaryRecords = diaryRecordMapper.findAllDiaryRecords(userName);
 		List<CalendarRecord> calendarRecords = new ArrayList<CalendarRecord>();
+		
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
 		for(int i = 0; i < diaryRecords.size(); i++) {
 			DiaryRecord diary = diaryRecords.get(i);

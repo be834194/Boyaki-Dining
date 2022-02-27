@@ -26,9 +26,9 @@ public class AccountUserDetailsServiceCombinedTest {
 		AccountUserDetails details = (AccountUserDetails)accountUserDetailsService.loadUserByUsername("加藤健");
 		assertEquals(true,details instanceof AccountUserDetails);
 		assertNotNull(details.getAccount());
-		assertEquals(details.getUsername(),"加藤健");
-		assertEquals(details.getPassword(),"$2a$10$56/AV51uDcWs7qsdHD98U.IdXVkae9CrrvtKbNaj8sJNaRGsvNBqK");
-		assertEquals(details.getAuthorities().toString(),"[ROLE_USER]");
+		assertEquals("加藤健",details.getUsername());
+		assertEquals("$2a$10$56/AV51uDcWs7qsdHD98U.IdXVkae9CrrvtKbNaj8sJNaRGsvNBqK",details.getPassword());
+		assertEquals("[ROLE_USER]",details.getAuthorities().toString());
 	}
 	
 	@Test

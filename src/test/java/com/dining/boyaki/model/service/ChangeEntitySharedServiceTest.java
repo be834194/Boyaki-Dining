@@ -45,11 +45,12 @@ public class ChangeEntitySharedServiceTest {
 		form.setPassword("encodedPassword");
 		form.setMail("north-east@gmail.com");
 		form.setConfirmPassword("sun-flan-sis");
+		
 		Account account = changeEntitySharedService.setToAccount(form);
-		assertEquals(account.getUserName(),"マクベイ");
-		assertEquals(account.getPassword(),"encodedPassword");
-		assertEquals(account.getMail(),"north-east@gmail.com");
-		assertEquals(account.getRole(),"ROLE_USER");
+		assertEquals("マクベイ",account.getUserName());
+		assertEquals("encodedPassword",account.getPassword());
+		assertEquals("north-east@gmail.com",account.getMail());
+		assertEquals("ROLE_USER",account.getRole());
 	}
 	
 	@Test
@@ -59,10 +60,11 @@ public class ChangeEntitySharedServiceTest {
 		form.setPassword("encodedPassword");
 		form.setMail("north-east@gmail.com");
 		form.setConfirmPassword("sun-flan-sis");
+		
 		PasswordHistory history = changeEntitySharedService.setToPasswordHistory(form);
-		assertEquals(history.getUserName(),"マクベイ");
-		assertEquals(history.getPassword(),"encodedPassword");
-		assertEquals(history.getUseDay(),datetime);
+		assertEquals("マクベイ",history.getUserName());
+		assertEquals("encodedPassword",history.getPassword());
+		assertEquals(datetime,history.getUseDay());
 	}
 	
 	@Test
@@ -77,6 +79,7 @@ public class ChangeEntitySharedServiceTest {
 		form.setPrice(2980);
 		form.setMemo("焼肉屋で外食");
 		form.setCreateAt(datetime);
+		
 		DiaryRecord record = changeEntitySharedService.setToDiaryRecord(form);
 		assertEquals("糸井",record.getUserName());
 		assertEquals(3,record.getCategoryId());
@@ -101,6 +104,7 @@ public class ChangeEntitySharedServiceTest {
 		record.setPrice(2980);
 		record.setMemo("焼肉屋で外食");
 		record.setCreateAt(datetime);
+		
 		DiaryRecordForm form = changeEntitySharedService.setToDiaryRecordForm(record);
 		assertEquals("糸井",form.getUserName());
 		assertEquals(3,form.getCategoryId());

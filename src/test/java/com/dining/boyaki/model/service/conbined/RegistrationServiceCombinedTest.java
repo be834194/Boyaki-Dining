@@ -50,7 +50,6 @@ public class RegistrationServiceCombinedTest {
 	@AfterEach //mockStaticのモック化の解除
     void tearDown() throws Exception {
         mock.close();
-    
 	}
 	
 	@Test
