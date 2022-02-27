@@ -45,6 +45,7 @@ public class UpdatePasswordServiceCombinedTest {
 		mock = Mockito.mockStatic(LocalDateTime.class,Mockito.CALLS_REAL_METHODS);
 		mock.when(LocalDateTime::now).thenReturn(datetime);
 	}
+	
 	@AfterEach //mockStaticのモック化の解除
     void tearDown() throws Exception {
         mock.close();

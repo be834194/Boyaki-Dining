@@ -1,12 +1,11 @@
 package com.dining.boyaki.model.form.validation.combined;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,7 +39,7 @@ public class UniqueUsernameValidatorCombinedTest {
 	void validateでユーザ名が重複せずエラーが発生しない() throws Exception{
 		form.setUserName("マクベイ");
 		uniqueUsernameValidator.validate(form, bindingResult);
-		assertNull(bindingResult.getFieldError());
+		assertEquals(0,bindingResult.getFieldErrorCount());
 	}
 	
 	@Test
@@ -48,6 +47,7 @@ public class UniqueUsernameValidatorCombinedTest {
 	void validateでユーザ名が重複してエラーが発生する() throws Exception{
 		form.setUserName("糸井");
 		uniqueUsernameValidator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("userName")
 				                .toString().contains("入力されたユーザ名は既に使われています"));
 	}

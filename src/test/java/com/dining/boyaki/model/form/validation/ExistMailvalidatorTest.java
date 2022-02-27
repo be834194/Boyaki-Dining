@@ -1,7 +1,7 @@
 package com.dining.boyaki.model.form.validation;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,7 +42,7 @@ public class ExistMailValidatorTest {
 		when(findDataSharedService.findMail("miho@gmail.com")).thenReturn("miho@gmail.com");
 		
 		existMailvalidator.validate(form, bindingResult);
-		assertNull(bindingResult.getFieldError());
+		assertEquals(0,bindingResult.getFieldErrorCount());
 		verify(findDataSharedService,times(1)).findMail("miho@gmail.com");
 	}
 	
@@ -52,6 +52,7 @@ public class ExistMailValidatorTest {
 		when(findDataSharedService.findMail("disney@gmail.com")).thenReturn(null);
 		
 		existMailvalidator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("mail")
 				                .toString().contains("入力されたメールアドレスは登録されていません"));
 		verify(findDataSharedService,times(1)).findMail("disney@gmail.com");

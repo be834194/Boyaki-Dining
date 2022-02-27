@@ -7,10 +7,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import org.junit.jupiter.api.Test;
+import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
@@ -18,20 +25,27 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dining.boyaki.config.BeanConfig;
+import com.dining.boyaki.config.SuccessHandler;
+import com.dining.boyaki.controller.RestCalendarController;
+import com.dining.boyaki.model.service.AccountUserDetailsService;
+import com.dining.boyaki.model.service.ChangeEntitySharedService;
+import com.dining.boyaki.model.service.DiaryRecordService;
 import com.dining.boyaki.util.CsvDataSetLoader;
 import com.dining.boyaki.util.WithMockCustomUser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.springtestdbunit.DbUnitTestExecutionListener;
-import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 
+@AutoConfigureMockMvc
+@AutoConfigureMybatis
 @DbUnitConfiguration(dataSetLoader = CsvDataSetLoader.class)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
 	                     TransactionalTestExecutionListener.class,
 	                     DbUnitTestExecutionListener.class,
 	                     WithSecurityContextTestExecutionListener.class})
-@AutoConfigureMockMvc
-@SpringBootTest
+@WebMvcTest(controllers = RestCalendarController.class,
+            includeFilters = @ComponentScan.Filter
+                            (type = FilterType.ASSIGNABLE_TYPE,
+                             value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
+                            		  ChangeEntitySharedService.class,DiaryRecordService.class}))
 @Transactional
 public class RestCalendarControllerCombinedTest {
 	

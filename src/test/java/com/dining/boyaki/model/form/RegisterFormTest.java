@@ -1,7 +1,7 @@
 package com.dining.boyaki.model.form;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -19,6 +19,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
+import com.dining.boyaki.model.form.validation.ExistMailValidator;
 import com.dining.boyaki.model.form.validation.UniqueMailValidator;
 import com.dining.boyaki.model.form.validation.UniqueUsernameValidator;
 import com.dining.boyaki.util.CsvDataSetLoader;
@@ -35,13 +36,16 @@ public class RegisterFormTest {
 	Validator validator;
 	
 	@Autowired
+	ExistMailValidator existMailValidator;
+	
+	@Autowired
 	UniqueMailValidator uniqueMailValidator;
 	
 	@Autowired
 	UniqueUsernameValidator uniqueUsernameValidator;
 	
 	RegisterForm form = new RegisterForm();
-	
+	                                            //ターゲット,ターゲットオブジェクトの名前
 	BindingResult bindingResult = new BindException(form,"RegistrationForm");
 	
 	@Test
@@ -51,12 +55,15 @@ public class RegisterFormTest {
 		form.setPassword("hogetaro");
 		form.setConfirmPassword("hogetaro");
 		form.setMail("disney@gmail.com");
+		
 		validator.validate(form, bindingResult);
-		assertNull(bindingResult.getFieldError());
+		assertEquals(0,bindingResult.getFieldErrorCount());
+		
 		uniqueMailValidator.validate(form, bindingResult);
-		assertNull(bindingResult.getFieldError());
+		assertEquals(0,bindingResult.getFieldErrorCount());
+		
 		uniqueUsernameValidator.validate(form, bindingResult);
-		assertNull(bindingResult.getFieldError());
+		assertEquals(0,bindingResult.getFieldErrorCount());
 	}
 	
 	@ParameterizedTest
@@ -67,7 +74,9 @@ public class RegisterFormTest {
 		form.setMail("");
 		form.setPassword("pass");
 		form.setConfirmPassword("");
+		
 		validator.validate(form, bindingResult);
+		assertEquals(4,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("userName")
 				                .toString().contains("ユーザ名は2字以上15字以内で作成してください"));
 		assertTrue(bindingResult.getFieldError("mail")
@@ -84,7 +93,9 @@ public class RegisterFormTest {
 		form.setPassword("hogetaro");
 		form.setConfirmPassword("hogetaro");
 		form.setMail("メールアドレス");
+		
 		validator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("mail")
                                 .toString().contains("メールアドレスの形式で入力してください"));
 	}
@@ -95,7 +106,9 @@ public class RegisterFormTest {
 		form.setPassword("pinballs");
 		form.setConfirmPassword("hogehoge");
 		form.setMail("example@ezweb.ne.jp");
+		
 		validator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("confirmPassword")
                                 .toString().contains("パスワードが一致していません"));
 	}
@@ -107,13 +120,36 @@ public class RegisterFormTest {
 		form.setPassword("pinballs");
 		form.setConfirmPassword("pinballs");
 		form.setMail("example@ezweb.ne.jp");
+		
 		validator.validate(form, bindingResult);
+		assertEquals(0,bindingResult.getFieldErrorCount());
+		
 		uniqueMailValidator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("mail")
 				                .toString().contains("入力されたメールアドレスは既に使われています"));
+		
 		uniqueUsernameValidator.validate(form, bindingResult);
+		assertEquals(2,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("userName")
                                 .toString().contains("入力されたユーザ名は既に使われています"));
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/form/Register/setup/")
+	void メールアドレスが存在しないとフィールドエラー発生() throws Exception{
+		form.setUserName("加藤健");
+		form.setPassword("pinballs");
+		form.setConfirmPassword("pinballs");
+		form.setMail("sakura.spring@gmail.com");
+		
+		validator.validate(form, bindingResult);
+		assertEquals(0,bindingResult.getFieldErrorCount());
+		
+		existMailValidator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
+		assertTrue(bindingResult.getFieldError("mail")
+                                .toString().contains("入力されたメールアドレスは登録されていません"));
 	}
 	
 }

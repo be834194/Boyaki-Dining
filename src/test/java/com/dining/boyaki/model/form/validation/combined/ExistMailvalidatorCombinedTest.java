@@ -1,12 +1,11 @@
 package com.dining.boyaki.model.form.validation.combined;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
-
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,7 +39,7 @@ public class ExistMailvalidatorCombinedTest {
 	void validateでメールアドレスが存在するのでエラーが発生しない() throws Exception{
 		form.setMail("miho@gmail.com");
 		existMailValidator.validate(form, bindingResult);
-		assertNull(bindingResult.getFieldError());
+		assertEquals(0,bindingResult.getFieldErrorCount());
 	}
 	
 	@Test
@@ -48,6 +47,7 @@ public class ExistMailvalidatorCombinedTest {
 	void validateでメールアドレスが取得出来ないのでエラーが発生する() throws Exception{
 		form.setMail("disney@gmail.com");
 		existMailValidator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("mail")
 				                .toString().contains("入力されたメールアドレスは登録されていません"));
 	}

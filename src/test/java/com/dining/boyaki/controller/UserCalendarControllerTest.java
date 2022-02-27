@@ -40,7 +40,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
-import com.dining.boyaki.config.WebSecurityConfig;
 import com.dining.boyaki.model.entity.DiaryRecordCategory;
 import com.dining.boyaki.model.form.DiaryRecordForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
@@ -53,7 +52,7 @@ import com.dining.boyaki.util.WithMockCustomUser;
             includeFilters = @ComponentScan.Filter
                             (type = FilterType.ASSIGNABLE_TYPE,
                              value = {AccountUserDetailsService.class,BeanConfig.class,
-            		                  SuccessHandler.class,WebSecurityConfig.class}))
+            		                  SuccessHandler.class}))
 public class UserCalendarControllerTest {
 	
 	@Autowired
@@ -251,8 +250,6 @@ public class UserCalendarControllerTest {
 			form.setRecord1(null);
 			form.setRecord2(null);
 			form.setRecord3(null);
-			form.setPrice(100);
-			form.setMemo("自販機でコーヒー買った");
 			form.setCreateAt(LocalDateTime.parse("2022-02-23T09:43:28"));
 			
 			when(diaryRecordService.findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"))).thenReturn(form);

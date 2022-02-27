@@ -25,7 +25,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
-import com.dining.boyaki.config.WebSecurityConfig;
 import com.dining.boyaki.model.entity.CalendarRecord;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
 import com.dining.boyaki.model.service.DiaryRecordService;
@@ -37,7 +36,7 @@ import com.dining.boyaki.util.WithMockCustomUser;
             includeFilters = @ComponentScan.Filter
                             (type = FilterType.ASSIGNABLE_TYPE,
                              value = {AccountUserDetailsService.class,BeanConfig.class,
-            		                  SuccessHandler.class,WebSecurityConfig.class}))
+            		                  SuccessHandler.class}))
 public class RestCalendarControllerTest {
 	
 	@Autowired

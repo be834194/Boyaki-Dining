@@ -15,18 +15,30 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.MockitoAnnotations;
-
+import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-@SpringBootTest
+import com.dining.boyaki.config.BeanConfig;
+import com.dining.boyaki.config.SuccessHandler;
+import com.dining.boyaki.model.service.AccountUserDetailsService;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+
 @AutoConfigureMockMvc
+@AutoConfigureMybatis
+@WebMvcTest(controllers = LoginController.class,
+            includeFilters = @ComponentScan.Filter
+                            (type = FilterType.ASSIGNABLE_TYPE,
+                             value = {AccountUserDetailsService.class,BeanConfig.class,
+            		                  SuccessHandler.class}))
 @Transactional
 public class LoginControllerTest {
 	
@@ -49,6 +61,7 @@ public class LoginControllerTest {
     @Test
 	void showloginPageでログイン画面が表示される() throws Exception{
     	this.mockMvc.perform(get("/login"))
+    	            .andExpect(status().is2xxSuccessful())
     	            .andExpect(view().name("Login/Login"));
     }
     
@@ -64,6 +77,7 @@ public class LoginControllerTest {
     }
     
     @Test
+    @DatabaseSetup(value="/controller/Registration/setup/")
 	void ROLE_ADMINがログインに成功するとADMIN用のトップ画面が表示される() throws Exception{
     	this.mockMvc.perform(formLogin("/authenticate")
 	                        .user("username", "admin")
