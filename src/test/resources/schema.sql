@@ -30,3 +30,14 @@ create table IF NOT EXISTS diary_record(
  primary key(username,categoryid,diaryday),
  CONSTRAINT unique_username_diaryrecord foreign key(username) references account(username)
  );
+
+ create table IF NOT EXISTS account_info(
+ username varchar(255) not null,
+ nickname varchar(255) not null,
+ profile  varchar(255) ,
+ status   varchar(255) not null,
+ gender   int          not null,
+ age      int          ,
+ primary key(username),
+ CONSTRAINT unique_username_accountinfo foreign key(username) references account(username)
+ );
