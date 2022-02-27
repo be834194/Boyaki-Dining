@@ -104,6 +104,7 @@ public class LoginControllerTest {
     @ParameterizedTest
 	@CsvSource({"admin,select*fromuser",
 		        "鈴木純也,zyunnzyunn"})
+    @DatabaseSetup(value="/controller/Login/setup/")
 	void PWを間違えたりDBに登録されていないユーザはログインできない(String username,String password) throws Exception{
     	this.mockMvc.perform(formLogin("/authenticate")
 	                        .user("username", username)
@@ -116,6 +117,7 @@ public class LoginControllerTest {
     
     @Test
     @WithMockUser(username="加藤健",authorities= {"ROLE_USER"})
+    @DatabaseSetup(value="/controller/Login/setup/")
     void ログイン済みユーザがログアウトするとログイン画面に戻る() throws Exception{
     	this.mockMvc.perform(logout())
     	            .andExpect(status().isFound())
