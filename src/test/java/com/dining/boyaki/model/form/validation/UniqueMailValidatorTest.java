@@ -1,7 +1,7 @@
 package com.dining.boyaki.model.form.validation;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -42,7 +42,7 @@ public class UniqueMailValidatorTest {
 		when(findDataSharedService.findMail("disney@gmail.com")).thenReturn(null);
 		
 		uniqueMailValidator.validate(form, bindingResult);
-		assertNull(bindingResult.getFieldError());
+		assertEquals(0,bindingResult.getFieldErrorCount());
 		verify(findDataSharedService,times(1)).findMail("disney@gmail.com");
 	}
 	
@@ -52,6 +52,7 @@ public class UniqueMailValidatorTest {
 		when(findDataSharedService.findMail("example@ezweb.ne.jp")).thenReturn("example@ezweb.ne.jp");
 		
 		uniqueMailValidator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("mail")
 				                .toString().contains("入力されたメールアドレスは既に使われています"));
 		verify(findDataSharedService,times(1)).findMail("example@ezweb.ne.jp");

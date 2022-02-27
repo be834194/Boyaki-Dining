@@ -1,7 +1,7 @@
 package com.dining.boyaki.model.form.validation;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -42,7 +42,7 @@ public class UniqueUsernameValidatorTest {
 		when(findDataSharedService.findUserName("マクベイ")).thenReturn(null);
 		
 		uniqueUsernameValidator.validate(form, bindingResult);
-		assertNull(bindingResult.getFieldError());
+		assertEquals(0,bindingResult.getFieldErrorCount());
 		verify(findDataSharedService,times(1)).findUserName("マクベイ");
 	}
 	
@@ -52,6 +52,7 @@ public class UniqueUsernameValidatorTest {
 		when(findDataSharedService.findUserName("糸井")).thenReturn("糸井");
 		
 		uniqueUsernameValidator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("userName")
 				                .toString().contains("入力されたユーザ名は既に使われています"));
 		verify(findDataSharedService,times(1)).findUserName("糸井");
