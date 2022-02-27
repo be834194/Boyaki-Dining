@@ -109,6 +109,7 @@ public class UserCalendarControllerTest {
 		@Test
 		void createContentで食事記録が登録される() throws Exception{
 			when(diaryRecordService.findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"))).thenReturn(null);
+			
 			mockMvc.perform(post("/index/create/insert")
 				           .flashAttr("diaryRecordForm", form)
 				           .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -238,6 +239,7 @@ public class UserCalendarControllerTest {
 					       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		           .andExpect(status().is3xxRedirection())
+		           .andExpect(model().hasNoErrors())
 		           .andExpect(redirectedUrl("/index"));
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
 			verify(diaryRecordService,times(1)).updateDiaryRecord(form);
