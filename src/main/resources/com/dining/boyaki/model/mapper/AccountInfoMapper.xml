@@ -16,4 +16,30 @@
             USERNAME = #{userName}
     </update>
     
+    <update id = "updatePassword" parameterType="com.dining.boyaki.model.entity.Account">
+        UPDATE
+            ACCOUNT
+        SET 
+            PASSWORD = #{password}
+        WHERE 
+            USERNAME = #{userName}
+    </update>
+    
+    <insert id = "insertPasswordHistory" parameterType="com.dining.boyaki.model.entity.Account">
+        INSERT INTO
+            Password_History(USERNAME, PASSWORD, USEDAY)
+        VALUES(
+               #{userName},
+               #{password},
+               #{useDay})
+    </insert>
+    
+    <delete id = "deleteAccount" parameterType = "String">
+        DELETE
+        FROM
+            ACCOUNT
+        WHERE
+            USERNAME = #{userName}
+    </delete>
+    
 </mapper>

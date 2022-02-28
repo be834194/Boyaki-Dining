@@ -13,7 +13,8 @@ create table IF NOT EXISTS password_history(
  password    varchar(255) ,
  useday      datetime     ,
  primary key(username,useday),
- CONSTRAINT unique_username_passwordhistory foreign key(username) references account(username)
+ CONSTRAINT unique_username_passwordhistory 
+            foreign key(username) references account(username) on delete cascade
 );
 
 create table IF NOT EXISTS diary_record(
@@ -28,16 +29,32 @@ create table IF NOT EXISTS diary_record(
  createat     datetime     ,
  updateat     datetime     ,
  primary key(username,categoryid,diaryday),
- CONSTRAINT unique_username_diaryrecord foreign key(username) references account(username)
+ CONSTRAINT unique_username_diaryrecord 
+            foreign key(username) references account(username) on delete cascade
  );
 
  create table IF NOT EXISTS account_info(
  username varchar(255) not null,
- nickname varchar(255) not null,
+ nickname varchar(255) unique,
  profile  varchar(255) ,
- status   varchar(255) not null,
+ status   int          not null,
  gender   int          not null,
  age      int          ,
  primary key(username),
- CONSTRAINT unique_username_accountinfo foreign key(username) references account(username)
+ CONSTRAINT unique_username_accountinfo 
+            foreign key(username) references account(username) on delete cascade
+ );
+ 
+ create table IF NOT EXISTS post(
+ username     varchar(255) not null,
+ nickname     varchar(255) unique,
+ postid       bigint auto_increment,
+ content      varchar(255) not null,
+ postcategory int          not null,
+ createat     datetime,
+ primary key(postid),
+ CONSTRAINT unique_username_post foreign key(username) 
+                                 references account(username) on delete cascade,
+ CONSTRAINT unique_nickname_post foreign key(nickname) 
+                                 references account_info(nickname) on delete cascade on update cascade
  );
