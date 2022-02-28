@@ -37,8 +37,8 @@ create table IF NOT EXISTS diary_record(
  username varchar(255) not null,
  nickname varchar(255) unique,
  profile  varchar(255) ,
- status   int          not null,
- gender   int          not null,
+ status   int          ,
+ gender   int          ,
  age      int          ,
  primary key(username),
  CONSTRAINT unique_username_accountinfo 

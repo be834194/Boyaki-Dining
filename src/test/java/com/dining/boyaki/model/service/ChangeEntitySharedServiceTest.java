@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.dining.boyaki.model.entity.Account;
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.DiaryRecord;
 import com.dining.boyaki.model.entity.PasswordHistory;
 import com.dining.boyaki.model.form.DiaryRecordForm;
@@ -65,6 +66,23 @@ public class ChangeEntitySharedServiceTest {
 		assertEquals("マクベイ",history.getUserName());
 		assertEquals("encodedPassword",history.getPassword());
 		assertEquals(datetime,history.getUseDay());
+	}
+	
+	@Test
+    void setToAccountInfoでRegisterFormをAccountInfoに詰め替える() throws Exception{
+		RegisterForm form = new RegisterForm();
+		form.setUserName("マクベイ");
+		form.setPassword("encodedPassword");
+		form.setMail("north-east@gmail.com");
+		form.setConfirmPassword("sun-flan-sis");
+		
+		AccountInfo info = changeEntitySharedService.setToAccountInfo(form);
+		assertEquals("マクベイ",info.getUserName());
+		assertEquals("マクベイ",info.getNickName());
+		assertEquals(null,info.getProfile());
+		assertEquals(0,info.getStatus());
+		assertEquals(0,info.getGender());
+		assertEquals(20,info.getAge());
 	}
 	
 	@Test

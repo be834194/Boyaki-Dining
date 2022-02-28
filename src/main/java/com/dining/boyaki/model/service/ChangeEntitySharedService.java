@@ -3,6 +3,7 @@ package com.dining.boyaki.model.service;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import com.dining.boyaki.model.entity.Account;
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.DiaryRecord;
 import com.dining.boyaki.model.entity.PasswordHistory;
 import com.dining.boyaki.model.form.DiaryRecordForm;
@@ -26,6 +27,17 @@ public class ChangeEntitySharedService {
 		history.setPassword(form.getPassword());
 		history.setUseDay(LocalDateTime.now());
 		return history;
+	}
+	
+	public AccountInfo setToAccountInfo(RegisterForm form) {
+		AccountInfo info = new AccountInfo();
+		info.setUserName(form.getUserName());
+		info.setNickName(form.getUserName());
+		info.setProfile(null);
+		info.setStatus(0);
+		info.setGender(0);
+		info.setAge(20);
+		return info;
 	}
 	
 	public DiaryRecord setToDiaryRecord(DiaryRecordForm form) {

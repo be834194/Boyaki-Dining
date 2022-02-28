@@ -28,6 +28,7 @@ public class RegistrationService {
 		form.setPassword(passwordEncoder.encode(form.getPassword()));
 		registrationMapper.insertAccount(changeEntitySharedService.setToAccount(form));
 		registrationMapper.insertPasswordHistory(changeEntitySharedService.setToPasswordHistory(form));
+		registrationMapper.insertAccountInfo(changeEntitySharedService.setToAccountInfo(form));
 	}
 
 }
