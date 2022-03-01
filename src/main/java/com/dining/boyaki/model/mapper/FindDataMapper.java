@@ -10,11 +10,12 @@ import com.dining.boyaki.model.entity.DiaryRecord;
 @Mapper
 public interface FindDataMapper {
 	
-	public String findUserName(String userName);
-	public String findUserNameFromMail(String mail);
-	public String findMail(String mail);
+	String findUserName(String userName);
+	String findUserNameFromMail(String mail);
+	String findMail(String mail);
 	DiaryRecord findOneDiaryRecord(@Param("userName")String userName,
                                    @Param("categoryId")int categoryId,
                                    @Param("diaryDay")Date diaryDay);
+	String findNickName(String nickName);
 
 }

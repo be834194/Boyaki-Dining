@@ -40,5 +40,14 @@
         AND CATEGORYID = #{categoryId}
         AND DIARYDAY = #{diaryDay}
     </select>
+    
+    <select id="findNickName" resultType="String" parameterType="String">
+        SELECT
+            NICKNAME
+        FROM
+            ACCOUNT_INFO
+        WHERE
+            NICKNAME = #{nickName}
+    </select>
 
 </mapper>

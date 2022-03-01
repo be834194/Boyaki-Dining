@@ -116,5 +116,21 @@ public class FindDataSharedServiceTest {
 		assertNull(result);
 		verify(findDataMapper,times(1)).findOneDiaryRecord("糸井", 2, Date.valueOf("2022-02-09"));
 	}
+	
+	@Test
+	void findNickNameでニックネームを取得する() throws Exception{
+		when(findDataMapper.findNickName("sigeno")).thenReturn("sigeno");
+		String userName = findDataSharedService.findNickName("sigeno");
+		assertEquals("sigeno",userName);
+		verify(findDataMapper,times(1)).findNickName("sigeno");
+	}
+	
+	@Test
+	void findNickNameでニックネームが見つからない場合はNullが返ってくる() throws Exception{
+		when(findDataMapper.findNickName("hogei")).thenReturn(null);
+		String userName = findDataSharedService.findNickName("hogei");
+		assertNull(userName);
+		verify(findDataMapper,times(1)).findNickName("hogei");
+	}
 
 }

@@ -56,7 +56,7 @@ public class FindDataMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/FindData/setup/")
-	void findMailでメールアドレスを一見見つける() throws Exception{
+	void findMailでメールアドレスを一件見つける() throws Exception{
 		String mail = findDataMapper.findMail("example@ezweb.ne.jp");
 		assertEquals("example@ezweb.ne.jp",mail);
 	}
@@ -75,5 +75,12 @@ public class FindDataMapperTest {
 		assertEquals(null,record.getMemo());
 		assertEquals(LocalDateTime.parse("2022-02-11T21:37:19"),record.getCreateAt());
 		assertEquals(LocalDateTime.parse("2022-02-11T21:37:19"),record.getUpdateAt());
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/mapper/FindData/setup/")
+	void findNickNameでニックネームを1人見つける() throws Exception{
+		String userName = findDataMapper.findNickName("sigeno");
+		assertEquals("sigeno",userName);
 	}
 }

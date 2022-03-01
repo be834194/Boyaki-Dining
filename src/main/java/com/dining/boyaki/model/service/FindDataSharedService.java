@@ -36,4 +36,9 @@ public class FindDataSharedService {
     public DiaryRecord findOneDiaryRecord(String userName,int categoryId,Date diaryDay) {
 		return findDataMapper.findOneDiaryRecord(userName, categoryId, diaryDay);
 	}
+	
+	@Transactional(readOnly = true)
+	public String findNickName(String userName) {
+		return findDataMapper.findNickName(userName);
+	}
 }
