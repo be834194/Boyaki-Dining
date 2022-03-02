@@ -87,6 +87,22 @@ public class RegisterFormTest {
                                 .toString().contains("パスワードが一致していません"));
 	}
 	
+	@ParameterizedTest
+	@CsvSource({"加藤健",
+		        "sigeno"})
+	@DatabaseSetup(value = "/form/Register/setup/")
+	void ユーザ名やニックネームの重複でエラー発生(String userName) throws Exception{
+		form.setUserName(userName);
+		form.setPassword("hogehoge");
+		form.setConfirmPassword("hogehoge");
+		form.setMail("example@ezweb.ne.jp");
+		
+		uniqueUsernameValidator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
+		assertTrue(bindingResult.getFieldError("userName")
+                                .toString().contains("入力されたユーザ名は既に使われています"));
+	}
+	
 	@Test
 	void メール形式でフィールドエラー発生() throws Exception{
 		form.setUserName("竹内");
@@ -115,7 +131,7 @@ public class RegisterFormTest {
 	
 	@Test
 	@DatabaseSetup(value = "/form/Register/setup/")
-	void ユーザ名やメールアドレスの重複でフィールドエラー発生() throws Exception{
+	void メールアドレスの重複でフィールドエラー発生() throws Exception{
 		form.setUserName("加藤健");
 		form.setPassword("pinballs");
 		form.setConfirmPassword("pinballs");
@@ -128,11 +144,6 @@ public class RegisterFormTest {
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("mail")
 				                .toString().contains("入力されたメールアドレスは既に使われています"));
-		
-		uniqueUsernameValidator.validate(form, bindingResult);
-		assertEquals(2,bindingResult.getFieldErrorCount());
-		assertTrue(bindingResult.getFieldError("userName")
-                                .toString().contains("入力されたユーザ名は既に使われています"));
 	}
 	
 	@Test

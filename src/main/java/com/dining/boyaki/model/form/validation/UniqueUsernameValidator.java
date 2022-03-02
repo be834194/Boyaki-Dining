@@ -31,8 +31,15 @@ public class UniqueUsernameValidator implements Validator {
 		String existName = findDataSharedService.findUserName(form.getUserName());
 		if(existName != null) {
 			errors.rejectValue("userName",
+					           "RegisterForm.userName",
+					           "入力されたユーザ名は既に使われています");
+		} else {
+			existName = findDataSharedService.findNickName(form.getUserName());
+			if(existName != null) {
+			errors.rejectValue("userName",
 			                   "RegisterForm.userName",
 			                   "入力されたユーザ名は既に使われています");
+			}
 		}
 	}
 

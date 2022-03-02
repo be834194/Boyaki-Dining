@@ -40,22 +40,40 @@ public class UniqueUsernameValidatorTest {
 	void validateでユーザ名が重複せずエラーが発生しない() throws Exception{
 		form.setUserName("マクベイ");
 		when(findDataSharedService.findUserName("マクベイ")).thenReturn(null);
+		when(findDataSharedService.findNickName("マクベイ")).thenReturn(null);
 		
 		uniqueUsernameValidator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
 		verify(findDataSharedService,times(1)).findUserName("マクベイ");
+		verify(findDataSharedService,times(1)).findNickName("マクベイ");
 	}
 	
 	@Test
 	void validateでユーザ名が重複してエラーが発生する() throws Exception{
 		form.setUserName("糸井");
 		when(findDataSharedService.findUserName("糸井")).thenReturn("糸井");
+		when(findDataSharedService.findNickName("糸井")).thenReturn(null);
 		
 		uniqueUsernameValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("userName")
 				                .toString().contains("入力されたユーザ名は既に使われています"));
 		verify(findDataSharedService,times(1)).findUserName("糸井");
+		verify(findDataSharedService,times(0)).findNickName("糸井");
+	}
+	
+	@Test
+	void validateでニックネームが重複してエラーが発生する() throws Exception{
+		form.setUserName("sigeno");
+		when(findDataSharedService.findUserName("sigeno")).thenReturn(null);
+		when(findDataSharedService.findNickName("sigeno")).thenReturn("sigeno");
+		
+		uniqueUsernameValidator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
+		assertTrue(bindingResult.getFieldError("userName")
+				                .toString().contains("入力されたユーザ名は既に使われています"));
+		verify(findDataSharedService,times(1)).findNickName("sigeno");
+		verify(findDataSharedService,times(1)).findNickName("sigeno");
 	}
 
 }
