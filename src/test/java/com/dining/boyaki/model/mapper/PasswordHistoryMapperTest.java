@@ -41,7 +41,7 @@ public class PasswordHistoryMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/PasswordHistory/setup/")
-	void findUserでユーザ名を取得する() throws Exception{
+	void findPasswordでパスワードを取得する() throws Exception{
 		String password = passwordHistoryMapper.findPassword("miho","miho@gmail.com");
 		assertEquals(password,"ocean-Nu");
 	}
