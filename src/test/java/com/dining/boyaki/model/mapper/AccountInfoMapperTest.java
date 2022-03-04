@@ -43,7 +43,7 @@ public class AccountInfoMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/AccountInfo/setup/")
-	void findAccountInfoでユーザレコードを1件取得する() throws Exception{
+	void findAccountInfoでユーザ情報レコードを1件取得する() throws Exception{
 		AccountInfo info = accountInfoMapper.findAccountInfo("糸井");
 		assertEquals("糸井",info.getUserName());
 		assertEquals("sigeno",info.getNickName());
@@ -94,7 +94,5 @@ public class AccountInfoMapperTest {
 	void deleteAccountでアカウントが削除される() throws Exception{
 		accountInfoMapper.deleteAccount("加藤健");
 	}
-	
-	
 	
 }
