@@ -1,7 +1,8 @@
 package com.dining.boyaki.model.mapper;
 
-import java.time.LocalDateTime;
+import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDateTime;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,18 @@ public class AccountInfoMapperTest {
 	@AfterEach
 	void tearDown() {
 		session.flushStatements();
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/mapper/AccountInfo/setup/")
+	void findAccountInfoでユーザレコードを1件取得する() throws Exception{
+		AccountInfo info = accountInfoMapper.findAccountInfo("糸井");
+		assertEquals("糸井",info.getUserName());
+		assertEquals("sigeno",info.getNickName());
+		assertEquals("今年中に体重5キロ落としたい",info.getProfile());
+		assertEquals(3,info.getStatus());
+		assertEquals(3,info.getGender());
+		assertEquals(21,info.getAge());
 	}
 	
 	@Test

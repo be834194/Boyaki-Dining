@@ -2,6 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dining.boyaki.model.mapper.AccountInfoMapper">
+
+    <select id = "findAccountInfo" resultType="com.dining.boyaki.model.entity.AccountInfo">
+        SELECT
+            USERNAME,NICKNAME,PROFILE,STATUS,GENDER,AGE
+        FROM
+            ACCOUNT_INFO
+        WHERE
+            USERNAME = #{userName}
+    </select>
     
     <update id = "updateAccountInfo" parameterType="com.dining.boyaki.model.entity.AccountInfo">
         UPDATE
