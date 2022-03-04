@@ -1,7 +1,5 @@
 package com.dining.boyaki.model.form;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import com.dining.boyaki.model.form.validation.ConfirmPassword;
@@ -11,8 +9,6 @@ public class PasswordChangeForm {
 	
 	private String userName;
 	
-	@Email(message="メールアドレスの形式で入力してください")
-	@NotEmpty(message="メールアドレスは必須項目です")
 	private String mail;
 	
 	private String oldPassword;
