@@ -20,8 +20,8 @@
 	</div>
 	<div>
 	    <label for="profile">プロフィール</label> 
-	    <input type="textarea" name="profile" id="profile" th:field="*{profile}"
-	    　　　　　　　placeholder="50文字以内でプロフィールを記入してください">
+	    <textarea name="profile" id="profile" th:field="*{profile}" 
+	              placeholder="50文字以内でプロフィールを記入してください"></textarea>
 	    <div th:if="${#fields.hasErrors('profile')}" th:errors="*{profile}" th:errorclass="err"></div>
 	</div>
 	<div>
@@ -49,7 +49,7 @@
 	</div>
 </form>
 
-<a th:href="@{/index/mypage/inactivate}">退会する</a>
+<a th:href="@{/index/mypage/confirm}">退会する</a>
 
 </body>
 </html>
