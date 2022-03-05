@@ -41,9 +41,10 @@
         AND DIARYDAY = #{diaryDay}
     </select>
     
-    <select id="findNickName" resultType="String" parameterType="String">
+    <select id="findNickName" resultType="com.dining.boyaki.model.entity.AccountInfo"
+                              parameterType="String">
         SELECT
-            NICKNAME
+            USERNAME,NICKNAME
         FROM
             ACCOUNT_INFO
         WHERE

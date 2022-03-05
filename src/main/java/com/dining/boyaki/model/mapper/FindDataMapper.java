@@ -5,6 +5,7 @@ import java.util.Date;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.DiaryRecord;
 
 @Mapper
@@ -16,6 +17,6 @@ public interface FindDataMapper {
 	DiaryRecord findOneDiaryRecord(@Param("userName")String userName,
                                    @Param("categoryId")int categoryId,
                                    @Param("diaryDay")Date diaryDay);
-	String findNickName(String nickName);
+	AccountInfo findNickName(String nickName);
 
 }

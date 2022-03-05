@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.form.AccountInfoForm;
 import com.dining.boyaki.model.service.FindDataSharedService;
 
@@ -28,11 +29,18 @@ public class UniqueNickNameValidator implements Validator {
 			return;
 		}
 		
-		String existName = findDataSharedService.findNickName(form.getNickName());
-		if(existName != null) {
-			errors.rejectValue("nickName",
-			                   "AccountInfoForm.nickName",
-			                   "入力されたニックネームは既に使われています");
+		AccountInfo existNames = findDataSharedService.findNickName(form.getNickName());
+		if(existNames != null) {
+			if(existNames.getNickName().equals(form.getNickName()) &&
+			   !existNames.getUserName().equals(form.getUserName())) {
+				errors.rejectValue("nickName",
+				                   "AccountInfoForm.nickName",
+				                   "入力されたニックネームは既に使われています");
+			} else {
+				return;
+			}
+		} else {
+			return;
 		}
 	}
 

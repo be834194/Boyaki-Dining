@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.form.AccountInfoForm;
 import com.dining.boyaki.model.service.FindDataSharedService;
 
@@ -38,6 +39,7 @@ public class UniqueNickNameValidatorTest {
 	
 	@Test
 	void validateでニックネームが重複せずエラーが発生しない() throws Exception{
+		form.setUserName("加藤健");
 		form.setNickName("kenken");
 		when(findDataSharedService.findNickName("kenken")).thenReturn(null);
 		
@@ -47,9 +49,27 @@ public class UniqueNickNameValidatorTest {
 	}
 	
 	@Test
+	void validateでニックネームが重複してユーザ名が一緒ならエラーが発生しない() throws Exception{
+		AccountInfo info = new AccountInfo();
+		info.setUserName("加藤健");
+		info.setNickName("kenken");
+		form.setUserName("加藤健");
+		form.setNickName("kenken");
+		when(findDataSharedService.findNickName("kenken")).thenReturn(info);
+		
+		uniqueNickNameValidator.validate(form, bindingResult);
+		assertEquals(0,bindingResult.getFieldErrorCount());
+		verify(findDataSharedService,times(1)).findNickName("kenken");
+	}
+	
+	@Test
 	void validateでニックネームが重複してエラーが発生する() throws Exception{
+		AccountInfo info = new AccountInfo();
+		info.setUserName("加藤健");
+		info.setNickName("匿名ちゃん");
+		form.setUserName("miho");
 		form.setNickName("匿名ちゃん");
-		when(findDataSharedService.findNickName("匿名ちゃん")).thenReturn("匿名ちゃん");
+		when(findDataSharedService.findNickName("匿名ちゃん")).thenReturn(info);
 		
 		uniqueNickNameValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
