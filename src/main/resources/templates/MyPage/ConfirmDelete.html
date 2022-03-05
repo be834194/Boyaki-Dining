@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>退会確認ページ</title>
+<meta charset="UTF-8">
+</head>
+<body>
+<a th:href="@{/index}">トップページへ</a>
+<p>退会してよろしいですか？</p>
+<form th:action="@{/index/mypage/confirm/delete}" method="post" th:object="${ConfirmDelete}">
+    <div>
+        <input type="hidden" id="userName" name="userName" th:value="*{userName}">    
+　　　　</div>
+	<div>
+	    <button type="submit">退会する</button>
+	</div>
+</form>
+
+</body>
+</html>
