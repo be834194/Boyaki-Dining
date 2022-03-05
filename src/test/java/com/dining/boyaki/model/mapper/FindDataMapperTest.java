@@ -19,6 +19,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.DiaryRecord;
 
 @DbUnitConfiguration(dataSetLoader = CsvDataSetLoader.class)
@@ -80,7 +81,8 @@ public class FindDataMapperTest {
 	@Test
 	@DatabaseSetup(value = "/mapper/FindData/setup/")
 	void findNickNameでニックネームを1人見つける() throws Exception{
-		String userName = findDataMapper.findNickName("sigeno");
-		assertEquals("sigeno",userName);
+		AccountInfo userName = findDataMapper.findNickName("sigeno");
+		assertEquals("糸井",userName.getUserName());
+		assertEquals("sigeno",userName.getNickName());
 	}
 }

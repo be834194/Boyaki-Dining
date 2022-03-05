@@ -1,6 +1,5 @@
 package com.dining.boyaki.controller;
 
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +32,6 @@ public class AccountInfoController {
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
 		binder.addValidators(uniqueNickNameValidator);
 	}
 	

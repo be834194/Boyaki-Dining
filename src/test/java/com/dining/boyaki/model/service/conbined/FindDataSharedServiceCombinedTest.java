@@ -18,6 +18,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.DiaryRecord;
 import com.dining.boyaki.model.service.FindDataSharedService;
 import com.dining.boyaki.util.CsvDataSetLoader;
@@ -100,15 +101,16 @@ public class FindDataSharedServiceCombinedTest {
 	@Test
 	@DatabaseSetup(value = "/service/FindData/setup/")
 	void findNickNameでニックネームを取得する() throws Exception{
-		String userName = findDataSharedService.findNickName("sigeno");
-		assertEquals("sigeno",userName);
+		AccountInfo info = findDataSharedService.findNickName("sigeno");
+		assertEquals("糸井",info.getUserName());
+		assertEquals("sigeno",info.getNickName());
 	}
 	
 	@Test
 	@DatabaseSetup(value = "/service/FindData/setup/")
 	void findNickNameでニックネームが見つからない場合はNullが返ってくる() throws Exception{
-		String userName = findDataSharedService.findNickName("hogei");
-		assertNull(userName);
+		AccountInfo info = findDataSharedService.findNickName("hogei");
+		assertNull(info);
 	}
 
 }

@@ -16,8 +16,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 
-import com.dining.boyaki.model.service.FindDataSharedService;
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.form.RegisterForm;
+import com.dining.boyaki.model.service.FindDataSharedService;
 
 @RunWith(SpringRunner.class)
 public class UniqueUsernameValidatorTest {
@@ -64,9 +65,12 @@ public class UniqueUsernameValidatorTest {
 	
 	@Test
 	void validateでニックネームが重複してエラーが発生する() throws Exception{
+		AccountInfo info = new AccountInfo();
+		info.setUserName("糸井");
+		info.setNickName("sigeno");
 		form.setUserName("sigeno");
 		when(findDataSharedService.findUserName("sigeno")).thenReturn(null);
-		when(findDataSharedService.findNickName("sigeno")).thenReturn("sigeno");
+		when(findDataSharedService.findNickName("sigeno")).thenReturn(info);
 		
 		uniqueUsernameValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());

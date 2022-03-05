@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.form.RegisterForm;
 import com.dining.boyaki.model.service.FindDataSharedService;
 
@@ -34,8 +35,8 @@ public class UniqueUsernameValidator implements Validator {
 					           "RegisterForm.userName",
 					           "入力されたユーザ名は既に使われています");
 		} else {
-			existName = findDataSharedService.findNickName(form.getUserName());
-			if(existName != null) {
+			AccountInfo existNickName = findDataSharedService.findNickName(form.getUserName());
+			if(existNickName != null) {
 			errors.rejectValue("userName",
 			                   "RegisterForm.userName",
 			                   "入力されたユーザ名は既に使われています");

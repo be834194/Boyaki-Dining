@@ -1,13 +1,12 @@
 package com.dining.boyaki.model.form;
 
 import javax.validation.constraints.Size;
-import javax.validation.constraints.NotEmpty;
 
 public class AccountInfoForm {
 	
 	private String userName;
 	
-	@NotEmpty(message="ニックネームは必須項目です")
+	@Size(min=2,max=15,message="ニックネームは2字以上15字以内で作成してください")
 	private String nickName;
 	
 	@Size(max = 50, message="50文字以内で入力してください")
