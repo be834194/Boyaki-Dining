@@ -32,7 +32,7 @@ import com.dining.boyaki.model.service.UpdatePasswordService;
 
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
-public class UpdatePasswordControllerTest {
+public class ForgetPasswordControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -44,12 +44,12 @@ public class UpdatePasswordControllerTest {
 	ExistMailValidator existMailValidator;
 	
 	@InjectMocks
-	UpdatePasswordController updatePasswordController;
+	ForgetPasswordController forgetPasswordController;
 	
 	@BeforeEach
 	void setUp() {
 		MockitoAnnotations.openMocks(this);
-		mockMvc = MockMvcBuilders.standaloneSetup(updatePasswordController)
+		mockMvc = MockMvcBuilders.standaloneSetup(forgetPasswordController)
 				                 .build();
 		when(existMailValidator.supports(any())).thenReturn(true);
 	}

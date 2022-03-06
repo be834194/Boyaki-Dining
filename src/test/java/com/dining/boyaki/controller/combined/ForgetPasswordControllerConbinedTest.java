@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
-import com.dining.boyaki.controller.UpdatePasswordController;
+import com.dining.boyaki.controller.ForgetPasswordController;
 import com.dining.boyaki.model.form.validation.ExistMailValidator;
 import com.dining.boyaki.model.form.RegisterForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
@@ -52,14 +52,14 @@ import com.dining.boyaki.util.CsvDataSetLoader;
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
 	                     TransactionalTestExecutionListener.class,
 	                     DbUnitTestExecutionListener.class})
-@WebMvcTest(controllers = UpdatePasswordController.class,
+@WebMvcTest(controllers = ForgetPasswordController.class,
 			includeFilters = @ComponentScan.Filter
 			                (type = FilterType.ASSIGNABLE_TYPE,
 			                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
 			                		  ChangeEntitySharedService.class,UpdatePasswordService.class,
 			                		  FindDataSharedService.class,ExistMailValidator.class}))
 @Transactional
-public class UpdatePasswordControllerConbinedTest {
+public class ForgetPasswordControllerConbinedTest {
 	
 	private static final LocalDateTime datetime = LocalDateTime.of(2022, 2, 10, 20, 39, 45);
 	
@@ -89,8 +89,8 @@ public class UpdatePasswordControllerConbinedTest {
     }
 	
 	@Test
-	@DatabaseSetup(value="/controller/UpdatePassword/setup/")
-	@ExpectedDatabase(value="/controller/UpdatePassword/update/",assertionMode=DatabaseAssertionMode.NON_STRICT)
+	@DatabaseSetup(value="/controller/ForgetPassword/setup/")
+	@ExpectedDatabase(value="/controller/ForgetPassword/update/",assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void updatePasswordでPW更新後にログイン画面へ遷移する() throws Exception{
 		RegisterForm form = new RegisterForm();
 		form.setMail("miho@gmail.com");
@@ -107,7 +107,7 @@ public class UpdatePasswordControllerConbinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value="/controller/UpdatePassword/setup/")
+	@DatabaseSetup(value="/controller/ForgetPassword/setup/")
 	void updatePasswordでPW更新処理が失敗する() throws Exception{
 		RegisterForm form = new RegisterForm();
 		form.setMail("disney@gmail.com");

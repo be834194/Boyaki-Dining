@@ -2,6 +2,7 @@ package com.dining.boyaki.model.service;
 
 import java.util.Objects;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +18,14 @@ public class AccountInfoService {
 	
 	private final ChangeEntitySharedService changeEntitySharedService;
 	
+	private final PasswordEncoder passwordEncoder;
+	
 	public AccountInfoService(AccountInfoMapper accountInfoMapper,
-			                  ChangeEntitySharedService changeEntitySharedService) {
+			                  ChangeEntitySharedService changeEntitySharedService,
+			                  PasswordEncoder passwordEncoder) {
 		this.accountInfoMapper = accountInfoMapper;
 		this.changeEntitySharedService = changeEntitySharedService;
+		this.passwordEncoder = passwordEncoder;
 	}
 	
 	@Transactional(readOnly = true)
@@ -39,6 +44,7 @@ public class AccountInfoService {
 	
 	@Transactional(readOnly = false)
 	public void updatePassword(PasswordChangeForm form) {
+		form.setPassword(passwordEncoder.encode(form.getPassword()));
 		accountInfoMapper.updatePassword(changeEntitySharedService.setToAccount(form));
 		accountInfoMapper.insertPasswordHistory(changeEntitySharedService.setToPasswordHistory(form));
 	}

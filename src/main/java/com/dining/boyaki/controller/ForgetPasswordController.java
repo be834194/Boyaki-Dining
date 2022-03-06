@@ -16,13 +16,13 @@ import com.dining.boyaki.model.form.validation.ExistMailValidator;
 import com.dining.boyaki.model.service.UpdatePasswordService;
 
 @Controller
-public class UpdatePasswordController {
+public class ForgetPasswordController {
 	
 	private final UpdatePasswordService updatePasswordService;
 	
 	private final ExistMailValidator existMailValidator;
 	
-	public UpdatePasswordController(UpdatePasswordService updatePasswordService,
+	public ForgetPasswordController(UpdatePasswordService updatePasswordService,
 			                           ExistMailValidator existMailValidator) {
 		this.updatePasswordService = updatePasswordService;
 		this.existMailValidator = existMailValidator;

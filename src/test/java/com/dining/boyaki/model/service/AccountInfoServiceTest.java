@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,9 @@ public class AccountInfoServiceTest {
 	
 	@Mock
 	ChangeEntitySharedService changeEntitySharedService;
+	
+	@Mock
+	PasswordEncoder passwordEncoder;
 	
 	@InjectMocks
 	AccountInfoService accountInfoService;
@@ -121,12 +125,14 @@ public class AccountInfoServiceTest {
 		history.setPassword("wonderSong");
 		history.setUseDay(LocalDateTime.now());
 		
+		when(passwordEncoder.encode(form.getPassword())).thenReturn(account.getPassword());
 		when(changeEntitySharedService.setToAccount(form)).thenReturn(account);
 		doNothing().when(accountInfoMapper).updatePassword(account);
 		when(changeEntitySharedService.setToPasswordHistory(form)).thenReturn(history);
 		doNothing().when(accountInfoMapper).insertPasswordHistory(history);
 		
 		accountInfoService.updatePassword(form);
+		verify(passwordEncoder,times(1)).encode(form.getPassword());
 		verify(changeEntitySharedService,times(1)).setToAccount(form);
 		verify(accountInfoMapper,times(1)).updatePassword(account);
 		verify(changeEntitySharedService,times(1)).setToPasswordHistory(form);
