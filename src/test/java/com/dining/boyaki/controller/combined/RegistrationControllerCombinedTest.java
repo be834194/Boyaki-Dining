@@ -18,6 +18,8 @@ import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -108,14 +110,17 @@ public class RegistrationControllerCombinedTest {
 		            .andExpect(redirectedUrl("/login"))
 		            .andExpect(flash().attribute("register", "ユーザ登録が完了しました"));
 	}
-	@Test
+	
+	@ParameterizedTest
+	@CsvSource({"加藤健,example@ezweb.ne.jp",
+		       "sigeno,example@ezweb.ne.jp"})
 	@DatabaseSetup(value="/controller/Registration/setup/")
-	void registで新規登録が失敗する() throws Exception{
+	void registで新規登録が失敗する(String userName,String mail) throws Exception{
 		RegisterForm form = new RegisterForm();
-		form.setUserName("加藤健");
-		form.setMail("example@ezweb.ne.jp");
+		form.setUserName(userName);
+		form.setMail(mail);
 		form.setPassword("");
-		form.setConfirmPassword("sun-flan-sis");
+		form.setConfirmPassword("hogehoge");
 		this.mockMvc.perform(post("/regist")
 				            .flashAttr("registerForm", form)
 				            .contentType(MediaType.APPLICATION_FORM_URLENCODED)

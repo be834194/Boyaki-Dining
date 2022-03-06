@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dining.boyaki.model.mapper.AccountInfoMapper">
+
+    <select id = "findAccountInfo" resultType="com.dining.boyaki.model.entity.AccountInfo">
+        SELECT
+            USERNAME,NICKNAME,PROFILE,STATUS,GENDER,AGE
+        FROM
+            ACCOUNT_INFO
+        WHERE
+            USERNAME = #{userName}
+    </select>
+    
+    <update id = "updateAccountInfo" parameterType="com.dining.boyaki.model.entity.AccountInfo">
+        UPDATE
+            ACCOUNT_INFO
+        SET 
+            NICKNAME = #{nickName},
+            PROFILE = #{profile},
+            STATUS = #{status},
+            GENDER = #{gender},
+            AGE = #{age}
+        WHERE 
+            USERNAME = #{userName}
+    </update>
+    
+    <update id = "updatePassword" parameterType="com.dining.boyaki.model.entity.Account">
+        UPDATE
+            ACCOUNT
+        SET 
+            PASSWORD = #{password}
+        WHERE 
+            USERNAME = #{userName}
+    </update>
+    
+    <insert id = "insertPasswordHistory" parameterType="com.dining.boyaki.model.entity.Account">
+        INSERT INTO
+            Password_History(USERNAME, PASSWORD, USEDAY)
+        VALUES(
+               #{userName},
+               #{password},
+               #{useDay})
+    </insert>
+    
+    <delete id = "deleteAccount" parameterType = "String">
+        DELETE
+        FROM
+            ACCOUNT
+        WHERE
+            USERNAME = #{userName}
+    </delete>
+    
+</mapper>

@@ -51,5 +51,15 @@ public class UniqueUsernameValidatorCombinedTest {
 		assertTrue(bindingResult.getFieldError("userName")
 				                .toString().contains("入力されたユーザ名は既に使われています"));
 	}
+	
+	@Test
+	@DatabaseSetup(value = "/validation/UniqueUsername/setup/")
+	void validateでニックネームが重複してエラーが発生する() throws Exception{
+		form.setUserName("sigeno");
+		uniqueUsernameValidator.validate(form, bindingResult);
+		assertEquals(1,bindingResult.getFieldErrorCount());
+		assertTrue(bindingResult.getFieldError("userName")
+				                .toString().contains("入力されたユーザ名は既に使われています"));
+	}
 
 }

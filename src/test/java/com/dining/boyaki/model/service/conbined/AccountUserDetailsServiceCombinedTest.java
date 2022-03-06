@@ -7,12 +7,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.model.entity.AccountUserDetails;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
+import com.dining.boyaki.util.CsvDataSetLoader;
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 
+@DbUnitConfiguration(dataSetLoader = CsvDataSetLoader.class)
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
+	                     TransactionalTestExecutionListener.class,
+	                     DbUnitTestExecutionListener.class})
 @SpringBootTest
 @Transactional
 public class AccountUserDetailsServiceCombinedTest {
@@ -27,7 +37,7 @@ public class AccountUserDetailsServiceCombinedTest {
 		assertEquals(true,details instanceof AccountUserDetails);
 		assertNotNull(details.getAccount());
 		assertEquals("加藤健",details.getUsername());
-		assertEquals("$2a$10$56/AV51uDcWs7qsdHD98U.IdXVkae9CrrvtKbNaj8sJNaRGsvNBqK",details.getPassword());
+		assertEquals("pinballs",details.getPassword());
 		assertEquals("[ROLE_USER]",details.getAuthorities().toString());
 	}
 	
@@ -35,7 +45,7 @@ public class AccountUserDetailsServiceCombinedTest {
 	@DatabaseSetup(value="/service/AccountUserDetails/setup/")
     void loadUserByUsernameでユーザが見つからない場合に例外を投げる() throws Exception{
 		try{
-			accountUserDetailsService.loadUserByUsername("加藤健");
+			accountUserDetailsService.loadUserByUsername("佐藤健");
 		} catch(UsernameNotFoundException e) {
 			assertEquals(e.getMessage(),"User not found.");
 		}

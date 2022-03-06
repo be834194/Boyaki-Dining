@@ -55,7 +55,7 @@ public class RegistrationServiceCombinedTest {
 	@Test
 	@DatabaseSetup(value="/service/Registration/setup/")
 	@ExpectedDatabase(value="/service/Registration/insert/",assertionMode=DatabaseAssertionMode.NON_STRICT)
-	void insertAccountでユーザとPW変更履歴が1件ずつ登録される() throws Exception{
+	void insertAccountでaccountとpassword_historyとaccount_infoが登録される() throws Exception{
 		RegisterForm form = new RegisterForm();
 		form.setUserName("マクベイ");
 		form.setPassword("sun-flan-sis");

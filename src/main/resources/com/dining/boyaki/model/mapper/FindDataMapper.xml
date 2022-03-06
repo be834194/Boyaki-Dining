@@ -40,5 +40,15 @@
         AND CATEGORYID = #{categoryId}
         AND DIARYDAY = #{diaryDay}
     </select>
+    
+    <select id="findNickName" resultType="com.dining.boyaki.model.entity.AccountInfo"
+                              parameterType="String">
+        SELECT
+            USERNAME,NICKNAME
+        FROM
+            ACCOUNT_INFO
+        WHERE
+            NICKNAME = #{nickName}
+    </select>
 
 </mapper>

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>マイページ</title>
+<meta charset="UTF-8">
+</head>
+<body>
+<a th:href="@{/index}">トップページへ</a>
+
+<form th:action="@{/index/mypage/update}" method="post" th:object="${AccountInfoForm}">
+<p th:text="${message}"></p>
+    <div>
+	    <input type="hidden" name="userName" id="userName" th:field="*{userName}">
+	</div>
+	<div>
+	    <label for="nickName">ニックネーム</label> 
+	    <input type="text" name="nickName" id="nickName" th:field="*{nickName}"
+	    　　　　　　　placeholder="設定したニックネームは他ユーザに表示されます">
+	    <div th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}" th:errorclass="err"></div>
+	</div>
+	<div>
+	    <label for="profile">プロフィール</label> 
+	    <textarea name="profile" id="profile" th:field="*{profile}" 
+	              placeholder="50文字以内でプロフィールを記入してください"></textarea>
+	    <div th:if="${#fields.hasErrors('profile')}" th:errors="*{profile}" th:errorclass="err"></div>
+	</div>
+	<div>
+	    <label for="status">健康状態</label> 
+	    <select id="status" name="status">
+	            <option th:each="status:${statusList}" 
+	                    th:value="${status.statusId}" th:text="${status.statusName}"></option>
+	            </select>
+	</div>
+	<div>
+	    <label for="gender">性別</label> 
+	    <select id="gender" name="gender" th:field="*{gender}">
+	            <option value="0">未設定</option>
+	            <option value="1">男性</option>
+	            <option value="2">女性</option>
+	            <option value="3">なし</option>
+	    </select>
+	</div>
+	<div>
+	    <label for="age">年齢</label> 
+	    <input type="number" id="age" name="age" th:field="*{age}">
+	</div>
+	<div>
+	    <button type="submit">更新する</button>
+	</div>
+</form>
+
+<a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
+<br/>
+<a th:href="@{/index/mypage/confirm}">退会する</a>
+
+</body>
+</html>

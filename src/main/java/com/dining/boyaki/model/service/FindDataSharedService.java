@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.DiaryRecord;
 import com.dining.boyaki.model.mapper.FindDataMapper;
 
@@ -35,5 +36,10 @@ public class FindDataSharedService {
 	@Transactional(readOnly = true)
     public DiaryRecord findOneDiaryRecord(String userName,int categoryId,Date diaryDay) {
 		return findDataMapper.findOneDiaryRecord(userName, categoryId, diaryDay);
+	}
+	
+	@Transactional(readOnly = true)
+	public AccountInfo findNickName(String userName) {
+		return findDataMapper.findNickName(userName);
 	}
 }

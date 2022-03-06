@@ -22,6 +22,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +34,18 @@ import org.springframework.web.context.WebApplicationContext;
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
+import com.dining.boyaki.util.CsvDataSetLoader;
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 
 @AutoConfigureMockMvc
 @AutoConfigureMybatis
+@DbUnitConfiguration(dataSetLoader = CsvDataSetLoader.class)
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
+	                     TransactionalTestExecutionListener.class,
+	                     DbUnitTestExecutionListener.class,
+	                     WithSecurityContextTestExecutionListener.class})
 @WebMvcTest(controllers = LoginController.class,
             includeFilters = @ComponentScan.Filter
                             (type = FilterType.ASSIGNABLE_TYPE,
@@ -66,6 +78,7 @@ public class LoginControllerTest {
     }
     
     @Test
+    @DatabaseSetup(value="/controller/Login/setup/")
 	void ROLE_USERがログインに成功するとUSER用のトップ画面が表示される() throws Exception{
     	this.mockMvc.perform(formLogin("/authenticate")
 	                        .user("username", "加藤健")
@@ -77,7 +90,7 @@ public class LoginControllerTest {
     }
     
     @Test
-    @DatabaseSetup(value="/controller/Registration/setup/")
+    @DatabaseSetup(value="/controller/Login/setup/")
 	void ROLE_ADMINがログインに成功するとADMIN用のトップ画面が表示される() throws Exception{
     	this.mockMvc.perform(formLogin("/authenticate")
 	                        .user("username", "admin")
@@ -91,6 +104,7 @@ public class LoginControllerTest {
     @ParameterizedTest
 	@CsvSource({"admin,select*fromuser",
 		        "鈴木純也,zyunnzyunn"})
+    @DatabaseSetup(value="/controller/Login/setup/")
 	void PWを間違えたりDBに登録されていないユーザはログインできない(String username,String password) throws Exception{
     	this.mockMvc.perform(formLogin("/authenticate")
 	                        .user("username", username)
@@ -103,6 +117,7 @@ public class LoginControllerTest {
     
     @Test
     @WithMockUser(username="加藤健",authorities= {"ROLE_USER"})
+    @DatabaseSetup(value="/controller/Login/setup/")
     void ログイン済みユーザがログアウトするとログイン画面に戻る() throws Exception{
     	this.mockMvc.perform(logout())
     	            .andExpect(status().isFound())

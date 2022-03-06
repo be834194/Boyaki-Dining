@@ -17,6 +17,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.model.entity.Account;
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.PasswordHistory;
 import com.dining.boyaki.util.CsvDataSetLoader;
 
@@ -60,6 +61,20 @@ public class RegistrationMapperTest {
 		history.setPassword("sigeSATO");
 		history.setUseDay(LocalDateTime.parse("2022-02-08T11:00:52"));
 		registrationMapper.insertPasswordHistory(history);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/mapper/Registration/setup/")
+	@ExpectedDatabase(value = "/mapper/Registration/insert/account_info/",table="account_info")
+	void insertAccountInfoでユーザ情報レコードが1件追加される() throws Exception{
+		AccountInfo info = new AccountInfo();
+		info.setUserName("加藤健");
+		info.setNickName("加藤健");
+		info.setProfile("間食が止まらない");
+		info.setStatus(3);
+		info.setGender(1);
+		info.setAge(31);
+		registrationMapper.insertAccountInfo(info);
 	}
 	
 }

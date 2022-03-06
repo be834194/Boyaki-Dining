@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.DiaryRecord;
 import com.dining.boyaki.model.mapper.FindDataMapper;
 
@@ -115,6 +116,26 @@ public class FindDataSharedServiceTest {
 		DiaryRecord result = findDataSharedService.findOneDiaryRecord("糸井", 2, Date.valueOf("2022-02-09"));
 		assertNull(result);
 		verify(findDataMapper,times(1)).findOneDiaryRecord("糸井", 2, Date.valueOf("2022-02-09"));
+	}
+	
+	@Test
+	void findNickNameでニックネームを取得する() throws Exception{
+		AccountInfo info = new AccountInfo();
+		info.setUserName("糸井");
+		info.setNickName("sigeno");
+		when(findDataMapper.findNickName("sigeno")).thenReturn(info);
+		AccountInfo userName = findDataSharedService.findNickName("sigeno");
+		assertEquals("糸井",userName.getUserName());
+		assertEquals("sigeno",userName.getNickName());
+		verify(findDataMapper,times(1)).findNickName("sigeno");
+	}
+	
+	@Test
+	void findNickNameでニックネームが見つからない場合はNullが返ってくる() throws Exception{
+		when(findDataMapper.findNickName("hogei")).thenReturn(null);
+		AccountInfo userName = findDataSharedService.findNickName("hogei");
+		assertNull(userName);
+		verify(findDataMapper,times(1)).findNickName("hogei");
 	}
 
 }

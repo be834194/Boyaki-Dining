@@ -103,7 +103,7 @@ public class UserCalendarControllerCombinedTest {
 	@Test
 	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/UserCalendar/setup/")
-	@ExpectedDatabase(value="/controller/UserCalendar/insert/")
+	@ExpectedDatabase(value="/controller/UserCalendar/insert/",table="diary_record")
 	void createContentで食事記録が登録される() throws Exception{
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setCategoryId(2);
@@ -204,7 +204,7 @@ public class UserCalendarControllerCombinedTest {
 	@Test
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/UserCalendar/setup/")
-	@ExpectedDatabase(value="/controller/UserCalendar/update/")
+	@ExpectedDatabase(value="/controller/UserCalendar/update/",table="diary_record")
 	void updateContentで食事記録を更新する() throws Exception{
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setCategoryId(3);
@@ -277,7 +277,7 @@ public class UserCalendarControllerCombinedTest {
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/UserCalendar/setup/")
-	@ExpectedDatabase(value="/controller/UserCalendar/delete/")
+	@ExpectedDatabase(value="/controller/UserCalendar/delete/",table="diary_record")
 	void deleteContentで食事記録を削除する() throws Exception{
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setCategoryId(3);

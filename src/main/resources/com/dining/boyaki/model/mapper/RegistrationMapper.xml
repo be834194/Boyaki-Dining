@@ -22,4 +22,16 @@
                #{useDay})
     </insert>
     
+    <insert id = "insertAccountInfo" parameterType="com.dining.boyaki.model.entity.AccountInfo">
+        INSERT INTO
+            ACCOUNT_INFO(USERNAME, NICKNAME, PROFILE, STATUS, GENDER, AGE)
+        VALUES(
+               #{userName},
+               #{nickName},
+               #{profile},
+               #{status},
+               #{gender},
+               #{age})
+    </insert>
+    
 </mapper>

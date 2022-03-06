@@ -1,0 +1,5 @@
+username,password,mail,role
+"admin", "select*fomUser","admin@softbank",     "ROLE_ADMIN"
+"miho",  "$2a$10$0EcntVQ/axCer9D4QUu8OORP90YKaKFd0oZrmkhAnbXK6w5I6vG7u","miho@gmail.com",     "ROLE_USER"
+"加藤健","$2a$10$Rz5DknyWh7jXzIuWYFW8UuNC2ODIWAXXmUvEk4RSaSz0NTf9KhMwC","example@ezweb.ne.jp","ROLE_USER"
+"糸井",  "$2a$10$KqnsMHwGGGB22sFt748l5uIVDzi0S6Kld3JdDMbv2h5Dv/TaUVvei","mother@yahoo.co.jp", "ROLE_USER"

@@ -13,9 +13,12 @@ import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.dining.boyaki.model.entity.Account;
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.DiaryRecord;
 import com.dining.boyaki.model.entity.PasswordHistory;
+import com.dining.boyaki.model.form.AccountInfoForm;
 import com.dining.boyaki.model.form.DiaryRecordForm;
+import com.dining.boyaki.model.form.PasswordChangeForm;
 import com.dining.boyaki.model.form.RegisterForm;
 
 @RunWith(SpringRunner.class)
@@ -54,6 +57,22 @@ public class ChangeEntitySharedServiceTest {
 	}
 	
 	@Test
+    void setToAccountでPasswordChangeFormをAccountに詰め替える() throws Exception{
+		PasswordChangeForm form = new PasswordChangeForm();
+		form.setUserName("加藤健");
+		form.setMail("example@ezweb.ne.jp");
+		form.setOldPassword("pinballs");
+		form.setPassword("wonderSong");
+		form.setConfirmPassword("WONDERSONG");
+		
+		Account account = changeEntitySharedService.setToAccount(form);
+		assertEquals("加藤健",account.getUserName());
+		assertEquals("wonderSong",account.getPassword());
+		assertEquals("example@ezweb.ne.jp",account.getMail());
+		assertEquals(null,account.getRole());
+	}
+	
+	@Test
     void setToPasswordHistoryでRegisterFormをPasswordHistoryに詰め替える() throws Exception{
 		RegisterForm form = new RegisterForm();
 		form.setUserName("マクベイ");
@@ -65,6 +84,76 @@ public class ChangeEntitySharedServiceTest {
 		assertEquals("マクベイ",history.getUserName());
 		assertEquals("encodedPassword",history.getPassword());
 		assertEquals(datetime,history.getUseDay());
+	}
+	
+	@Test
+    void setToPasswordHistoryでPasswordChangeFormをPasswordHistoryに詰め替える() throws Exception{
+		PasswordChangeForm form = new PasswordChangeForm();
+		form.setUserName("加藤健");
+		form.setMail("example@ezweb.ne.jp");
+		form.setOldPassword("pinballs");
+		form.setPassword("wonderSong");
+		form.setConfirmPassword("WONDERSONG");
+		
+		PasswordHistory history = changeEntitySharedService.setToPasswordHistory(form);
+		assertEquals("加藤健",history.getUserName());
+		assertEquals("wonderSong",history.getPassword());
+		assertEquals(datetime,history.getUseDay());
+	}
+	
+	@Test
+    void setToAccountInfoでRegisterFormをAccountInfoに詰め替える() throws Exception{
+		RegisterForm form = new RegisterForm();
+		form.setUserName("マクベイ");
+		form.setPassword("encodedPassword");
+		form.setMail("north-east@gmail.com");
+		form.setConfirmPassword("sun-flan-sis");
+		
+		AccountInfo info = changeEntitySharedService.setToAccountInfo(form);
+		assertEquals("マクベイ",info.getUserName());
+		assertEquals("マクベイ",info.getNickName());
+		assertEquals(null,info.getProfile());
+		assertEquals(0,info.getStatus());
+		assertEquals(0,info.getGender());
+		assertEquals(20,info.getAge());
+	}
+	
+	@Test
+    void setToAccountInfoでAccountInfoFormをAccountInfoに詰め替える() throws Exception{
+		AccountInfoForm form = new AccountInfoForm();
+		form.setUserName("miho");
+		form.setNickName("匿名ちゃん");
+		form.setProfile("毎日定時で帰りたい");
+		form.setStatus(0);
+		form.setGender(2);
+		form.setAge(21);
+		
+		AccountInfo info = changeEntitySharedService.setToAccountInfo(form);
+		assertEquals("miho",info.getUserName());
+		assertEquals("匿名ちゃん",info.getNickName());
+		assertEquals("毎日定時で帰りたい",info.getProfile());
+		assertEquals(0,info.getStatus());
+		assertEquals(2,info.getGender());
+		assertEquals(21,info.getAge());
+	}
+	
+	@Test
+    void setToAccountInfoFormでAccountInfoをAccountInfoFormに詰め替える() throws Exception{
+		AccountInfo info = new AccountInfo();
+		info.setUserName("miho");
+		info.setNickName("匿名ちゃん");
+		info.setProfile("毎日定時で帰りたい");
+		info.setStatus(0);
+		info.setGender(2);
+		info.setAge(21);
+		
+		AccountInfoForm form = changeEntitySharedService.setToAccountInfoForm(info);
+		assertEquals("miho",form.getUserName());
+		assertEquals("匿名ちゃん",form.getNickName());
+		assertEquals("毎日定時で帰りたい",form.getProfile());
+		assertEquals(0,form.getStatus());
+		assertEquals(2,form.getGender());
+		assertEquals(21,form.getAge());
 	}
 	
 	@Test
@@ -116,5 +205,5 @@ public class ChangeEntitySharedServiceTest {
 		assertEquals("焼肉屋で外食",form.getMemo());
 		assertEquals(datetime,form.getCreateAt());
 	}
-
+	
 }
