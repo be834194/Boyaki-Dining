@@ -25,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
+import com.dining.boyaki.controller.rest.RestCalendarController;
 import com.dining.boyaki.model.entity.CalendarRecord;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
 import com.dining.boyaki.model.service.DiaryRecordService;
