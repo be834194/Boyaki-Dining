@@ -1,5 +1,5 @@
 account
 account_info
 post
-post_list
+post_category
 status_list

@@ -11,6 +11,16 @@
             USERNAME = #{userName}
     </select>
     
+    <select id = "findProfile" parameterType="String"
+                               resultType="com.dining.boyaki.model.entity.AccountInfo">
+        SELECT
+            NICKNAME,PROFILE,STATUS,GENDER,AGE
+        FROM
+            ACCOUNT_INFO
+        WHERE
+            NICKNAME = #{nickName}
+    </select>
+    
     <insert id = "insertPost" parameterType="com.dining.boyaki.model.entity.Post">
         INSERT INTO
             POST(USERNAME,NICKNAME,CONTENT,POSTCATEGORY,CREATEAT)
@@ -27,7 +37,7 @@
         SELECT
             POST.NICKNAME,
             S_LIST.STATUSNAME,
-            P_LIST.POSTNAME,
+            P_CATEGORY.POSTNAME,
             POST.CONTENT,
             CAST(POST.CREATEAT as VARCHAR) as CREATEAT
         FROM
@@ -36,8 +46,8 @@
               ON   POST.NICKNAME = INFO.NICKNAME
         INNER JOIN STATUS_LIST as S_LIST
               ON   INFO.STATUS = S_LIST.STATUSID
-        INNER JOIN POST_LIST as P_LIST
-              ON  POST.POSTCATEGORY = P_LIST.POSTID
+        INNER JOIN POST_CATEGORY as P_CATEGORY
+              ON  POST.POSTCATEGORY = P_CATEGORY.POSTID
         <where>
             <if test="category != null">
                 <foreach item="categoryId" index="i" collection="category"
@@ -58,7 +68,7 @@
                 </foreach>
             </if>
         </where>
-        ORDER BY POST.CREATEAT
+        ORDER BY POST.CREATEAT DESC
     </select>
     
     <resultMap id="PostRecordResultMap" type="com.dining.boyaki.model.entity.PostRecord">

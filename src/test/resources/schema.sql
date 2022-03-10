@@ -63,7 +63,7 @@ create table IF NOT EXISTS diary_record(
   statusname varchar(255) not null
   );
   
-   create table IF NOT EXISTS post_list(
+   create table IF NOT EXISTS post_category(
   postid int not null,
   postname varchar(255) not null
   );

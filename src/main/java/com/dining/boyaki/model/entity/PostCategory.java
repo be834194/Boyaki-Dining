@@ -7,7 +7,7 @@ public enum PostCategory {
 	LOCABO(2,"糖質"),
 	SALTY(3,"塩分"),
 	TEMPERANCE(4,"禁酒・禁煙"),
-	MUSCLE(5,"筋トレ"),
+	MUSCLE(5,"運動・筋トレ"),
 	LIPIDS(6,"中性脂肪・コレステロール"),
 	URICACID(7,"尿酸値"),
 	BLOOD(8,"血圧");

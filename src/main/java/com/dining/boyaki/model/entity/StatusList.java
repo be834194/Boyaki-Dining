@@ -7,7 +7,7 @@ public enum StatusList {
 	LOCABO(2,"糖質制限中"),
 	SALTY(3,"塩分制限中"),
 	TEMPERANCE(4,"禁酒・禁煙中"),
-	MUSCLE(5,"筋トレ中"),
+	MUSCLE(5,"運動・筋トレ中"),
 	LIPIDS(6,"中性脂肪・コレステロール高め"),
 	URICACID(7,"尿酸値高め"),
 	BLOOD(8,"血圧高め");

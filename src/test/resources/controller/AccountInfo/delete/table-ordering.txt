@@ -3,3 +3,5 @@ password_history
 diary_record
 account_info
 post
+status_list
+post_category
