@@ -4,13 +4,13 @@ public class PostRecord {
 	
 	private String nickName; //postから
 	
-	private String status;   //StatusListから
+	private String status;   //AccountInfo+StatusListから
 	
 	private String postCategory; //PostListから
 	
 	private String content; //Postから
 	
-	private String date;  //Postから
+	private String createAt;  //Postから
 
 	public String getNickName() {
 		return nickName;
@@ -44,12 +44,12 @@ public class PostRecord {
 		this.content = content;
 	}
 
-	public String getDate() {
-		return date;
+	public String getCreateAt() {
+		return createAt;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setCreateAt(String createAt) {
+		this.createAt = createAt;
 	}
 	
 }
