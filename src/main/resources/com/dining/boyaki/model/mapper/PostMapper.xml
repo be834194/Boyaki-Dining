@@ -39,7 +39,7 @@
             S_LIST.STATUSNAME,
             P_CATEGORY.POSTNAME,
             POST.CONTENT,
-            CAST(POST.CREATEAT as VARCHAR) as CREATEAT
+            CAST(POST.CREATEAT as CHAR) as CREATEAT
         FROM
             POST as POST
         INNER JOIN ACCOUNT_INFO as INFO

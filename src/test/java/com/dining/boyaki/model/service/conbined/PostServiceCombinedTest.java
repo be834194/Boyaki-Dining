@@ -165,7 +165,7 @@ public class PostServiceCombinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/mapper/Post/setup/")
+	@DatabaseSetup(value = "/service/Post/setup/")
 	void findProfileでユーザ情報レコードを1件取得する() throws Exception{
 		AccountInfo info = postService.findProfile("匿名");
 		assertEquals("匿名",info.getNickName());
@@ -181,8 +181,8 @@ public class PostServiceCombinedTest {
 		assertEquals(null,result);
 	}
 	@Test
-	@DatabaseSetup(value = "/mapper/Post/setup/")
-	@ExpectedDatabase(value = "/mapper/Post/insert/",table="post")
+	@DatabaseSetup(value = "/service/Post/setup/")
+	@ExpectedDatabase(value = "/service/Post/insert/",table="post")
 	void insertPostで投稿が1件追加される() throws Exception{
 		PostForm form = new PostForm();
 		form.setUserName("miho");

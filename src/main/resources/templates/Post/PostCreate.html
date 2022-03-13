@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+  <title>ぼやく</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+<h1>ぼやく</h1>
+<form th:action="@{/index/boyaki/post/insert}" method="POST" th:object="${postForm}">
+    <input type="hidden" id="userName" name="userName" th:field="*{userName}">
+    <input type="hidden" id="nickName" name="nickName" th:field="*{nickName}">
+    <div>
+	    <label for="postCategory">投稿の分類</label> 
+	    <select id="postCategory" name="postCategory">
+	            <option th:each="list:${postCategory}" 
+	                    th:value="${list.postId}" th:text="${list.postName}"></option>
+	    </select>
+    </div>
+    <div>
+	    <label for="content">投稿内容</label>
+        <textarea id="content" name="content"　th:field="*{content}"></textarea>
+        <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" th:errorclass="err"></div>
+    </div>
+    <div>
+	    <button type="submit">更新する</button>
+	</div>
+</form>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+  <title>ぼやき一覧</title>
+  <meta charset="UTF-8">
+   <meta name="_csrf" th:content="${_csrf.token}"/>
+   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+<h1>投稿一覧</h1>
+<a th:href="@{/index/boyaki/post}">グチをぼやく</a>
+<div id="boyakiApp">
+{{category}}
+{{status}}
+{{keyword}}
+	<div>
+	    <select id="postCategory" name="postCategory" v-model="category">
+            <option th:each="category:${postCategory}" 
+                    th:value="${category.postId}" th:text="${category.postName}"></option>
+        </select>
+        <select id="status" name="status" v-model="status">
+	        <option th:each="status:${statusList}" 
+	                th:value="${status.statusId}" th:text="${status.statusName}"></option>
+	    </select>
+	    <input type="text" id="keyword" name="keyword" v-model="keyword">
+	    
+	    <button type="submit" v-on:click="search">検索</button>
+	</div>
+    <table>
+	    <tr v-for="(value,key) in PostRecords">
+	      <td><!--テンプレートリテラル-->
+	          <a v-bind:href="`/index/boyaki/${value.nickName}`" >{{value.nickName}}</a>
+	      　　　　</td>
+	      <td> {{value.content}} </td>
+	      <td> {{value.createAt}} </td>
+	    </tr>
+	</table>
+</div>
+
+<script>
+var boyakiApp = {
+	data(){
+		return{
+			category:[],
+			status:[],
+			keyword:"",
+			PostRecords:[]
+		}
+	},
+	methods: {
+		getAll(){
+			axios.get('/api/search')
+			.then(response => {
+				this.PostRecords = response.data
+			})
+			.catch(error =>{
+				console.log(error)
+			})
+		},
+		search(){
+			var tokenValue = document.head.querySelector("[name=_csrf]").content;
+			var headerName = document.head.querySelector("[name=_csrf_header]").content;
+	        var header={
+            		'token': tokenValue,
+		            'headerName':headerName
+	           }
+			let params = new FormData()
+            params.append('category', this.category)
+            params.append('status',this.status)
+            params.append('keyword',this.keyword)
+            
+			axios.post('/api/search',params,{header:header})
+			     .then(response => {
+				this.PostRecords = response.data
+			})
+			.catch(error =>{
+				console.log(error)
+			})
+		}
+	},
+	mounted(){
+		this.getAll()
+	}
+}
+Vue.createApp(boyakiApp).mount('#boyakiApp');
+</script>
+</body>
+
+</html>

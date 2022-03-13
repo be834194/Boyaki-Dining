@@ -23,10 +23,10 @@ public class PostService {
 	@Transactional(readOnly = true)
 	public List<PostRecord> searchPostRecord(int[] category,int[] status,
 			                                 String text) {
-		if(category.length == 0) {
+		if(category != null && category.length == 0) {
 			category = null;
 		}
-		if(status.length == 0) {
+		if(status != null && status.length == 0) {
 			status = null;
 		}
 		
@@ -43,7 +43,7 @@ public class PostService {
 		
 		List<PostRecord> records = postMapper
 				                  .searchPostRecord(category,status,content);
-	    return records;
+		return records;
 	}
 	
 	@Transactional(readOnly = true)

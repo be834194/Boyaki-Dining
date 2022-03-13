@@ -2,7 +2,7 @@ package com.dining.boyaki.model.entity;
 
 public enum PostCategory {
 	
-	BOYAKI(0,"グチ、ぼやき"),
+	BOYAKI(0,"グチ・ぼやき"),
 	DIET(1,"ダイエット"),
 	LOCABO(2,"糖質"),
 	SALTY(3,"塩分"),
