@@ -17,27 +17,26 @@
 {{status}}
 {{keyword}}
 	<div>
-	    <select id="postCategory" name="postCategory" v-model="category">
+	    <button type="reset" v-on:click="resetAll">検索値の初期化</button>     
+	    <select id="postCategory" name="postCategory" multiple v-model="category">
             <option th:each="category:${postCategory}" 
                     th:value="${category.postId}" th:text="${category.postName}"></option>
         </select>
-        <select id="status" name="status" v-model="status">
+        <select id="statusList" name="statusList" multiple v-model="status">
 	        <option th:each="status:${statusList}" 
 	                th:value="${status.statusId}" th:text="${status.statusName}"></option>
 	    </select>
-	    <input type="text" id="keyword" name="keyword" v-model="keyword">
+	    <input type="text" id="textkeyword" name="textkeyword" v-model="keyword">
 	    
 	    <button type="submit" v-on:click="search">検索</button>
 	</div>
-    <table>
-	    <tr v-for="(value,key) in PostRecords">
-	      <td><!--テンプレートリテラル-->
-	          <a v-bind:href="`/index/boyaki/${value.nickName}`" >{{value.nickName}}</a>
-	      　　　　</td>
-	      <td> {{value.content}} </td>
-	      <td> {{value.createAt}} </td>
-	    </tr>
-	</table>
+    <div v-for="(value,key) in PostRecords">
+	    <a v-bind:href="`/index/boyaki/${value.nickName}`">{{value.nickName}}</a> さん
+	    <a>:{{value.status}}</a>
+	    <p>{{value.postCategory}}</p>
+	    <p>{{value.content}} <h6> {{value.createAt}}</h6></p>
+	</div>
+	<div ref="observe_element">loading</div>
 </div>
 
 <script>
@@ -47,32 +46,25 @@ var boyakiApp = {
 			category:[],
 			status:[],
 			keyword:"",
-			PostRecords:[]
+			PostRecords:[],
+			observer:null
 		}
 	},
 	methods: {
-		getAll(){
-			axios.get('/api/search')
-			.then(response => {
-				this.PostRecords = response.data
-			})
-			.catch(error =>{
-				console.log(error)
-			})
+		resetAll(){
+			this.category = []
+			this.status = []
+			this.keyword = ""
 		},
 		search(){
 			var tokenValue = document.head.querySelector("[name=_csrf]").content;
-			var headerName = document.head.querySelector("[name=_csrf_header]").content;
-	        var header={
-            		'token': tokenValue,
-		            'headerName':headerName
-	           }
 			let params = new FormData()
             params.append('category', this.category)
             params.append('status',this.status)
             params.append('keyword',this.keyword)
+            params.append('_csrf',tokenValue)
             
-			axios.post('/api/search',params,{header:header})
+			axios.post('/api/search',params)
 			     .then(response => {
 				this.PostRecords = response.data
 			})
@@ -82,7 +74,15 @@ var boyakiApp = {
 		}
 	},
 	mounted(){
-		this.getAll()
+		this.search()
+		this.observer = new IntersectionObserver((entries) => {
+            const entry = entries[0];  //監視対象の要素が配列で入っている
+            if (entry && entry.isIntersecting) { //isIntersectingがtrue:ブラウザに入っている
+              console.log('画面に入ったよ');
+            }
+          });
+        const observe_element = this.$refs.observe_element;
+        this.observer.observe(observe_element);
 	}
 }
 Vue.createApp(boyakiApp).mount('#boyakiApp');

@@ -2,8 +2,6 @@ package com.dining.boyaki.controller.rest;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,20 +21,6 @@ public class RestPostRecordController {
 	public RestPostRecordController(PostService postService) {
 		this.postService = postService;
 	}
-	
-	/*@GetMapping(value = "/api/boyaki/all")
-    public String getAllPostRecord() throws JsonProcessingException{
-		String jsonMsg = null;
-		int[]category = null;
-		int[]status = null;
-		String text = null;
-		List<PostRecord>records =  postService.searchPostRecord(category,status,text);
-		
-		ObjectMapper mapper = new ObjectMapper();
-        jsonMsg =  mapper.writerWithDefaultPrettyPrinter().writeValueAsString(records);
-        
-        return jsonMsg;
-	}*/
 	
 	@RequestMapping(value = "/api/search",method= {RequestMethod.GET,RequestMethod.POST},
 			        produces = "application/json; charset=utf-8")
