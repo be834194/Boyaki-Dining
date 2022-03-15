@@ -69,6 +69,8 @@
             </if>
         </where>
         ORDER BY POST.CREATEAT DESC
+        LIMIT #{pageable.pageSize}
+        OFFSET #{pageable.offset}
     </select>
     
     <resultMap id="PostRecordResultMap" type="com.dining.boyaki.model.entity.PostRecord">

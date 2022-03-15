@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
@@ -65,19 +64,24 @@ public class PostServiceCombinedTest {
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
 	void searchPostRecordで全件取得する() throws Exception{
-        List<PostRecord> record = postService.searchPostRecord(category,status,text);
-        assertEquals(7,record.size());
+        List<PostRecord> record = postService.searchPostRecord(category,status,text,0);
+        assertEquals(5,record.size());
         assertEquals("2022-03-03 18:41:36",record.get(0).getCreateAt());
 		assertEquals("2022-03-02 12:55:08",record.get(1).getCreateAt());
-		assertEquals("2022-03-01 12:07:27",record.get(5).getCreateAt());
-		assertEquals("2022-02-28 23:30:34",record.get(6).getCreateAt());
+		assertEquals("2022-03-02 00:02:49",record.get(3).getCreateAt());
+		assertEquals("2022-03-01 18:29:51",record.get(4).getCreateAt());
+		
+		record = postService.searchPostRecord(category,status,text,1);
+		assertEquals(2,record.size());
+		assertEquals("2022-03-01 12:07:27",record.get(0).getCreateAt());
+		assertEquals("2022-02-28 23:30:34",record.get(1).getCreateAt());
 	}
 	
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
 	void searchPostRecordで一つの条件で絞り込んで取得する() throws Exception{
 		category = new int[]{5,3};
-		List<PostRecord> record = postService.searchPostRecord(category,status,text);
+		List<PostRecord> record = postService.searchPostRecord(category,status,text,0);
 		assertEquals(2,record.size());
 		assertEquals("運動・筋トレ",record.get(0).getPostCategory());
 		assertEquals("2022-03-02 00:02:49",record.get(0).getCreateAt());
@@ -86,7 +90,7 @@ public class PostServiceCombinedTest {
 		
 		category = new int[] {};
 		status = new int[]{1,7};
-		record = postService.searchPostRecord(category,status,text);
+		record = postService.searchPostRecord(category,status,text,0);
 		assertEquals(5,record.size());
 		assertEquals("尿酸値高め",record.get(0).getStatus());
 		assertEquals("2022-03-03 18:41:36",record.get(0).getCreateAt());
@@ -97,7 +101,7 @@ public class PostServiceCombinedTest {
 		
 		status = new int[] {};
 		text = "改善";
-		record = postService.searchPostRecord(category,status,text);
+		record = postService.searchPostRecord(category,status,text,0);
 		assertEquals(1,record.size());
 		assertTrue(record.get(0).getContent().contains("改善"));
 		assertEquals("2022-03-02 12:55:08",record.get(0).getCreateAt());
@@ -109,7 +113,7 @@ public class PostServiceCombinedTest {
 		category = new int[]{3,7};
 		status = new int[]{1,6};
 		
-		List<PostRecord> record = postService.searchPostRecord(category,status,text);
+		List<PostRecord> record = postService.searchPostRecord(category,status,text,0);
 		assertEquals(1,record.size());
 		assertEquals("ダイエット中",record.get(0).getStatus());
 		assertEquals("塩分",record.get(0).getPostCategory());
@@ -117,7 +121,7 @@ public class PostServiceCombinedTest {
 		
 		category = new int[]{};
 		text = "検査";
-		record = postService.searchPostRecord(category,status,text);
+		record = postService.searchPostRecord(category,status,text,0);
 		assertEquals(1,record.size());
 		assertEquals("ダイエット中",record.get(0).getStatus());
 		assertTrue(record.get(0).getContent().contains("検査"));
@@ -125,7 +129,7 @@ public class PostServiceCombinedTest {
 		
 		category = new int[]{3,7};
 		status = new int[]{};
-		record = postService.searchPostRecord(category,status,text);
+		record = postService.searchPostRecord(category,status,text,0);
 		assertEquals(2,record.size());
 		assertEquals("尿酸値",record.get(0).getPostCategory());
 		assertTrue(record.get(0).getContent().contains("検査"));
@@ -141,7 +145,7 @@ public class PostServiceCombinedTest {
 		category = new int[]{1,2,3};
 		status = new int[]{1,7};
 		text = "ダイエット　効果";
-		List<PostRecord> record = postService.searchPostRecord(category, status, text);
+		List<PostRecord> record = postService.searchPostRecord(category, status, text,0);
 		assertEquals(1,record.size());
 		assertEquals("ダイエット",record.get(0).getPostCategory());
 		assertEquals("尿酸値高め",record.get(0).getStatus());

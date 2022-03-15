@@ -28,7 +28,7 @@
 	    </select>
 	    <input type="text" id="textkeyword" name="textkeyword" v-model="keyword">
 	    
-	    <button type="submit" v-on:click="search">検索</button>
+	    <button type="submit" v-on:click="startSearch">検索</button>
 	</div>
     <div v-for="(value,key) in PostRecords">
 	    <a v-bind:href="`/index/boyaki/${value.nickName}`">{{value.nickName}}</a> さん
@@ -46,7 +46,9 @@ var boyakiApp = {
 			category:[],
 			status:[],
 			keyword:"",
+			page:0,
 			PostRecords:[],
+			observe_element:null,
 			observer:null
 		}
 	},
@@ -56,33 +58,49 @@ var boyakiApp = {
 			this.status = []
 			this.keyword = ""
 		},
+		startSearch(){
+			this.page = 0
+			this.PostRecords = []
+			this.observer.observe(this.observe_element)
+			this.search()
+		},
 		search(){
 			var tokenValue = document.head.querySelector("[name=_csrf]").content;
 			let params = new FormData()
             params.append('category', this.category)
             params.append('status',this.status)
             params.append('keyword',this.keyword)
+            params.append('page',this.page)
             params.append('_csrf',tokenValue)
             
 			axios.post('/api/search',params)
-			     .then(response => {
-				this.PostRecords = response.data
+			.then(response => {
+				if(response.data.length == 0){
+					this.observer.unobserve(this.observe_element)
+					console.log('停止したよ')
+				} else{
+					for(let i=0;i<response.data.length;i++){
+					    this.PostRecords.push(response.data[i])
+					}
+				}
 			})
 			.catch(error =>{
 				console.log(error)
 			})
+			this.page += 1
+			console.log(this.page)
 		}
 	},
 	mounted(){
-		this.search()
 		this.observer = new IntersectionObserver((entries) => {
             const entry = entries[0];  //監視対象の要素が配列で入っている
             if (entry && entry.isIntersecting) { //isIntersectingがtrue:ブラウザに入っている
-              console.log('画面に入ったよ');
+              console.log('画面に入ったよ')
+              this.search()
             }
           });
-        const observe_element = this.$refs.observe_element;
-        this.observer.observe(observe_element);
+        this.observe_element = this.$refs.observe_element
+        this.observer.observe(this.observe_element)
 	}
 }
 Vue.createApp(boyakiApp).mount('#boyakiApp');
