@@ -1,4 +1,4 @@
-package com.dining.boyaki.controller.combined;
+package com.dining.boyaki.controller.rest.conbined;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
