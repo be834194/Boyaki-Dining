@@ -19,6 +19,7 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.PageRequest;
 
 import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.Post;
@@ -76,19 +77,27 @@ public class PostMapperTest {
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
 	void searchPostRecordで全件取得する() throws Exception{
-		List<PostRecord> record = postMapper.searchPostRecord(category,status,content);
-		assertEquals(7,record.size());
+		List<PostRecord> record = postMapper.searchPostRecord(category,status,content,
+				                                              PageRequest.of(0, 5));
+		assertEquals(5,record.size());
 		assertEquals("2022-03-03 18:41:36",record.get(0).getCreateAt());
 		assertEquals("2022-03-02 12:55:08",record.get(1).getCreateAt());
-		assertEquals("2022-03-01 12:07:27",record.get(5).getCreateAt());
-		assertEquals("2022-02-28 23:30:34",record.get(6).getCreateAt());
+		assertEquals("2022-03-02 00:02:49",record.get(3).getCreateAt());
+		assertEquals("2022-03-01 18:29:51",record.get(4).getCreateAt());
+		
+		record = postMapper.searchPostRecord(category,status,content,
+                                             PageRequest.of(1, 5));
+		assertEquals(2,record.size());
+		assertEquals("2022-03-01 12:07:27",record.get(0).getCreateAt());
+		assertEquals("2022-02-28 23:30:34",record.get(1).getCreateAt());
 	}
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
 	void searchPostRecordで一つの条件で絞り込んで取得する() throws Exception{
 		category = new int[]{5,3};
-		List<PostRecord> record = postMapper.searchPostRecord(category,null,null);
+		List<PostRecord> record = postMapper.searchPostRecord(category,null,null,
+				                                              PageRequest.of(0, 5));
 		assertEquals(2,record.size());
 		assertEquals("運動・筋トレ",record.get(0).getPostCategory());
 		assertEquals("2022-03-02 00:02:49",record.get(0).getCreateAt());
@@ -96,7 +105,8 @@ public class PostMapperTest {
 		assertEquals("2022-03-01 18:29:51",record.get(1).getCreateAt());
 		
 		status = new int[]{1,7};
-		record = postMapper.searchPostRecord(null,status,null);
+		record = postMapper.searchPostRecord(null,status,null,
+				                             PageRequest.of(0, 5));
 		assertEquals(5,record.size());
 		assertEquals("尿酸値高め",record.get(0).getStatus());
 		assertEquals("2022-03-03 18:41:36",record.get(0).getCreateAt());
@@ -106,7 +116,8 @@ public class PostMapperTest {
 		assertEquals("2022-02-28 23:30:34",record.get(4).getCreateAt());
 		
 		content = new String[]{"改善"};
-		record = postMapper.searchPostRecord(null,null,content);
+		record = postMapper.searchPostRecord(null,null,content,
+				                             PageRequest.of(0, 5));
 		assertEquals(1,record.size());
 		assertTrue(record.get(0).getContent().contains("改善"));
 		assertEquals("2022-03-02 12:55:08",record.get(0).getCreateAt());
@@ -119,19 +130,22 @@ public class PostMapperTest {
 		status = new int[]{1,6};
 		content = new String[]{"検査"};
 		
-		List<PostRecord> record = postMapper.searchPostRecord(category,status,null);
+		List<PostRecord> record = postMapper.searchPostRecord(category,status,null,
+				                                              PageRequest.of(0, 5));
 		assertEquals(1,record.size());
 		assertEquals("ダイエット中",record.get(0).getStatus());
 		assertEquals("塩分",record.get(0).getPostCategory());
 		assertEquals("2022-03-01 18:29:51",record.get(0).getCreateAt());
 		
-		record = postMapper.searchPostRecord(null,status,content);
+		record = postMapper.searchPostRecord(null,status,content,
+				                             PageRequest.of(0, 5));
 		assertEquals(1,record.size());
 		assertEquals("ダイエット中",record.get(0).getStatus());
 		assertTrue(record.get(0).getContent().contains("検査"));
 		assertEquals("2022-03-01 18:29:51",record.get(0).getCreateAt());
 		
-		record = postMapper.searchPostRecord(category,null,content);
+		record = postMapper.searchPostRecord(category,null,content,
+				                             PageRequest.of(0, 5));
 		assertEquals(2,record.size());
 		assertEquals("尿酸値",record.get(0).getPostCategory());
 		assertTrue(record.get(0).getContent().contains("検査"));
@@ -147,7 +161,8 @@ public class PostMapperTest {
 		category = new int[]{1,2,3};
 		status = new int[]{1,7};
 		content = new String[]{"ダイエット","効果"};
-		List<PostRecord> record = postMapper.searchPostRecord(category,status,content);
+		List<PostRecord> record = postMapper.searchPostRecord(category,status,content,
+				                                              PageRequest.of(0, 5));
 		assertEquals(1,record.size());
 		assertEquals("ダイエット",record.get(0).getPostCategory());
 		assertEquals("尿酸値高め",record.get(0).getStatus());

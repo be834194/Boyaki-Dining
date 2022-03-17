@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.PageRequest;
 
 import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.Post;
@@ -22,7 +23,7 @@ public class PostService {
 	
 	@Transactional(readOnly = true)
 	public List<PostRecord> searchPostRecord(int[] category,int[] status,
-			                                 String text) {
+			                                 String text,int page) {
 		if(category.length == 0) {
 			category = null;
 		}
@@ -42,8 +43,9 @@ public class PostService {
 		}
 		
 		List<PostRecord> records = postMapper
-				                  .searchPostRecord(category,status,content);
-	    return records;
+				                  .searchPostRecord(category,status,content,
+				                		            PageRequest.of(page, 5));
+		return records;
 	}
 	
 	@Transactional(readOnly = true)

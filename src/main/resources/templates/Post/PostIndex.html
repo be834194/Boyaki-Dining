@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+  <title>ぼやき一覧</title>
+  <meta charset="UTF-8">
+   <meta name="_csrf" th:content="${_csrf.token}"/>
+   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+<h1>投稿一覧</h1>
+<a th:href="@{/index/boyaki/post}">グチをぼやく</a>
+<div id="boyakiApp">
+{{category}}
+{{status}}
+{{keyword}}
+	<div>
+	    <button type="reset" v-on:click="resetAll">検索値の初期化</button>     
+	    <select id="postCategory" name="postCategory" multiple v-model="category">
+            <option th:each="category:${postCategory}" 
+                    th:value="${category.postId}" th:text="${category.postName}"></option>
+        </select>
+        <select id="statusList" name="statusList" multiple v-model="status">
+	        <option th:each="status:${statusList}" 
+	                th:value="${status.statusId}" th:text="${status.statusName}"></option>
+	    </select>
+	    <input type="text" id="textkeyword" name="textkeyword" v-model="keyword">
+	    
+	    <button type="submit" v-on:click="startSearch">検索</button>
+	</div>
+    <div v-for="(value,key) in PostRecords">
+	    <a v-bind:href="`/index/boyaki/${value.nickName}`">{{value.nickName}}</a> さん
+	    <a>:{{value.status}}</a>
+	    <p>{{value.postCategory}}</p>
+	    <p>{{value.content}} <h6> {{value.createAt}}</h6></p>
+	</div>
+	<div ref="observe_element">loading</div>
+</div>
+
+<script>
+var boyakiApp = {
+	data(){
+		return{
+			category:[],
+			status:[],
+			keyword:"",
+			page:0,
+			PostRecords:[],
+			observe_element:null,
+			observer:null
+		}
+	},
+	methods: {
+		resetAll(){
+			this.category = []
+			this.status = []
+			this.keyword = ""
+		},
+		startSearch(){
+			this.page = 0
+			this.PostRecords = []
+			this.observer.observe(this.observe_element)
+			this.search()
+		},
+		search(){
+			var tokenValue = document.head.querySelector("[name=_csrf]").content;
+			let params = new FormData()
+            params.append('category', this.category)
+            params.append('status',this.status)
+            params.append('keyword',this.keyword)
+            params.append('page',this.page)
+            params.append('_csrf',tokenValue)
+            
+			axios.post('/api/search',params)
+			.then(response => {
+				if(response.data.length == 0){
+					this.observer.unobserve(this.observe_element)
+					console.log('停止したよ')
+				} else{
+					for(let i=0;i<response.data.length;i++){
+					    this.PostRecords.push(response.data[i])
+					}
+				}
+			})
+			.catch(error =>{
+				console.log(error)
+			})
+			this.page += 1
+			console.log(this.page)
+		}
+	},
+	mounted(){
+		this.observer = new IntersectionObserver((entries) => {
+            const entry = entries[0];  //監視対象の要素が配列で入っている
+            if (entry && entry.isIntersecting) { //isIntersectingがtrue:ブラウザに入っている
+              console.log('画面に入ったよ')
+              this.search()
+            }
+          });
+        this.observe_element = this.$refs.observe_element
+        this.observer.observe(this.observe_element)
+	}
+}
+Vue.createApp(boyakiApp).mount('#boyakiApp');
+</script>
+</body>
+
+</html>

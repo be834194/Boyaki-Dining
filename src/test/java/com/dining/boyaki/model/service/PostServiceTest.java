@@ -20,6 +20,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.data.domain.PageRequest;
 
 import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.Post;
@@ -62,21 +63,21 @@ public class PostServiceTest {
 		int[] category = new int[]{};
 		int[] status = new int[]{};
 		String text = " 		";
-		when(postMapper.searchPostRecord(any(),any(),any())).thenReturn(recordList);
+		when(postMapper.searchPostRecord(any(),any(),any(),any())).thenReturn(recordList);
 		
-		List<PostRecord> result = postService.searchPostRecord(category, status, text);
+		List<PostRecord> result = postService.searchPostRecord(category, status, text,0);
 		assertEquals(2,result.size());
-		verify(postMapper,times(1)).searchPostRecord(any(),any(),any());
+		verify(postMapper,times(1)).searchPostRecord(any(),any(),any(),any());
 		
 		text = null;
-		result = postService.searchPostRecord(category, status, text);
+		result = postService.searchPostRecord(category, status, text,0);
 		assertEquals(2,result.size());
-		verify(postMapper,times(2)).searchPostRecord(any(),any(),any());
+		verify(postMapper,times(2)).searchPostRecord(any(),any(),any(),any());
 		
 		text = "";
-		result = postService.searchPostRecord(category, status, text);
+		result = postService.searchPostRecord(category, status, text,0);
 		assertEquals(2,result.size());
-		verify(postMapper,times(3)).searchPostRecord(any(),any(),any());
+		verify(postMapper,times(3)).searchPostRecord(any(),any(),any(),any());
 	}
 	
 	@Test
@@ -93,11 +94,12 @@ public class PostServiceTest {
 		int[] category = new int[]{1,2,3};
 		int[] status = new int[]{1,7};
 		String text = "牛乳 尿酸";
-		when(postMapper.searchPostRecord(any(int[].class),any(int[].class),any(String[].class))).thenReturn(recordList);
+		when(postMapper.searchPostRecord(
+				any(int[].class),any(int[].class),any(String[].class),any(PageRequest.class))).thenReturn(recordList);
 		
-		List<PostRecord> result = postService.searchPostRecord(category, status, text);
+		List<PostRecord> result = postService.searchPostRecord(category, status, text,0);
 		assertEquals(1,result.size());
-		verify(postMapper,times(1)).searchPostRecord(any(int[].class),any(int[].class),any(String[].class));
+		verify(postMapper,times(1)).searchPostRecord(any(int[].class),any(int[].class),any(String[].class),any(PageRequest.class));
 	}
 	
 	@Test
