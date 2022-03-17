@@ -1,4 +1,4 @@
-package com.dining.boyaki.controller.combined;
+package com.dining.boyaki.controller.rest.conbined;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
-import com.dining.boyaki.controller.RestCalendarController;
+import com.dining.boyaki.controller.rest.RestCalendarController;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
 import com.dining.boyaki.model.service.ChangeEntitySharedService;
 import com.dining.boyaki.model.service.DiaryRecordService;

@@ -1,4 +1,4 @@
-package com.dining.boyaki.controller;
+package com.dining.boyaki.controller.rest;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;

@@ -1,4 +1,4 @@
-package com.dining.boyaki.controller;
+package com.dining.boyaki.controller.rest;
 
 import java.util.List;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
