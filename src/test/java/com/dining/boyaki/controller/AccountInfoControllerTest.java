@@ -73,7 +73,7 @@ public class AccountInfoControllerTest {
 	
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
-	void showMyPageでマイページ画面が表示される() throws Exception{
+	void showIndexMyPageでマイページ画面が表示される() throws Exception{
 		AccountInfoForm form = new AccountInfoForm();
 		form.setUserName("miho");
 		form.setNickName("匿名");
@@ -84,17 +84,36 @@ public class AccountInfoControllerTest {
 		when(accountInfoService.findAccountInfo("miho")).thenReturn(form);
 		
 		mockMvc.perform(get("/index/mypage"))
-		       .andExpect(status().is2xxSuccessful())
-		       .andExpect(model().attribute("AccountInfoForm",
-		    		                        hasProperty("userName",is("miho"))))
-		       .andExpect(model().attribute("statusList",StatusList.values()))
-		       .andExpect(view().name("MyPage/MyPage"));
+				       .andExpect(status().is2xxSuccessful())
+				       .andExpect(model().attribute("statusList",StatusList.values()))
+				       .andExpect(view().name("MyPage/IndexMyPage"));
+		verify(accountInfoService,times(1)).findAccountInfo("miho");
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	void showEditMyPageでプロフィール編集画面が表示される() throws Exception{
+		AccountInfoForm form = new AccountInfoForm();
+		form.setUserName("miho");
+		form.setNickName("匿名");
+		form.setProfile("5000兆円欲しい！！！");
+		form.setStatus(0);
+		form.setGender(2);
+		form.setAge(27);
+		when(accountInfoService.findAccountInfo("miho")).thenReturn(form);
+		
+		mockMvc.perform(get("/index/mypage/edit"))
+				       .andExpect(status().is2xxSuccessful())
+				       .andExpect(model().attribute("AccountInfoForm",
+				    		                        hasProperty("userName",is("miho"))))
+				       .andExpect(model().attribute("statusList",StatusList.values()))
+				       .andExpect(view().name("MyPage/EditMyPage"));
 		verify(accountInfoService,times(1)).findAccountInfo("miho");
 	}
 	
 	@Nested
 	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
-    class createContent {
+    class updateContent {
 		AccountInfoForm form = new AccountInfoForm();
 		
 		@BeforeEach
@@ -110,12 +129,12 @@ public class AccountInfoControllerTest {
 		@Test
 		void updateMyPageでユーザ情報が更新される() throws Exception{
 			doNothing().when(accountInfoService).updateAccountInfo(form);
-			mockMvc.perform(post("/index/mypage/update")
+			mockMvc.perform(post("/index/mypage/edit/update")
 					       .flashAttr("AccountInfoForm", form)
 					       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 			       .andExpect(status().is3xxRedirection())
-			       .andExpect(flash().attribute("message", "更新が完了しました"))
+			       .andExpect(model().hasNoErrors())
 			       .andExpect(redirectedUrl("/index/mypage"));
 			verify(accountInfoService,times(1)).updateAccountInfo(form);
 		}
@@ -125,15 +144,16 @@ public class AccountInfoControllerTest {
 			form.setNickName("");
 			form.setProfile("123456789012345678901234567890123456789012345678901");
 			doNothing().when(accountInfoService).updateAccountInfo(form);
-			mockMvc.perform(post("/index/mypage/update")
+			mockMvc.perform(post("/index/mypage/edit/update")
 					       .flashAttr("AccountInfoForm", form)
 					       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 			       .andExpect(status().is2xxSuccessful())
+			       .andExpect(model().attribute("statusList",StatusList.values()))
 			       .andExpect(model().hasErrors())
 			       .andExpect(model().attributeHasFieldErrors("AccountInfoForm"
 			    		   , "nickName","profile"))
-			       .andExpect(view().name("MyPage/MyPage"));
+			       .andExpect(view().name("MyPage/EditMyPage"));
 			verify(accountInfoService,times(0)).updateAccountInfo(form);
 		}
 	}

@@ -7,7 +7,7 @@
 <body>
 <a th:href="@{/index}">トップページへ</a>
 
-<form th:action="@{/index/mypage/update}" method="post" th:object="${AccountInfoForm}">
+<form th:action="@{/index/mypage/edit/update}" method="post" th:object="${AccountInfoForm}">
 <p th:text="${message}"></p>
     <div>
 	    <input type="hidden" name="userName" id="userName" th:field="*{userName}">
@@ -27,17 +27,19 @@
 	<div>
 	    <label for="status">健康状態</label> 
 	    <select id="status" name="status">
-	            <option th:each="status:${statusList}" 
-	                    th:value="${status.statusId}" th:text="${status.statusName}"></option>
-	            </select>
+	        <option th:each="list:${statusList}" 
+	                th:value="${list.statusId}" th:text="${list.statusName}"
+	                th:selected="${list.statusId} == *{status}">
+	        </option>
+	    </select>
 	</div>
 	<div>
 	    <label for="gender">性別</label> 
 	    <select id="gender" name="gender" th:field="*{gender}">
-	            <option value="0">未設定</option>
-	            <option value="1">男性</option>
-	            <option value="2">女性</option>
-	            <option value="3">なし</option>
+	        <option value="0">未設定</option>
+	        <option value="1">男性</option>
+	        <option value="2">女性</option>
+	        <option value="3">なし</option>
 	    </select>
 	</div>
 	<div>
