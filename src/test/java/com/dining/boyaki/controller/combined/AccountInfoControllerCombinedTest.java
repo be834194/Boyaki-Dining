@@ -66,13 +66,23 @@ public class AccountInfoControllerCombinedTest {
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/AccountInfo/setup/")
-	void showMyPageでマイページ画面が表示される() throws Exception{
+	void showIndexMyPageでマイページ画面が表示される() throws Exception{
 		mockMvc.perform(get("/index/mypage"))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("statusList",StatusList.values()))
+		       .andExpect(view().name("MyPage/IndexMyPage"));
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	@DatabaseSetup(value="/controller/AccountInfo/setup/")
+	void showEditMyPageでプロフィール編集画面が表示される() throws Exception{
+		mockMvc.perform(get("/index/mypage/edit"))
 		       .andExpect(status().is2xxSuccessful())
 		       .andExpect(model().attribute("AccountInfoForm",
 		    		                        hasProperty("userName",is("miho"))))
 		       .andExpect(model().attribute("statusList",StatusList.values()))
-		       .andExpect(view().name("MyPage/MyPage"));
+		       .andExpect(view().name("MyPage/EditMyPage"));
 	}
 	
 	@Test
@@ -88,12 +98,11 @@ public class AccountInfoControllerCombinedTest {
 		form.setGender(1);
 		form.setAge(31);
 		
-		mockMvc.perform(post("/index/mypage/update")
+		mockMvc.perform(post("/index/mypage/edit/update")
 				       .flashAttr("AccountInfoForm", form)
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 			   .andExpect(status().is3xxRedirection())
-			   .andExpect(flash().attribute("message", "更新が完了しました"))
 			   .andExpect(redirectedUrl("/index/mypage"));
 	}
 	
@@ -109,15 +118,16 @@ public class AccountInfoControllerCombinedTest {
 		form.setGender(1);
 		form.setAge(31);
 		
-		mockMvc.perform(post("/index/mypage/update")
+		mockMvc.perform(post("/index/mypage/edit/update")
 				       .flashAttr("AccountInfoForm", form)
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("statusList",StatusList.values()))
 		       .andExpect(model().hasErrors())
 		       .andExpect(model().attributeHasFieldErrors("AccountInfoForm"
 		    		   , "nickName","profile"))
-		       .andExpect(view().name("MyPage/MyPage"));
+		       .andExpect(view().name("MyPage/EditMyPage"));
 	}
 	
 	@Test

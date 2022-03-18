@@ -37,23 +37,31 @@ public class AccountInfoController {
 	}
 	
 	@GetMapping("/index/mypage")
-	public String showMyPage(@AuthenticationPrincipal AccountUserDetails details,
-			                 Model model) {
+	public String showIndexMyPage(@AuthenticationPrincipal AccountUserDetails details,
+			                      Model model) {
 		AccountInfoForm form = accountInfoService.findAccountInfo(details.getUsername());
 		model.addAttribute("AccountInfoForm", form);
 		model.addAttribute("statusList", StatusList.values());
-		return "MyPage/MyPage";
+		return "MyPage/IndexMyPage";
 	}
 	
-	@PostMapping("/index/mypage/update")
+	@GetMapping("/index/mypage/edit")
+	public String showEditMyPage(@AuthenticationPrincipal AccountUserDetails details,
+			                     Model model) {
+		AccountInfoForm form = accountInfoService.findAccountInfo(details.getUsername());
+		model.addAttribute("AccountInfoForm", form);
+		model.addAttribute("statusList", StatusList.values());
+		return "MyPage/EditMyPage";
+	}
+	
+	@PostMapping("/index/mypage/edit/update")
 	public String updateMyPage(@ModelAttribute("AccountInfoForm") @Validated AccountInfoForm form,
-			                   BindingResult result,RedirectAttributes model) {
+			                   BindingResult result,Model model) {
 		if(result.hasErrors()) {
 			model.addAttribute("statusList", StatusList.values());
-			return "MyPage/MyPage";
+			return "MyPage/EditMyPage";
 		}
 		accountInfoService.updateAccountInfo(form);
-		model.addFlashAttribute("message", "更新が完了しました");
 		return "redirect:/index/mypage";
 	}
 	

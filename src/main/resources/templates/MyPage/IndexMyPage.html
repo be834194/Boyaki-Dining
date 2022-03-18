@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>マイページ</title>
+<meta charset="UTF-8">
+</head>
+<body>
+<a th:href="@{/index}">トップページへ</a>
+
+<table th:each="obj:${AccountInfoForm}">
+<p th:text="${message}"></p>
+	<tr>
+        <td>ニックネーム</td>
+        <td th:text="${obj.nickName}"></td>
+    </tr>
+	<tr>
+	    <td>プロフィール</td>
+	    <td th:text="${obj.profile}"></td>
+	</tr> 
+	<tr>
+	    <td>健康状態</td>
+	      <span th:each="status:${statusList}">
+	    <td th:if="*{status.statusId} == ${obj.status}"
+	        th:text="*{status.statusName}"></td>
+	    </span>
+	</tr>
+	<tr>
+	    <td>性別</td> 
+	    <td th:if="0 == ${obj.gender}">未設定</td>
+	    <td th:if="1 == ${obj.gender}">男性</td>
+	    <td th:if="2 == ${obj.gender}">女性</td>
+	    <td th:if="3 == ${obj.gender}">なし</td>
+	</tr>
+	<tr>
+	    <td>年齢</td>
+        <td th:text="${obj.age}"></td>
+	</tr>
+</table>
+
+<a th:href="@{/index/mypage/edit}">プロフィールを変更する</a>
+<br/>
+<a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
+<br/>
+<a th:href="@{/index/mypage/confirm}">退会する</a>
+
+</body>
+</html>
