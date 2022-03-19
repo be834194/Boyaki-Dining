@@ -59,14 +59,14 @@ public class AccountInfoServiceTest {
 			info.setProfile("今年中に体重5キロ落としたい");
 			info.setStatus(3);
 			info.setGender(3);
-			info.setAge(21);
+			info.setAge(2);
 			form = new AccountInfoForm();
 			form.setUserName("糸井");
 			form.setNickName("sigeno");
 			form.setProfile("今年中に体重5キロ落としたい");
 			form.setStatus(3);
 			form.setGender(3);
-			form.setAge(21);
+			form.setAge(2);
 		}
 	
 		@Test
@@ -80,7 +80,7 @@ public class AccountInfoServiceTest {
 			assertEquals("今年中に体重5キロ落としたい",result.getProfile());
 			assertEquals(3,result.getStatus());
 			assertEquals(3,result.getGender());
-			assertEquals(21,result.getAge());
+			assertEquals(2,result.getAge());
 			verify(accountInfoMapper,times(1)).findAccountInfo("糸井");
 			verify(changeEntitySharedService,times(1)).setToAccountInfoForm(info);
 		}

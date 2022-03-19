@@ -54,7 +54,7 @@ public class ChangeEntitySharedService {
 		info.setProfile(null);
 		info.setStatus(0);
 		info.setGender(0);
-		info.setAge(20);
+		info.setAge(0);
 		return info;
 	}
 	

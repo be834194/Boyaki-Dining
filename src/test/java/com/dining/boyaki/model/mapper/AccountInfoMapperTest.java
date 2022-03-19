@@ -50,7 +50,7 @@ public class AccountInfoMapperTest {
 		assertEquals("今年中に体重5キロ落としたい",info.getProfile());
 		assertEquals(3,info.getStatus());
 		assertEquals(3,info.getGender());
-		assertEquals(21,info.getAge());
+		assertEquals(2,info.getAge());
 	}
 	
 	@Test
@@ -63,7 +63,7 @@ public class AccountInfoMapperTest {
 		info.setProfile("間食が止まらない");
 		info.setStatus(3);
 		info.setGender(1);
-		info.setAge(31);
+		info.setAge(3);
 		accountInfoMapper.updateAccountInfo(info);
 	}
 	

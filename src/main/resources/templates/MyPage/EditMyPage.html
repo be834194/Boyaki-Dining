@@ -44,7 +44,17 @@
 	</div>
 	<div>
 	    <label for="age">年齢</label> 
-	    <input type="number" id="age" name="age" th:field="*{age}">
+	    <select id="age" name="age" th:field="*{age}">
+	        <option value="0">未設定</option>
+	        <option value="1">10代以下</option>
+	        <option value="2">20代</option>
+	        <option value="3">30代</option>
+	        <option value="4">40代</option>
+	        <option value="5">50代</option>
+	        <option value="6">60代</option>
+	        <option value="7">70代</option>
+	        <option value="8">80代以上</option>
+	    </select>
 	</div>
 	<div>
 	    <button type="submit">更新する</button>

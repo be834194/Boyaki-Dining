@@ -48,7 +48,7 @@ public class AccountInfoFormTest {
 		form.setProfile("しがない会社員");
 		form.setStatus(0);
 		form.setGender(2);
-		form.setAge(27);
+		form.setAge(2);
 		
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
@@ -64,7 +64,7 @@ public class AccountInfoFormTest {
 		form.setProfile("しがない会社員");
 		form.setStatus(0);
 		form.setGender(1);
-		form.setAge(37);
+		form.setAge(3);
 		
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
@@ -82,7 +82,7 @@ public class AccountInfoFormTest {
 		form.setProfile("123456789012345678901234567890123456789012345678901");
 		form.setStatus(3);
 		form.setGender(3);
-		form.setAge(21);
+		form.setAge(2);
 		
 		validator.validate(form, bindingResult);
 		assertEquals(2,bindingResult.getFieldErrorCount());
@@ -102,7 +102,7 @@ public class AccountInfoFormTest {
 		form.setProfile("つい最近嫁に小遣いを削られました");
 		form.setStatus(5);
 		form.setGender(1);
-		form.setAge(31);
+		form.setAge(3);
 		
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());

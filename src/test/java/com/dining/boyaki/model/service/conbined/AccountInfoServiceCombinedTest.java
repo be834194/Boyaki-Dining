@@ -61,7 +61,7 @@ public class AccountInfoServiceCombinedTest {
 		assertEquals("今年中に体重5キロ落としたい",form.getProfile());
 		assertEquals(3,form.getStatus());
 		assertEquals(3,form.getGender());
-		assertEquals(21,form.getAge());
+		assertEquals(2,form.getAge());
 	}
 	
 	@Test
@@ -81,7 +81,7 @@ public class AccountInfoServiceCombinedTest {
 		info.setProfile("間食が止まらない");
 		info.setStatus(3);
 		info.setGender(1);
-		info.setAge(31);
+		info.setAge(3);
 		accountInfoService.updateAccountInfo(info);
 	}
 	
