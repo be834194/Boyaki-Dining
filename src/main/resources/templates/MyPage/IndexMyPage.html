@@ -33,7 +33,12 @@
 	</tr>
 	<tr>
 	    <td>年齢</td>
-        <td th:text="${obj.age}"></td>
+	    <div th:switch="${obj.age}">
+	        <td th:case="0">未設定</td>
+		    <td th:case="1" th:inline="text">[[${obj.age}]]0代以下</td>
+		    <td th:case="8"　th:inline="text">[[${obj.age}]]0代以上</td>
+		    <td th:case="*" th:inline="text">[[${obj.age}]]0代</td>
+	    </div>
 	</tr>
 </table>
 

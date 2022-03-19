@@ -80,7 +80,7 @@ public class AccountInfoControllerTest {
 		form.setProfile("5000兆円欲しい！！！");
 		form.setStatus(0);
 		form.setGender(2);
-		form.setAge(27);
+		form.setAge(2);
 		when(accountInfoService.findAccountInfo("miho")).thenReturn(form);
 		
 		mockMvc.perform(get("/index/mypage"))
@@ -99,7 +99,7 @@ public class AccountInfoControllerTest {
 		form.setProfile("5000兆円欲しい！！！");
 		form.setStatus(0);
 		form.setGender(2);
-		form.setAge(27);
+		form.setAge(2);
 		when(accountInfoService.findAccountInfo("miho")).thenReturn(form);
 		
 		mockMvc.perform(get("/index/mypage/edit"))
@@ -123,7 +123,7 @@ public class AccountInfoControllerTest {
 			form.setProfile("間食が止まらない");
 			form.setStatus(3);
 			form.setGender(1);
-			form.setAge(31);
+			form.setAge(3);
 		}
 		
 		@Test

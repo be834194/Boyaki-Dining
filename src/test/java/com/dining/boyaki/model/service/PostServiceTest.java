@@ -127,7 +127,7 @@ public class PostServiceTest {
 		info.setProfile("5000兆円欲しい！！！");
 		info.setStatus(1);
 		info.setGender(2);
-		info.setAge(27);
+		info.setAge(2);
 		when(postMapper.findProfile("匿名")).thenReturn(info);
 		
 		AccountInfo result = postService.findProfile("匿名");
@@ -135,7 +135,7 @@ public class PostServiceTest {
 		assertEquals("5000兆円欲しい！！！",result.getProfile());
 		assertEquals(1,result.getStatus());
 		assertEquals(2,result.getGender());
-		assertEquals(27,result.getAge());
+		assertEquals(2,result.getAge());
 		verify(postMapper,times(1)).findProfile("匿名");
 	}
 	

@@ -96,7 +96,7 @@ public class AccountInfoControllerCombinedTest {
 		form.setProfile("間食が止まらない");
 		form.setStatus(3);
 		form.setGender(1);
-		form.setAge(31);
+		form.setAge(3);
 		
 		mockMvc.perform(post("/index/mypage/edit/update")
 				       .flashAttr("AccountInfoForm", form)
@@ -116,7 +116,7 @@ public class AccountInfoControllerCombinedTest {
 		form.setProfile("123456789012345678901234567890123456789012345678901");
 		form.setStatus(3);
 		form.setGender(1);
-		form.setAge(31);
+		form.setAge(3);
 		
 		mockMvc.perform(post("/index/mypage/edit/update")
 				       .flashAttr("AccountInfoForm", form)

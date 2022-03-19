@@ -73,7 +73,7 @@ public class RegistrationMapperTest {
 		info.setProfile("間食が止まらない");
 		info.setStatus(3);
 		info.setGender(1);
-		info.setAge(31);
+		info.setAge(3);
 		registrationMapper.insertAccountInfo(info);
 	}
 	

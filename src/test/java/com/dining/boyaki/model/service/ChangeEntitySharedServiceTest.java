@@ -115,7 +115,7 @@ public class ChangeEntitySharedServiceTest {
 		assertEquals(null,info.getProfile());
 		assertEquals(0,info.getStatus());
 		assertEquals(0,info.getGender());
-		assertEquals(20,info.getAge());
+		assertEquals(0,info.getAge());
 	}
 	
 	@Test

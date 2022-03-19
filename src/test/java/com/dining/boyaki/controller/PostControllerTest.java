@@ -85,7 +85,7 @@ public class PostControllerTest {
 		info.setProfile("今年中に体重5キロ落としたい");
 		info.setStatus(6);
 		info.setGender(3);
-		info.setAge(21);
+		info.setAge(2);
 		when(postService.findProfile("sigeno")).thenReturn(info);
 		
 		mockMvc.perform(get("/index/boyaki/sigeno"))

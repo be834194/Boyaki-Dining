@@ -71,7 +71,7 @@ public class PostMapperTest {
 		assertEquals("5000兆円欲しい！！！",info.getProfile());
 		assertEquals(1,info.getStatus());
 		assertEquals(2,info.getGender());
-		assertEquals(27,info.getAge());
+		assertEquals(2,info.getAge());
 	}
 	
 	@Test
