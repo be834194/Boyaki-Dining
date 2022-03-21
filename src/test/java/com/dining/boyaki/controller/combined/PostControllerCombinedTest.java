@@ -61,7 +61,7 @@ import com.dining.boyaki.util.WithMockCustomUser;
 @Transactional
 public class PostControllerCombinedTest {
 	
-	private static LocalDateTime datetime = LocalDateTime.parse("2022-03-03T09:31:12");
+	private static LocalDateTime datetime = LocalDateTime.parse("2022-03-08T09:31:12");
 	
 	private static MockedStatic<LocalDateTime> mock;
 	

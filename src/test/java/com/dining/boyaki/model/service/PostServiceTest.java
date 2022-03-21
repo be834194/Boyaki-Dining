@@ -54,6 +54,23 @@ public class PostServiceTest {
 	}
 	
 	@Test
+	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
+		List<PostRecord> recordList = new ArrayList<PostRecord>();
+		PostRecord record = new PostRecord();
+		record.setNickName("加藤健");
+		record.setContent("牛乳を飲み始めて尿酸値が7.0を切りました！");
+		record.setPostCategory("尿酸値");
+		record.setStatus("尿酸値高め");
+		record.setCreateAt("2022-03-07 12:46:36");
+		recordList.add(record);
+		
+		when(postMapper.findPostRecord("加藤健", PageRequest.of(0, 5))).thenReturn(recordList);
+		List<PostRecord> result = postService.findPostRecord("加藤健", 0);
+		assertEquals(1,result.size());
+		verify(postMapper,times(1)).findPostRecord("加藤健", PageRequest.of(0, 5));
+	}
+	
+	@Test
 	void searchPostRecordで全件取得する() throws Exception{
 		List<PostRecord> recordList = new ArrayList<PostRecord>();
 		PostRecord record = new PostRecord();

@@ -22,6 +22,12 @@ public class PostService {
 	}
 	
 	@Transactional(readOnly = true)
+	public List<PostRecord> findPostRecord(String nickName,int page) {
+		List<PostRecord> records = postMapper.findPostRecord(nickName, PageRequest.of(page, 5));
+		return records;
+	}
+	
+	@Transactional(readOnly = true)
 	public List<PostRecord> searchPostRecord(int[] category,int[] status,
 			                                 String text,int page) {
 		if(category.length == 0) {
