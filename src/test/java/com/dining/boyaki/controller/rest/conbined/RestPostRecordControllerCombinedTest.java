@@ -1,6 +1,7 @@
 package com.dining.boyaki.controller.rest.conbined;
 
 import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,14 +56,45 @@ public class RestPostRecordControllerCombinedTest {
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_Nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
+	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
+		ObjectMapper mapper = new ObjectMapper();
+		List<String> expect = new ArrayList<String>();
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです, createAt=2022-03-07 22:17:49}");
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=ダイエット, content=ノンアル飽きた！, createAt=2022-03-03 19:32:44}");
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=全然お腹周りが改善されなくてダイエットめげそう, createAt=2022-03-02 12:55:08}");
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=ダイエット, content=在宅だと毎日の料理が大変。。, createAt=2022-03-01 18:07:15}");
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=中性脂肪・コレステロール, content=ドーナツは穴が開いてるからゼロカロリーって本当？, createAt=2022-03-01 12:07:27}");
+		String readValue = mockMvc.perform(get("/api/find")
+										  .param("nickName", "sigeno")
+										  .param("page","0"))
+							      .andExpect(status().is2xxSuccessful())
+							      .andReturn().getResponse().getContentAsString();
+		List<?> result = mapper.readValue(readValue, List.class);
+		assertEquals(expect.toString(),result.toString());
+		
+		expect = new ArrayList<String>();
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=最近アカウントをつくりました、よろしく, createAt=2022-03-01 12:06:21}");
+		readValue = mockMvc.perform(get("/api/find")
+								   .param("nickName", "sigeno")
+								   .param("page","1"))
+					       .andExpect(status().is2xxSuccessful())
+					       .andReturn().getResponse().getContentAsString();
+		result = mapper.readValue(readValue, List.class);
+		assertEquals(expect.toString(),result.toString());
+		
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_Nu",role="ROLE_USER")
+	@DatabaseSetup(value="/controller/Post/setup/")
 	void searchPostRecordでjsonを全件取得する() throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		List<String> expect = new ArrayList<String>();
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです, createAt=2022-03-07 22:17:49}");
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=ダイエット, content=ノンアル飽きた！, createAt=2022-03-03 19:32:44}");
 		expect.add("{nickName=加藤健, status=尿酸値高め, postCategory=尿酸値, content=血液検査で尿酸値がやっと下がってきました！やっぱ牛乳のお陰？, createAt=2022-03-03 18:41:36}");
 		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=全然お腹周りが改善されなくてダイエットめげそう, createAt=2022-03-02 12:55:08}");
 		expect.add("{nickName=匿名, status=ダイエット中, postCategory=ダイエット, content=先月から体重1キロ落ち増した！今月もダイエット頑張るぞ！！, createAt=2022-03-02 11:12:50}");
-		expect.add("{nickName=加藤健, status=尿酸値高め, postCategory=運動・筋トレ, content=今日はラジオ番組を聴きながら隣の駅まで散歩。三日坊主にならないことを祈る, createAt=2022-03-02 00:02:49}");
-		expect.add("{nickName=匿名, status=ダイエット中, postCategory=塩分, content=検査で高血圧気味と言われた母のためにレシピを模索中・・・, createAt=2022-03-01 18:29:51}");
 		String readValue = mockMvc.perform(post("/api/search")
 										  .param("category","")
 										  .param("status","")
@@ -76,13 +108,12 @@ public class RestPostRecordControllerCombinedTest {
 		assertEquals(expect.toString(),result.toString());
 		
 		expect = new ArrayList<String>();
-		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=中性脂肪・コレステロール, content=ドーナツは穴が開いてるからゼロカロリーって本当？, createAt=2022-03-01 12:07:27}");
 		expect.add("{nickName=加藤健, status=尿酸値高め, postCategory=ダイエット, content=サイゼリヤのサラダがダイエットに効果あるらしい, createAt=2022-02-28 23:30:34}");
 		readValue = mockMvc.perform(post("/api/search")
 								   .param("category","")
 								   .param("status","")
 								   .param("keyword", "　")
-								   .param("page","1")
+								   .param("page","2")
 								   .contentType(MediaType.APPLICATION_JSON_VALUE)
 								   .with(SecurityMockMvcRequestPostProcessors.csrf()))
 					       .andExpect(status().is2xxSuccessful())

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,6 +59,40 @@ public class RestPostRecordControllerTest {
 		MockitoAnnotations.openMocks(this);
 		mockMvc = MockMvcBuilders.webAppContextSetup(context)
 				                 .apply(springSecurity()).build();
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="マクベイ",password="sun_flan_sis",role="ROLE_USER")
+	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
+		List<PostRecord> records = new ArrayList<PostRecord>();
+		PostRecord record = new PostRecord();
+		record.setNickName("kenken");
+		record.setContent("今日は疲れた");
+		record.setStatus("尿酸値高め");
+		record.setPostCategory("グチ・ぼやき");
+		record.setCreateAt("2022-03-18 21:18:39");
+		records.add(record);
+		record = new PostRecord();
+		record.setNickName("kenken");
+		record.setContent("朝にコンビニまで散歩、夕方に隣の駅まで散歩して非常に疲れた。我ながら体力がない！");
+		record.setStatus("尿酸値高め");
+		record.setPostCategory("運動・筋トレ");
+		record.setCreateAt("2022-03-18 22:55:10");
+		records.add(record);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		List<String> expect = new ArrayList<String>();
+		expect.add("{nickName=kenken, status=尿酸値高め, postCategory=グチ・ぼやき, content=今日は疲れた, createAt=2022-03-18 21:18:39}");
+		expect.add("{nickName=kenken, status=尿酸値高め, postCategory=運動・筋トレ, content=朝にコンビニまで散歩、夕方に隣の駅まで散歩して非常に疲れた。我ながら体力がない！, createAt=2022-03-18 22:55:10}");
+		when(postService.findPostRecord("kenken", 0)).thenReturn(records);
+		
+		String readValue = mockMvc.perform(get("/api/find")
+										  .param("nickName", "kenken")
+										  .param("page","0"))
+							      .andExpect(status().is2xxSuccessful())
+							      .andReturn().getResponse().getContentAsString();
+		List<?> result = mapper.readValue(readValue, List.class);
+		assertEquals(expect.toString(),result.toString());
 	}
 	
 	@Test

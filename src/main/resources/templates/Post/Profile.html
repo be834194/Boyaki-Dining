@@ -3,41 +3,100 @@
 <head>
   <title>プロフィール</title>
   <meta charset="UTF-8">
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
-<table th:each="obj:${accountInfo}">
-<tr>
-    <td>ニックネーム</td>
-    <td th:text="${obj.nickName}"></td>
-</tr>
-<tr>
-    <td>プロフィール</td>
-    <td th:text="${obj.profile}"></td>
-</tr>    
-<tr>
-    <td>健康状態</td>
-      <span th:each="status:${statusList}">
-    <td th:if="*{status.statusId} == ${obj.status}"
-        th:text="*{status.statusName}"></td>
-    </span>
-</tr>
-<tr>
-    <td>性別</td>
-    <td th:if="0 == ${obj.gender}">未設定</td>
-    <td th:if="1 == ${obj.gender}">男性</td>
-    <td th:if="2 == ${obj.gender}">女性</td>
-    <td th:if="3 == ${obj.gender}">なし</td>
-</tr>
-<tr>
-    <td>年齢</td>
-    <div th:switch="${obj.age}">
-	        <td th:case="0">未設定</td>
-		    <td th:case="1" th:inline="text">[[${obj.age}]]0代以下</td>
-		    <td th:case="8"　th:inline="text">[[${obj.age}]]0代以上</td>
-		    <td th:case="*" th:inline="text">[[${obj.age}]]0代</td>
+<div id="boyakiApp">
+	<table th:each="obj:${accountInfo}">
+	<tr>
+	    <td>ニックネーム</td>
+	    <td th:text="${obj.nickName}" id="nickName"></td>
+	</tr>
+	<tr>
+	    <td>プロフィール</td>
+	    <td th:text="${obj.profile}"></td>
+	</tr>    
+	<tr>
+	    <td>健康状態</td>
+	      <span th:each="status:${statusList}">
+	    <td th:if="*{status.statusId} == ${obj.status}"
+	        th:text="*{status.statusName}"></td>
+	    </span>
+	</tr>
+	<tr>
+	    <td>性別</td>
+	    <td th:if="0 == ${obj.gender}">未設定</td>
+	    <td th:if="1 == ${obj.gender}">男性</td>
+	    <td th:if="2 == ${obj.gender}">女性</td>
+	    <td th:if="3 == ${obj.gender}">なし</td>
+	</tr>
+	<tr>
+	    <td>年齢</td>
+	    <div th:switch="${obj.age}">
+		        <td th:case="0">未設定</td>
+			    <td th:case="1" th:inline="text">[[${obj.age}]]0代以下</td>
+			    <td th:case="8"　th:inline="text">[[${obj.age}]]0代以上</td>
+			    <td th:case="*" th:inline="text">[[${obj.age}]]0代</td>
+		</div>
+	</tr>
+	</table>
+	<div v-for="(value,key) in PostRecords">
+	    <p>{{value.content}} <h6> {{value.createAt}}</h6></p>
 	</div>
-</tr>
-</table>
+	<div ref="observe_element">loading</div>
+</div>
+
+<script>
+var boyakiApp = {
+	data(){
+		return{
+			page:0,
+			PostRecords:[],
+			observe_element:null,
+			observer:null
+		}
+	},
+	methods: {
+		find(){
+			var nickName = document.getElementById('nickName')
+			axios.get('/api/find',{params:{
+				                             nickName: nickName.textContent,
+				                             page: this.page
+									        }
+									 })
+			.then(response => {
+				if(response.data.length == 0){
+					this.observer.unobserve(this.observe_element)
+					console.log('停止したよ')
+				} else{
+					for(let i=0;i<response.data.length;i++){
+					    this.PostRecords.push(response.data[i])
+					}
+				}
+			})
+			.catch(error =>{
+				console.log(error)
+			})
+			this.page += 1
+			console.log(this.page)
+		}
+	},
+	mounted(){
+		this.observer = new IntersectionObserver((entries) => {
+            const entry = entries[0];  //監視対象の要素が配列で入っている
+            if (entry && entry.isIntersecting) { //isIntersectingがtrue:ブラウザに入っている
+              console.log('画面に入ったよ')
+              this.find()
+            }
+          });
+        this.observe_element = this.$refs.observe_element
+        this.observer.observe(this.observe_element)
+	}
+}
+Vue.createApp(boyakiApp).mount('#boyakiApp');
+</script>
+
 </body>
 </html>

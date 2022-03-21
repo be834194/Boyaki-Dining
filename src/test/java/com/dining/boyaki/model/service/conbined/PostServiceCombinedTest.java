@@ -36,7 +36,7 @@ import com.dining.boyaki.util.CsvDataSetLoader;
 @Transactional
 public class PostServiceCombinedTest {
 	
-	private static LocalDateTime datetime = LocalDateTime.parse("2022-03-03T09:31:12");
+	private static LocalDateTime datetime = LocalDateTime.parse("2022-03-08T09:31:12");
 	
 	private static MockedStatic<LocalDateTime> mock;
 	
@@ -63,18 +63,46 @@ public class PostServiceCombinedTest {
 	
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
+	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
+		List<PostRecord> record = postService.findPostRecord("sigeno", 0);
+		assertEquals(5,record.size());
+		assertEquals("sigeno",record.get(0).getNickName());
+		assertEquals("ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです",record.get(0).getContent());
+		assertEquals("グチ・ぼやき",record.get(0).getPostCategory());
+		assertEquals("中性脂肪・コレステロール高め",record.get(0).getStatus());
+		assertEquals("2022-03-07 22:17:49",record.get(0).getCreateAt());
+		assertEquals("2022-03-03 19:32:44",record.get(1).getCreateAt());
+		assertEquals("2022-03-01 18:07:15",record.get(3).getCreateAt());
+		assertEquals("2022-03-01 12:07:27",record.get(4).getCreateAt());
+		
+		record = postService.findPostRecord("sigeno", 1);
+		assertEquals(1,record.size());
+		assertEquals("2022-03-01 12:06:21",record.get(0).getCreateAt());
+		
+		record = postService.findPostRecord("sigeno", 2);
+		assertTrue(record.isEmpty());
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
 	void searchPostRecordで全件取得する() throws Exception{
         List<PostRecord> record = postService.searchPostRecord(category,status,text,0);
         assertEquals(5,record.size());
-        assertEquals("2022-03-03 18:41:36",record.get(0).getCreateAt());
-		assertEquals("2022-03-02 12:55:08",record.get(1).getCreateAt());
-		assertEquals("2022-03-02 00:02:49",record.get(3).getCreateAt());
-		assertEquals("2022-03-01 18:29:51",record.get(4).getCreateAt());
+        assertEquals("sigeno",record.get(0).getNickName());
+		assertEquals("ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです",record.get(0).getContent());
+		assertEquals("グチ・ぼやき",record.get(0).getPostCategory());
+		assertEquals("中性脂肪・コレステロール高め",record.get(0).getStatus());
+		assertEquals("2022-03-07 22:17:49",record.get(0).getCreateAt());
+		assertEquals("2022-03-03 19:32:44",record.get(1).getCreateAt());
+		assertEquals("2022-03-02 12:55:08",record.get(3).getCreateAt());
+		assertEquals("2022-03-02 11:12:50",record.get(4).getCreateAt());
 		
-		record = postService.searchPostRecord(category,status,text,1);
-		assertEquals(2,record.size());
-		assertEquals("2022-03-01 12:07:27",record.get(0).getCreateAt());
-		assertEquals("2022-02-28 23:30:34",record.get(1).getCreateAt());
+		record = postService.searchPostRecord(category,status,text,2);
+		assertEquals(1,record.size());
+		assertEquals("2022-02-28 23:30:34",record.get(0).getCreateAt());
+		
+		record = postService.searchPostRecord(category,status,text,3);
+		assertTrue(record.isEmpty());
 	}
 	
 	@Test

@@ -22,10 +22,25 @@ public class RestPostRecordController {
 		this.postService = postService;
 	}
 	
-	@RequestMapping(value = "/api/search",method= {RequestMethod.GET,RequestMethod.POST},
+	@ResponseBody
+	@RequestMapping(value = "/api/find",method=RequestMethod.GET,
+	                produces = "application/json; charset=utf-8")
+	public String findPostRecord(@RequestParam(value="nickName") String nickName,
+		                         @RequestParam(value="page") int page)
+		                        		  throws JsonProcessingException{
+		String jsonMsg = null;
+		List<PostRecord>records =  postService.findPostRecord(nickName,page);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		jsonMsg =  mapper.writerWithDefaultPrettyPrinter().writeValueAsString(records);
+		
+		return jsonMsg;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/api/search",method=RequestMethod.POST,
 			        produces = "application/json; charset=utf-8")
-    @ResponseBody
-	public String SearchPostRecord(@RequestParam(value="category") int[]category,
+	public String searchPostRecord(@RequestParam(value="category") int[]category,
     		                          @RequestParam(value="status") int[]status,
     		                          @RequestParam(value="keyword") String text,
     		                          @RequestParam(value="page") int page)

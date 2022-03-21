@@ -32,6 +32,28 @@
                #{createAt}
                )
     </insert>
+    
+    <select id = "findPostRecord" resultMap="PostRecordResultMap">
+        SELECT
+            POST.NICKNAME,
+            S_LIST.STATUSNAME,
+            P_CATEGORY.POSTNAME,
+            POST.CONTENT,
+            CAST(POST.CREATEAT as CHAR) as CREATEAT
+        FROM
+            POST as POST
+        INNER JOIN ACCOUNT_INFO as INFO
+              ON   POST.NICKNAME = INFO.NICKNAME
+        INNER JOIN STATUS_LIST as S_LIST
+              ON   INFO.STATUS = S_LIST.STATUSID
+        INNER JOIN POST_CATEGORY as P_CATEGORY
+              ON  POST.POSTCATEGORY = P_CATEGORY.POSTID
+        WHERE
+            POST.NICKNAME = #{nickName}
+        ORDER BY POST.CREATEAT DESC
+        LIMIT #{pageable.pageSize}
+        OFFSET #{pageable.offset}
+    </select>
 
     <select id = "searchPostRecord" resultMap="PostRecordResultMap">
         SELECT

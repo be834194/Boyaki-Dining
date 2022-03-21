@@ -76,27 +76,49 @@ public class PostMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
+	void findPostRecordでユーザ一人の投稿を全件取得する() throws Exception{
+		List<PostRecord> record = postMapper.findPostRecord("sigeno", PageRequest.of(0, 5));
+		assertEquals(5,record.size());
+		assertEquals("sigeno",record.get(0).getNickName());
+		assertEquals("ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです",record.get(0).getContent());
+		assertEquals("グチ・ぼやき",record.get(0).getPostCategory());
+		assertEquals("中性脂肪・コレステロール高め",record.get(0).getStatus());
+		assertEquals("2022-03-07 22:17:49",record.get(0).getCreateAt());
+		assertEquals("2022-03-03 19:32:44",record.get(1).getCreateAt());
+		assertEquals("2022-03-01 18:07:15",record.get(3).getCreateAt());
+		assertEquals("2022-03-01 12:07:27",record.get(4).getCreateAt());
+		
+		record = postMapper.findPostRecord("sigeno", PageRequest.of(1, 5));
+		assertEquals(1,record.size());
+		assertEquals("2022-03-01 12:06:21",record.get(0).getCreateAt());
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/mapper/Post/setup/")
 	void searchPostRecordで全件取得する() throws Exception{
 		List<PostRecord> record = postMapper.searchPostRecord(category,status,content,
 				                                              PageRequest.of(0, 5));
 		assertEquals(5,record.size());
-		assertEquals("2022-03-03 18:41:36",record.get(0).getCreateAt());
-		assertEquals("2022-03-02 12:55:08",record.get(1).getCreateAt());
-		assertEquals("2022-03-02 00:02:49",record.get(3).getCreateAt());
-		assertEquals("2022-03-01 18:29:51",record.get(4).getCreateAt());
+		assertEquals("sigeno",record.get(0).getNickName());
+		assertEquals("ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです",record.get(0).getContent());
+		assertEquals("グチ・ぼやき",record.get(0).getPostCategory());
+		assertEquals("中性脂肪・コレステロール高め",record.get(0).getStatus());
+		assertEquals("2022-03-07 22:17:49",record.get(0).getCreateAt());
+		assertEquals("2022-03-03 19:32:44",record.get(1).getCreateAt());
+		assertEquals("2022-03-02 12:55:08",record.get(3).getCreateAt());
+		assertEquals("2022-03-02 11:12:50",record.get(4).getCreateAt());
 		
 		record = postMapper.searchPostRecord(category,status,content,
-                                             PageRequest.of(1, 5));
-		assertEquals(2,record.size());
-		assertEquals("2022-03-01 12:07:27",record.get(0).getCreateAt());
-		assertEquals("2022-02-28 23:30:34",record.get(1).getCreateAt());
+                                             PageRequest.of(2, 5));
+		assertEquals(1,record.size());
+		assertEquals("2022-02-28 23:30:34",record.get(0).getCreateAt());
 	}
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
 	void searchPostRecordで一つの条件で絞り込んで取得する() throws Exception{
 		category = new int[]{5,3};
-		List<PostRecord> record = postMapper.searchPostRecord(category,null,null,
+		List<PostRecord> record = postMapper.searchPostRecord(category,status,null,
 				                                              PageRequest.of(0, 5));
 		assertEquals(2,record.size());
 		assertEquals("運動・筋トレ",record.get(0).getPostCategory());
@@ -180,7 +202,7 @@ public class PostMapperTest {
 		post.setNickName("匿名");
 		post.setContent("糖質制限ってどこまでやればいいの～？");
 		post.setPostCategory(2);
-		post.setCreateAt(LocalDateTime.parse("2022-03-03T09:31:12"));
+		post.setCreateAt(LocalDateTime.parse("2022-03-08T09:31:12"));
 		postMapper.insertPost(post);
 	}
 
