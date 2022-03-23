@@ -20,6 +20,28 @@ public class AccountInfoService {
 	
 	private final PasswordEncoder passwordEncoder;
 	
+	public AccountInfoForm setToAccountInfoForm(AccountInfo info) {
+		AccountInfoForm form = new AccountInfoForm();
+		form.setUserName(info.getUserName());
+		form.setNickName(info.getNickName());
+		form.setProfile(info.getProfile());
+		form.setStatus(info.getStatus());
+		form.setAge(info.getAge());
+		form.setGender(info.getGender());
+		return form;
+	}
+	
+	public AccountInfo setToAccountInfo(AccountInfoForm form) {
+		AccountInfo info = new AccountInfo();
+		info.setUserName(form.getUserName());
+		info.setNickName(form.getNickName());
+		info.setProfile(form.getProfile());
+		info.setStatus(form.getStatus());
+		info.setGender(form.getGender());
+		info.setAge(form.getAge());
+		return info;
+	}
+	
 	public AccountInfoService(AccountInfoMapper accountInfoMapper,
 			                  ChangeEntitySharedService changeEntitySharedService,
 			                  PasswordEncoder passwordEncoder) {
@@ -34,12 +56,19 @@ public class AccountInfoService {
 		if(Objects.isNull(info)) {
     		return null;
     	}
-    	return changeEntitySharedService.setToAccountInfoForm(info);
+		AccountInfoForm form = new AccountInfoForm();
+		form.setUserName(info.getUserName());
+		form.setNickName(info.getNickName());
+		form.setProfile(info.getProfile());
+		form.setStatus(info.getStatus());
+		form.setAge(info.getAge());
+		form.setGender(info.getGender());
+    	return form;
 	}
 	
 	@Transactional(readOnly = false)
 	public void updateAccountInfo(AccountInfoForm form) {
-		accountInfoMapper.updateAccountInfo(changeEntitySharedService.setToAccountInfo(form));
+		accountInfoMapper.updateAccountInfo(setToAccountInfo(form));
 	}
 	
 	@Transactional(readOnly = false)
