@@ -19,12 +19,36 @@ public class DiaryRecordService {
 	
 	private final DiaryRecordMapper diaryRecordMapper;
 	
-	private final ChangeEntitySharedService changeEntitySharedService;
-	
-	public DiaryRecordService(DiaryRecordMapper diaryRecordMapper,
-			                  ChangeEntitySharedService changeEntitySharedService) {
+	public DiaryRecordService(DiaryRecordMapper diaryRecordMapper) {
 		this.diaryRecordMapper = diaryRecordMapper;
-		this.changeEntitySharedService = changeEntitySharedService;
+	}
+	
+	public DiaryRecord setToDiaryRecord(DiaryRecordForm form) {
+		DiaryRecord record = new DiaryRecord();
+		record.setUserName(form.getUserName());
+		record.setCategoryId(form.getCategoryId());
+		record.setDiaryDay(form.getDiaryDay());
+		record.setRecord1(form.getRecord1());
+		record.setRecord2(form.getRecord2());
+		record.setRecord3(form.getRecord3());
+		record.setPrice(form.getPrice());
+		record.setMemo(form.getMemo());
+		record.setCreateAt(form.getCreateAt());
+		return record;
+	}
+	
+	public DiaryRecordForm setToDiaryRecordForm(DiaryRecord record) {
+		DiaryRecordForm form = new DiaryRecordForm();
+		form.setUserName(record.getUserName());
+		form.setCategoryId(record.getCategoryId());
+		form.setDiaryDay(record.getDiaryDay());
+		form.setRecord1(record.getRecord1());
+		form.setRecord2(record.getRecord2());
+		form.setRecord3(record.getRecord3());
+		form.setPrice(record.getPrice());
+		form.setMemo(record.getMemo());
+		form.setCreateAt(record.getCreateAt());
+		return form;
 	}
 	
 	@Transactional(readOnly = true)
@@ -82,13 +106,13 @@ public class DiaryRecordService {
     	if(Objects.isNull(diary)) {
     		return null;
     	}
-    	return changeEntitySharedService.setToDiaryRecordForm(diary);
+    	return setToDiaryRecordForm(diary);
     	
     }
     
     @Transactional(readOnly = false)
     public void insertDiaryRecord(DiaryRecordForm form) {
-    	DiaryRecord diary = changeEntitySharedService.setToDiaryRecord(form);
+    	DiaryRecord diary = setToDiaryRecord(form);
     	diary.setCreateAt(LocalDateTime.now());
     	diary.setUpdateAt(diary.getCreateAt());
     	diaryRecordMapper.insertDiaryRecord(diary);
@@ -96,14 +120,14 @@ public class DiaryRecordService {
     
     @Transactional(readOnly = false)
     public void updateDiaryRecord(DiaryRecordForm form) {
-    	DiaryRecord diary = changeEntitySharedService.setToDiaryRecord(form);
+    	DiaryRecord diary = setToDiaryRecord(form);
     	diary.setUpdateAt(LocalDateTime.now());
     	diaryRecordMapper.updateDiaryRecord(diary);
     }
     
     @Transactional(readOnly = false)
     public void deleteDiaryRecord(DiaryRecordForm form) {
-    	diaryRecordMapper.deleteDiaryRecord(changeEntitySharedService.setToDiaryRecord(form));
+    	diaryRecordMapper.deleteDiaryRecord(setToDiaryRecord(form));
     }
 
 }

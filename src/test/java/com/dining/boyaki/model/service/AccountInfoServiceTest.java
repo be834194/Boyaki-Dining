@@ -1,6 +1,7 @@
 package com.dining.boyaki.model.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,6 +47,44 @@ public class AccountInfoServiceTest {
 		MockitoAnnotations.openMocks(this);
 	}
 	
+	@Test
+    void setToAccountInfoFormでAccountInfoをAccountInfoFormに詰め替える() throws Exception{
+		AccountInfo info = new AccountInfo();
+		info.setUserName("miho");
+		info.setNickName("匿名ちゃん");
+		info.setProfile("毎日定時で帰りたい");
+		info.setStatus(0);
+		info.setGender(2);
+		info.setAge(21);
+		
+		AccountInfoForm form = accountInfoService.setToAccountInfoForm(info);
+		assertEquals("miho",form.getUserName());
+		assertEquals("匿名ちゃん",form.getNickName());
+		assertEquals("毎日定時で帰りたい",form.getProfile());
+		assertEquals(0,form.getStatus());
+		assertEquals(2,form.getGender());
+		assertEquals(21,form.getAge());
+	}
+	
+	@Test
+    void setToAccountInfoでAccountInfoFormをAccountInfoに詰め替える() throws Exception{
+		AccountInfoForm form = new AccountInfoForm();
+		form.setUserName("miho");
+		form.setNickName("匿名ちゃん");
+		form.setProfile("毎日定時で帰りたい");
+		form.setStatus(0);
+		form.setGender(2);
+		form.setAge(21);
+		
+		AccountInfo info = accountInfoService.setToAccountInfo(form);
+		assertEquals("miho",info.getUserName());
+		assertEquals("匿名ちゃん",info.getNickName());
+		assertEquals("毎日定時で帰りたい",info.getProfile());
+		assertEquals(0,info.getStatus());
+		assertEquals(2,info.getGender());
+		assertEquals(21,info.getAge());
+	}
+	
 	@Nested
 	class AccountInfoMethods {
 		AccountInfo info;
@@ -72,7 +111,6 @@ public class AccountInfoServiceTest {
 		@Test
 		void findAccountInfoでユーザ情報レコードを1件取得する() {
 			when(accountInfoMapper.findAccountInfo("糸井")).thenReturn(info);
-			when(changeEntitySharedService.setToAccountInfoForm(info)).thenReturn(form);
 			
 			AccountInfoForm result =  accountInfoService.findAccountInfo("糸井");
 			assertEquals("糸井",result.getUserName());
@@ -82,28 +120,23 @@ public class AccountInfoServiceTest {
 			assertEquals(3,result.getGender());
 			assertEquals(2,result.getAge());
 			verify(accountInfoMapper,times(1)).findAccountInfo("糸井");
-			verify(changeEntitySharedService,times(1)).setToAccountInfoForm(info);
 		}
 	
 		@Test
 		void findAccountInfoでユーザ情報レコードが取得できない場合はnullが返ってくる() {
 			when(accountInfoMapper.findAccountInfo("糸井")).thenReturn(null);
-			when(changeEntitySharedService.setToAccountInfoForm(info)).thenReturn(form);
 			
 			AccountInfoForm result =  accountInfoService.findAccountInfo("糸井");
 			assertEquals(null,result);
 			verify(accountInfoMapper,times(1)).findAccountInfo("糸井");
-			verify(changeEntitySharedService,times(0)).setToAccountInfoForm(info);
 		}
 		
 		@Test
 		void updateAccountInfoでユーザ情報レコードを更新する() {
-			when(changeEntitySharedService.setToAccountInfo(form)).thenReturn(info);
-			doNothing().when(accountInfoMapper).updateAccountInfo(info);
+			doNothing().when(accountInfoMapper).updateAccountInfo(any(AccountInfo.class));
 			
 			accountInfoService.updateAccountInfo(form);
-			verify(changeEntitySharedService,times(1)).setToAccountInfo(form);
-			verify(accountInfoMapper,times(1)).updateAccountInfo(info);
+			verify(accountInfoMapper,times(1)).updateAccountInfo(any(AccountInfo.class));
 		}
 	}
 	
