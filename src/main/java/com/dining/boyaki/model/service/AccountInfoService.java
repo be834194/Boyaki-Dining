@@ -56,14 +56,7 @@ public class AccountInfoService {
 		if(Objects.isNull(info)) {
     		return null;
     	}
-		AccountInfoForm form = new AccountInfoForm();
-		form.setUserName(info.getUserName());
-		form.setNickName(info.getNickName());
-		form.setProfile(info.getProfile());
-		form.setStatus(info.getStatus());
-		form.setAge(info.getAge());
-		form.setGender(info.getGender());
-    	return form;
+    	return setToAccountInfoForm(info);
 	}
 	
 	@Transactional(readOnly = false)
