@@ -5,29 +5,29 @@
 
     <select id="findAllDiaryRecords" resultType="com.dining.boyaki.model.entity.DiaryRecord">
         SELECT
-            USERNAME,CATEGORYID,DIARYDAY,RECORD1,RECORD2,RECORD3
+            username,categoryid,diaryday,record1,record2,record3
         FROM
-            DIARY_RECORD
+            diary_record
         WHERE
-            USERNAME = #{userName}
+            username = #{userName}
         ORDER BY
-            DIARYDAY,CATEGORYID
+            diaryday,categoryid
     </select>
 
     <select id="findOneDiaryRecord" resultType="com.dining.boyaki.model.entity.DiaryRecord">
         SELECT
-            USERNAME,CATEGORYID,DIARYDAY,RECORD1,RECORD2,RECORD3,PRICE,MEMO,CREATEAT,UPDATEAT
+            username,categoryid,diaryday,record1,record2,record3,price,memo,createat,updateat
         FROM
-            DIARY_RECORD
+            diary_record
         WHERE
-            USERNAME = #{userName}
-        AND CATEGORYID = #{categoryId}
-        AND DIARYDAY = #{diaryDay}
+            username = #{userName}
+        AND categoryid = #{categoryId}
+        AND diaryday = #{diaryDay}
     </select>
     
     <insert id="insertDiaryRecord">
         INSERT INTO
-            DIARY_RECORD(USERNAME,CATEGORYID,DIARYDAY,RECORD1,RECORD2,RECORD3,PRICE,MEMO,CREATEAT,UPDATEAT)
+            diary_record(username,categoryid,diaryday,record1,record2,record3,price,memo,createat,updateat)
         VALUES
            (#{userName},
             #{categoryId},
@@ -43,30 +43,30 @@
     
     <update id="updateDiaryRecord" parameterType="com.dining.boyaki.model.entity.DiaryRecord">
         UPDATE
-            DIARY_RECORD
+            diary_record
         SET
-            USERNAME = #{userName},
-            CATEGORYID = #{categoryId},
-            DIARYDAY = #{diaryDay},
-            RECORD1 = #{record1},
-            RECORD2 = #{record2},
-            RECORD3 = #{record3},
-            PRICE = #{price},
-            MEMO = #{memo},
-            UPDATEAT = #{updateAt}
+            username = #{userName},
+            categoryid = #{categoryId},
+            diaryday = #{diaryDay},
+            record1 = #{record1},
+            record2 = #{record2},
+            record3 = #{record3},
+            price = #{price},
+            memo = #{memo},
+            updateat = #{updateAt}
         WHERE 
-            USERNAME = #{userName}
-        AND CREATEAT = #{createAt}
+            username = #{userName}
+        AND createat = #{createAt}
     </update>
     
     <delete id="deleteDiaryRecord">
         DELETE
         FROM
-            DIARY_RECORD
+            diary_record
         WHERE
-            USERNAME = #{userName}
-        AND CATEGORYID = #{categoryId}
-        AND DIARYDAY = #{diaryDay}
+            username = #{userName}
+        AND categoryid = #{categoryId}
+        AND diaryday = #{diaryDay}
     </delete>
 
 </mapper>

@@ -4,26 +4,26 @@
 <mapper namespace="com.dining.boyaki.model.mapper.PostMapper">
     <select id = "findNickName" resultType="String">
         SELECT
-            NICKNAME
+            nickname
         FROM
-            ACCOUNT_INFO
+            account_info
         WHERE
-            USERNAME = #{userName}
+            username = #{userName}
     </select>
     
     <select id = "findProfile" parameterType="String"
                                resultType="com.dining.boyaki.model.entity.AccountInfo">
         SELECT
-            NICKNAME,PROFILE,STATUS,GENDER,AGE
+            nickname,profile,status,gender,age
         FROM
-            ACCOUNT_INFO
+            account_info
         WHERE
-            NICKNAME = #{nickName}
+            nickname = #{nickName}
     </select>
     
     <insert id = "insertPost" parameterType="com.dining.boyaki.model.entity.Post">
         INSERT INTO
-            POST(USERNAME,NICKNAME,CONTENT,POSTCATEGORY,CREATEAT)
+            post(username,nickname,content,postcategory,createat)
         VALUES(
                #{userName},
                #{nickName},
@@ -35,62 +35,62 @@
     
     <select id = "findPostRecord" resultMap="PostRecordResultMap">
         SELECT
-            POST.NICKNAME,
-            S_LIST.STATUSNAME,
-            P_CATEGORY.POSTNAME,
-            POST.CONTENT,
-            CAST(POST.CREATEAT as CHAR) as CREATEAT
+            POST.nickname,
+            S_LIST.statusname,
+            P_CATEGORY.postname,
+            POST.content,
+            CAST(POST.createat as CHAR) as createat
         FROM
-            POST as POST
-        INNER JOIN ACCOUNT_INFO as INFO
-              ON   POST.NICKNAME = INFO.NICKNAME
-        INNER JOIN STATUS_LIST as S_LIST
-              ON   INFO.STATUS = S_LIST.STATUSID
-        INNER JOIN POST_CATEGORY as P_CATEGORY
-              ON  POST.POSTCATEGORY = P_CATEGORY.POSTID
+            post as POST
+        INNER JOIN account_info as INFO
+              ON   POST.nickname = INFO.nickname
+        INNER JOIN status_list as S_LIST
+              ON   INFO.status = S_LIST.statusid
+        INNER JOIN post_category as P_CATEGORY
+              ON  POST.postcategory = P_CATEGORY.postid
         WHERE
-            POST.NICKNAME = #{nickName}
-        ORDER BY POST.CREATEAT DESC
+            post.nickname = #{nickName}
+        ORDER BY POST.createat DESC
         LIMIT #{pageable.pageSize}
         OFFSET #{pageable.offset}
     </select>
 
     <select id = "searchPostRecord" resultMap="PostRecordResultMap">
         SELECT
-            POST.NICKNAME,
-            S_LIST.STATUSNAME,
-            P_CATEGORY.POSTNAME,
-            POST.CONTENT,
-            CAST(POST.CREATEAT as CHAR) as CREATEAT
+            POST.nickname,
+            S_LIST.statusname,
+            P_CATEGORY.postname,
+            POST.content,
+            CAST(POST.createat as CHAR) as createat
         FROM
-            POST as POST
-        INNER JOIN ACCOUNT_INFO as INFO
-              ON   POST.NICKNAME = INFO.NICKNAME
-        INNER JOIN STATUS_LIST as S_LIST
-              ON   INFO.STATUS = S_LIST.STATUSID
-        INNER JOIN POST_CATEGORY as P_CATEGORY
-              ON  POST.POSTCATEGORY = P_CATEGORY.POSTID
+            post as POST
+        INNER JOIN account_info as INFO
+              ON   POST.nickname = INFO.nickname
+        INNER JOIN status_list as S_LIST
+              ON   INFO.status = S_LIST.statusid
+        INNER JOIN post_category as P_CATEGORY
+              ON  POST.postcategory = P_CATEGORY.postid
         <where>
             <if test="category != null">
                 <foreach item="categoryId" index="i" collection="category"
-                         open="POST.POSTCATEGORY IN (" separator="," close=")">
+                         open="POST.postcategory IN (" separator="," close=")">
                          #{categoryId}
                 </foreach>
             </if>
             <if test="status!= null">
                 AND <foreach item="statusId" index="j" collection="status"
-                         open="INFO.STATUS IN (" separator="," close=")">
+                         open="INFO.status IN (" separator="," close=")">
                          #{statusId}
                 </foreach>
             </if>
             <if test="content!= null">
                 AND <foreach item="text" index="k" collection="content"
                          open="(" separator=" and " close=")">
-                         POST.CONTENT LIKE '%${text}%'
+                         POST.content LIKE '%${text}%'
                 </foreach>
             </if>
         </where>
-        ORDER BY POST.CREATEAT DESC
+        ORDER BY POST.createat DESC
         LIMIT #{pageable.pageSize}
         OFFSET #{pageable.offset}
     </select>
@@ -100,7 +100,7 @@
       <result property="status" column="statusname"></result>
       <result property="postCategory" column="postname"></result>
       <result property="content" column="content"></result>
-      <result property="createAt" column="createAt"></result>
+      <result property="createAt" column="createat"></result>
     </resultMap>
     
 </mapper>
