@@ -5,14 +5,14 @@
 
     <select id = "findAccount" resultType="com.dining.boyaki.model.entity.Account" 
                                parameterType="String">
-        SELECT
-            USERNAME,
-            PASSWORD,
-            ROLE
-        FROM
-            ACCOUNT
-        WHERE
-           USERNAME = #{userName}
+        select
+            username,
+            password,
+            role
+        from
+            account
+        where
+           username = #{userName}
     </select>
     
 </mapper>

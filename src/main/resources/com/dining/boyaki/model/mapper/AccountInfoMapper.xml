@@ -5,38 +5,38 @@
 
     <select id = "findAccountInfo" resultType="com.dining.boyaki.model.entity.AccountInfo">
         SELECT
-            USERNAME,NICKNAME,PROFILE,STATUS,GENDER,AGE
+            username,nickname,profile,status,gender,age
         FROM
-            ACCOUNT_INFO
+            account_info
         WHERE
-            USERNAME = #{userName}
+            username = #{userName}
     </select>
     
     <update id = "updateAccountInfo" parameterType="com.dining.boyaki.model.entity.AccountInfo">
         UPDATE
-            ACCOUNT_INFO
+            account_info
         SET 
-            NICKNAME = #{nickName},
-            PROFILE = #{profile},
-            STATUS = #{status},
-            GENDER = #{gender},
-            AGE = #{age}
+            nickname = #{nickName},
+            profile = #{profile},
+            status = #{status},
+            gender = #{gender},
+            age = #{age}
         WHERE 
-            USERNAME = #{userName}
+            username = #{userName}
     </update>
     
     <update id = "updatePassword" parameterType="com.dining.boyaki.model.entity.Account">
         UPDATE
-            ACCOUNT
+            account
         SET 
-            PASSWORD = #{password}
+            password = #{password}
         WHERE 
-            USERNAME = #{userName}
+            username = #{userName}
     </update>
     
     <insert id = "insertPasswordHistory" parameterType="com.dining.boyaki.model.entity.Account">
         INSERT INTO
-            Password_History(USERNAME, PASSWORD, USEDAY)
+            password_history(username, password, useday)
         VALUES(
                #{userName},
                #{password},
@@ -46,9 +46,9 @@
     <delete id = "deleteAccount" parameterType = "String">
         DELETE
         FROM
-            ACCOUNT
+            account
         WHERE
-            USERNAME = #{userName}
+            username = #{userName}
     </delete>
     
 </mapper>

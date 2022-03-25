@@ -5,7 +5,7 @@
     
     <insert id = "insertAccount" parameterType="com.dining.boyaki.model.entity.Account">
         INSERT INTO
-            ACCOUNT(USERNAME, PASSWORD, MAIL, ROLE)
+            account(username, password, mail, role)
         VALUES(
                #{userName},
                #{password},
@@ -15,7 +15,7 @@
     
     <insert id = "insertPasswordHistory" parameterType="com.dining.boyaki.model.entity.Account">
         INSERT INTO
-            Password_History(USERNAME, PASSWORD, USEDAY)
+            password_history(username, password, useday)
         VALUES(
                #{userName},
                #{password},
@@ -24,7 +24,7 @@
     
     <insert id = "insertAccountInfo" parameterType="com.dining.boyaki.model.entity.AccountInfo">
         INSERT INTO
-            ACCOUNT_INFO(USERNAME, NICKNAME, PROFILE, STATUS, GENDER, AGE)
+            account_info(username, nickname, profile, status, gender, age)
         VALUES(
                #{userName},
                #{nickName},
