@@ -17,8 +17,8 @@ public interface PostMapper {
 	
 	void insertPost(Post post);
 	void deletePost(@Param("userName")String userName,
-			        @Param("postId")int postId);
-	PostRecord findOnePostRecord(int postId);
+			        @Param("postId")long postId);
+	PostRecord findOnePostRecord(long postId);
 	
 	List<PostRecord> findPostRecord(@Param("nickName")String nickName,
 			                        @Param("pageable")Pageable pageable);

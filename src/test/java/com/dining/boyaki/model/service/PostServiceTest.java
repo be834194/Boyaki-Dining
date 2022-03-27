@@ -54,72 +54,6 @@ public class PostServiceTest {
 	}
 	
 	@Test
-	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
-		List<PostRecord> recordList = new ArrayList<PostRecord>();
-		PostRecord record = new PostRecord();
-		record.setNickName("加藤健");
-		record.setContent("牛乳を飲み始めて尿酸値が7.0を切りました！");
-		record.setPostCategory("尿酸値");
-		record.setStatus("尿酸値高め");
-		record.setCreateAt("2022-03-07 12:46:36");
-		recordList.add(record);
-		
-		when(postMapper.findPostRecord("加藤健", PageRequest.of(0, 5))).thenReturn(recordList);
-		List<PostRecord> result = postService.findPostRecord("加藤健", 0);
-		assertEquals(1,result.size());
-		verify(postMapper,times(1)).findPostRecord("加藤健", PageRequest.of(0, 5));
-	}
-	
-	@Test
-	void searchPostRecordで全件取得する() throws Exception{
-		List<PostRecord> recordList = new ArrayList<PostRecord>();
-		PostRecord record = new PostRecord();
-		recordList.add(record);
-		recordList.add(record);
-		
-		int[] category = new int[]{};
-		int[] status = new int[]{};
-		String text = " 		";
-		when(postMapper.searchPostRecord(any(),any(),any(),any())).thenReturn(recordList);
-		
-		List<PostRecord> result = postService.searchPostRecord(category, status, text,0);
-		assertEquals(2,result.size());
-		verify(postMapper,times(1)).searchPostRecord(any(),any(),any(),any());
-		
-		text = null;
-		result = postService.searchPostRecord(category, status, text,0);
-		assertEquals(2,result.size());
-		verify(postMapper,times(2)).searchPostRecord(any(),any(),any(),any());
-		
-		text = "";
-		result = postService.searchPostRecord(category, status, text,0);
-		assertEquals(2,result.size());
-		verify(postMapper,times(3)).searchPostRecord(any(),any(),any(),any());
-	}
-	
-	@Test
-	void searchPostRecordで投稿情報を絞り込んで取得する() throws Exception{
-		List<PostRecord> recordList = new ArrayList<PostRecord>();
-		PostRecord record = new PostRecord();
-		record.setNickName("加藤健");
-		record.setContent("牛乳を飲み始めて尿酸値が7.0を切りました！");
-		record.setPostCategory("尿酸値");
-		record.setStatus("尿酸値高め");
-		record.setCreateAt("2022-03-07 12:46:36");
-		recordList.add(record);
-		
-		int[] category = new int[]{1,2,3};
-		int[] status = new int[]{1,7};
-		String text = "牛乳 尿酸";
-		when(postMapper.searchPostRecord(
-				any(int[].class),any(int[].class),any(String[].class),any(PageRequest.class))).thenReturn(recordList);
-		
-		List<PostRecord> result = postService.searchPostRecord(category, status, text,0);
-		assertEquals(1,result.size());
-		verify(postMapper,times(1)).searchPostRecord(any(int[].class),any(int[].class),any(String[].class),any(PageRequest.class));
-	}
-	
-	@Test
 	void findNickNameでニックネームを1件取得する() throws Exception{
 		when(postMapper.findNickName("糸井")).thenReturn("sigeno");
 		
@@ -192,6 +126,112 @@ public class PostServiceTest {
 		
 		postService.insertPost(form);
 		verify(postMapper,times(1)).insertPost(any(Post.class));
+	}
+	
+	@Test
+	void deletePostで投稿が1件追加される() throws Exception{
+		doNothing().when(postMapper).deletePost("糸井", 3);
+		
+		postService.deletePost("糸井", 3);
+		verify(postMapper,times(1)).deletePost("糸井", 3);
+	}
+	
+	@Test
+	void findOnePostRecordで投稿を一件取得する() {
+		PostRecord record = new PostRecord();
+		record.setPostId("10");
+		record.setUserName("糸井");
+		record.setNickName("sigeno");
+		record.setContent("ノンアル飽きた！");
+		record.setStatus("中性脂肪・コレステロール高め");
+		record.setPostCategory("ダイエット");
+		record.setCreateAt("2022-03-03 19:32:44");
+		when(postMapper.findOnePostRecord(10)).thenReturn(record);
+		
+		PostRecord result = postService.findOnePostRecord(10);
+		assertEquals("10",result.getPostId());
+		assertEquals("糸井",result.getUserName());
+		assertEquals("sigeno",result.getNickName());
+		assertEquals("ノンアル飽きた！",result.getContent());
+		assertEquals("中性脂肪・コレステロール高め",result.getStatus());
+		assertEquals("ダイエット",result.getPostCategory());
+		assertEquals("2022-03-03 19:32:44",result.getCreateAt());
+		verify(postMapper,times(1)).findOnePostRecord(10);
+	}
+	
+	@Test
+	void findOnePostRecordで投稿を一件取得できない場合はnullが返ってくる() {
+		when(postMapper.findOnePostRecord(10)).thenReturn(null);
+		
+		PostRecord result = postService.findOnePostRecord(10);
+		assertEquals(null,result);
+		verify(postMapper,times(1)).findOnePostRecord(10);
+	}
+	
+	@Test
+	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
+		List<PostRecord> recordList = new ArrayList<PostRecord>();
+		PostRecord record = new PostRecord();
+		record.setNickName("加藤健");
+		record.setContent("牛乳を飲み始めて尿酸値が7.0を切りました！");
+		record.setPostCategory("尿酸値");
+		record.setStatus("尿酸値高め");
+		record.setCreateAt("2022-03-07 12:46:36");
+		recordList.add(record);
+		
+		when(postMapper.findPostRecord("加藤健", PageRequest.of(0, 5))).thenReturn(recordList);
+		List<PostRecord> result = postService.findPostRecord("加藤健", 0);
+		assertEquals(1,result.size());
+		verify(postMapper,times(1)).findPostRecord("加藤健", PageRequest.of(0, 5));
+	}
+	
+	@Test
+	void searchPostRecordで全件取得する() throws Exception{
+		List<PostRecord> recordList = new ArrayList<PostRecord>();
+		PostRecord record = new PostRecord();
+		recordList.add(record);
+		recordList.add(record);
+		
+		int[] category = new int[]{};
+		int[] status = new int[]{};
+		String text = " 		";
+		when(postMapper.searchPostRecord(any(),any(),any(),any())).thenReturn(recordList);
+		
+		List<PostRecord> result = postService.searchPostRecord(category, status, text,0);
+		assertEquals(2,result.size());
+		verify(postMapper,times(1)).searchPostRecord(any(),any(),any(),any());
+		
+		text = null;
+		result = postService.searchPostRecord(category, status, text,0);
+		assertEquals(2,result.size());
+		verify(postMapper,times(2)).searchPostRecord(any(),any(),any(),any());
+		
+		text = "";
+		result = postService.searchPostRecord(category, status, text,0);
+		assertEquals(2,result.size());
+		verify(postMapper,times(3)).searchPostRecord(any(),any(),any(),any());
+	}
+	
+	@Test
+	void searchPostRecordで投稿情報を絞り込んで取得する() throws Exception{
+		List<PostRecord> recordList = new ArrayList<PostRecord>();
+		PostRecord record = new PostRecord();
+		record.setNickName("加藤健");
+		record.setContent("牛乳を飲み始めて尿酸値が7.0を切りました！");
+		record.setPostCategory("尿酸値");
+		record.setStatus("尿酸値高め");
+		record.setCreateAt("2022-03-07 12:46:36");
+		recordList.add(record);
+		
+		int[] category = new int[]{1,2,3};
+		int[] status = new int[]{1,7};
+		String text = "牛乳 尿酸";
+		when(postMapper.searchPostRecord(
+				any(int[].class),any(int[].class),any(String[].class),any(PageRequest.class))).thenReturn(recordList);
+		
+		List<PostRecord> result = postService.searchPostRecord(category, status, text,0);
+		assertEquals(1,result.size());
+		verify(postMapper,times(1)).searchPostRecord(any(int[].class),any(int[].class),any(String[].class),any(PageRequest.class));
 	}
 
 }
