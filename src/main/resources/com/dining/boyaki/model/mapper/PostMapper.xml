@@ -33,6 +33,34 @@
                )
     </insert>
     
+    <delete id = "deletePost">
+        DELETE FROM post
+        WHERE
+              username = #{userName}
+        and   postid = #{postId}
+    </delete>
+    
+    <select id = "findOnePostRecord" resultMap="PostRecordResultMap">
+        SELECT
+            POST.postid,
+            POST.username,
+            POST.nickname,
+            S_LIST.statusname,
+            P_CATEGORY.postname,
+            POST.content,
+            CAST(POST.createat as CHAR) as createat
+        FROM
+            post as POST
+        INNER JOIN account_info as INFO
+              ON   POST.nickname = INFO.nickname
+        INNER JOIN status_list as S_LIST
+              ON   INFO.status = S_LIST.statusid
+        INNER JOIN post_category as P_CATEGORY
+              ON  POST.postcategory = P_CATEGORY.postid
+        WHERE
+            post.postid = #{postid}
+    </select>
+    
     <select id = "findPostRecord" resultMap="PostRecordResultMap">
         SELECT
             POST.postid,

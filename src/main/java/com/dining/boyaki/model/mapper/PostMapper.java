@@ -14,7 +14,12 @@ public interface PostMapper {
 	
 	String findNickName(String userName);
 	AccountInfo findProfile(String nickName);
+	
 	void insertPost(Post post);
+	void deletePost(@Param("userName")String userName,
+			        @Param("postId")int postId);
+	PostRecord findOnePostRecord(int postId);
+	
 	List<PostRecord> findPostRecord(@Param("nickName")String nickName,
 			                        @Param("pageable")Pageable pageable);
 	List<PostRecord> searchPostRecord(@Param("category") int[] category,
