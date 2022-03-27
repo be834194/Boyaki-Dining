@@ -14,7 +14,7 @@
 	   text-decoration:none;
 	   color:black;
 	}
-	a span {
+	a.span {
 	   text-decoration:underline;
 	   color:blue;
 	}
@@ -43,10 +43,10 @@
 	    <button type="submit" v-on:click="startSearch">検索</button>
 	</div>
     <div v-for="(value,key) in PostRecords" class="blocklink">
-	    <a v-bind:href="`/index/boyaki/${value.nickName}`">{{value.nickName}} さん
-		    <span>:{{value.status}}</span>
-		    <span>{{value.postCategory}}</span>
-		    <span>{{value.content}} <h6> {{value.createAt}}</h6></span>
+	    <a v-bind:href="`/index/boyaki/${value.postId}`">{{value.nickName}} さん
+		    <span>{{value.content}} 
+		    <h6> {{value.createAt}}</h6>
+		    </span>
 	    </a>
 	</div>
 	<div ref="observe_element">loading</div>

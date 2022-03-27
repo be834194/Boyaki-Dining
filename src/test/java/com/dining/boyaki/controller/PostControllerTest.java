@@ -34,8 +34,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
-import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.PostCategory;
+import com.dining.boyaki.model.entity.PostRecord;
 import com.dining.boyaki.model.entity.StatusList;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
@@ -77,34 +77,71 @@ public class PostControllerTest {
 		       .andExpect(view().name("Post/PostIndex"));
 	}
 	
-	@Test
-	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
-	void showProfileでプロフィール画面が表示される() throws Exception{
-		AccountInfo info = new AccountInfo();
-		info.setNickName("sigeno");
-		info.setProfile("今年中に体重5キロ落としたい");
-		info.setStatus(6);
-		info.setGender(3);
-		info.setAge(2);
-		when(postService.findProfile("sigeno")).thenReturn(info);
+	@Nested
+	class showPostDetail {
+		PostRecord record;
 		
-		mockMvc.perform(get("/index/boyaki/sigeno"))
-		       .andExpect(status().is2xxSuccessful())
-		       .andExpect(model().attribute("accountInfo",
-                                            hasProperty("nickName",is("sigeno"))))
-		       .andExpect(model().attribute("statusList", StatusList.values()))
-		       .andExpect(view().name("Post/Profile"));
-		verify(postService,times(1)).findProfile("sigeno");
+		@BeforeEach
+		void setUp(){
+			record = new PostRecord();
+			record.setPostId("7");
+			record.setUserName("miho");
+			record.setNickName("匿名");
+			record.setContent("先月から体重1キロ落ち増した！今月もダイエット頑張るぞ！！");
+			record.setStatus("ダイエット中");
+			record.setPostCategory("ダイエット");
+			record.setCreateAt("2022-03-02 11:12:50");
+			when(postService.findOnePostRecord(7)).thenReturn(record);
+			when(postService.findOnePostRecord(333)).thenReturn(null);
+		}
+		
+		@Test
+		@WithMockCustomUser(userName="マクベイ",password="sun-fla-cis",role="ROLE_USER")
+		void showPostDetailで投稿詳細画面が表示され削除ボタンは表示されない() throws Exception{
+			mockMvc.perform(get("/index/boyaki/7"))
+			       .andExpect(status().is2xxSuccessful())
+			       .andExpect(model().attribute("postRecord",
+	                                            hasProperty("userName",is("miho"))))
+			       .andExpect(model().attribute("ableDeleted", "false"))
+			       .andExpect(view().name("Post/PostDetail"));
+			verify(postService,times(1)).findOnePostRecord(7);
+		}
+		
+		@Test
+		@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+		void showPostDetailで投稿詳細画面が表示され削除ボタンが表示される() throws Exception{
+			mockMvc.perform(get("/index/boyaki/7"))
+			       .andExpect(status().is2xxSuccessful())
+			       .andExpect(model().attribute("postRecord",
+	                                            hasProperty("userName",is("miho"))))
+			       .andExpect(model().attribute("ableDeleted", "true"))
+			       .andExpect(view().name("Post/PostDetail"));
+			verify(postService,times(1)).findOnePostRecord(7);
+		}
+		
+		@Test
+		@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+		void showPostDetailで投稿が見つからない場合は404ページを返す() throws Exception{
+			mockMvc.perform(get("/index/boyaki/333"))
+			       .andExpect(status().is2xxSuccessful())
+			       .andExpect(view().name("Common/404"));
+			verify(postService,times(1)).findOnePostRecord(333);
+		}
 	}
 	
 	@Test
-	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
-	void showProfileでプロフィールが見つからない場合は404ページを返す() throws Exception{
-		when(postService.findProfile("hoge")).thenReturn(null);
-		mockMvc.perform(get("/index/boyaki/hoge"))
-		       .andExpect(status().is2xxSuccessful())
-		       .andExpect(view().name("Common/404"));
-		verify(postService,times(1)).findProfile("hoge");
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	void deletePostDetailで投稿が削除される() throws Exception{
+		doNothing().when(postService).deletePost("miho", 7);
+		mockMvc.perform(post("/index/boyaki/post/delete")
+				       .param("userName", "miho")
+				       .param("postId", "7")
+				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+		       .andExpect(status().is3xxRedirection())
+		       .andExpect(model().hasNoErrors())
+		       .andExpect(redirectedUrl("/index/boyaki"));
+		verify(postService,times(1)).deletePost("miho", 7);
 	}
 	
 	@Test
