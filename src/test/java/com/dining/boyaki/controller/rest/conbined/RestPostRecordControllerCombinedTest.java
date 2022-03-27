@@ -59,11 +59,11 @@ public class RestPostRecordControllerCombinedTest {
 	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		List<String> expect = new ArrayList<String>();
-		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです, createAt=2022-03-07 22:17:49}");
-		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=ダイエット, content=ノンアル飽きた！, createAt=2022-03-03 19:32:44}");
-		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=全然お腹周りが改善されなくてダイエットめげそう, createAt=2022-03-02 12:55:08}");
-		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=ダイエット, content=在宅だと毎日の料理が大変。。, createAt=2022-03-01 18:07:15}");
-		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=中性脂肪・コレステロール, content=ドーナツは穴が開いてるからゼロカロリーって本当？, createAt=2022-03-01 12:07:27}");
+		expect.add("{postId=11, userName=null, nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです, createAt=2022-03-07 22:17:49}");
+		expect.add("{postId=10, userName=null, nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=ダイエット, content=ノンアル飽きた！, createAt=2022-03-03 19:32:44}");
+		expect.add("{postId=8, userName=null, nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=全然お腹周りが改善されなくてダイエットめげそう, createAt=2022-03-02 12:55:08}");
+		expect.add("{postId=4, userName=null, nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=ダイエット, content=在宅だと毎日の料理が大変。。, createAt=2022-03-01 18:07:15}");
+		expect.add("{postId=3, userName=null, nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=中性脂肪・コレステロール, content=ドーナツは穴が開いてるからゼロカロリーって本当？, createAt=2022-03-01 12:07:27}");
 		String readValue = mockMvc.perform(get("/api/find")
 										  .param("nickName", "sigeno")
 										  .param("page","0"))
@@ -73,7 +73,7 @@ public class RestPostRecordControllerCombinedTest {
 		assertEquals(expect.toString(),result.toString());
 		
 		expect = new ArrayList<String>();
-		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=最近アカウントをつくりました、よろしく, createAt=2022-03-01 12:06:21}");
+		expect.add("{postId=2, userName=null, nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=最近アカウントをつくりました、よろしく, createAt=2022-03-01 12:06:21}");
 		readValue = mockMvc.perform(get("/api/find")
 								   .param("nickName", "sigeno")
 								   .param("page","1"))
@@ -90,11 +90,11 @@ public class RestPostRecordControllerCombinedTest {
 	void searchPostRecordでjsonを全件取得する() throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		List<String> expect = new ArrayList<String>();
-		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです, createAt=2022-03-07 22:17:49}");
-		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=ダイエット, content=ノンアル飽きた！, createAt=2022-03-03 19:32:44}");
-		expect.add("{nickName=加藤健, status=尿酸値高め, postCategory=尿酸値, content=血液検査で尿酸値がやっと下がってきました！やっぱ牛乳のお陰？, createAt=2022-03-03 18:41:36}");
-		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=全然お腹周りが改善されなくてダイエットめげそう, createAt=2022-03-02 12:55:08}");
-		expect.add("{nickName=匿名, status=ダイエット中, postCategory=ダイエット, content=先月から体重1キロ落ち増した！今月もダイエット頑張るぞ！！, createAt=2022-03-02 11:12:50}");
+		expect.add("{postId=11, userName=null, nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです, createAt=2022-03-07 22:17:49}");
+		expect.add("{postId=10, userName=null, nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=ダイエット, content=ノンアル飽きた！, createAt=2022-03-03 19:32:44}");
+		expect.add("{postId=9, userName=null, nickName=加藤健, status=尿酸値高め, postCategory=尿酸値, content=血液検査で尿酸値がやっと下がってきました！やっぱ牛乳のお陰？, createAt=2022-03-03 18:41:36}");
+		expect.add("{postId=8, userName=null, nickName=sigeno, status=中性脂肪・コレステロール高め, postCategory=グチ・ぼやき, content=全然お腹周りが改善されなくてダイエットめげそう, createAt=2022-03-02 12:55:08}");
+		expect.add("{postId=7, userName=null, nickName=匿名, status=ダイエット中, postCategory=ダイエット, content=先月から体重1キロ落ち増した！今月もダイエット頑張るぞ！！, createAt=2022-03-02 11:12:50}");
 		String readValue = mockMvc.perform(post("/api/search")
 										  .param("category","")
 										  .param("status","")
@@ -108,7 +108,7 @@ public class RestPostRecordControllerCombinedTest {
 		assertEquals(expect.toString(),result.toString());
 		
 		expect = new ArrayList<String>();
-		expect.add("{nickName=加藤健, status=尿酸値高め, postCategory=ダイエット, content=サイゼリヤのサラダがダイエットに効果あるらしい, createAt=2022-02-28 23:30:34}");
+		expect.add("{postId=1, userName=null, nickName=加藤健, status=尿酸値高め, postCategory=ダイエット, content=サイゼリヤのサラダがダイエットに効果あるらしい, createAt=2022-02-28 23:30:34}");
 		readValue = mockMvc.perform(post("/api/search")
 								   .param("category","")
 								   .param("status","")
@@ -128,8 +128,8 @@ public class RestPostRecordControllerCombinedTest {
 	void searchPostRecordで条件を絞ってjsonを取得する() throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		List<String> expect = new ArrayList<String>();
-		expect.add("{nickName=加藤健, status=尿酸値高め, postCategory=尿酸値, content=血液検査で尿酸値がやっと下がってきました！やっぱ牛乳のお陰？, createAt=2022-03-03 18:41:36}");
-		expect.add("{nickName=匿名, status=ダイエット中, postCategory=塩分, content=検査で高血圧気味と言われた母のためにレシピを模索中・・・, createAt=2022-03-01 18:29:51}");
+		expect.add("{postId=9, userName=null, nickName=加藤健, status=尿酸値高め, postCategory=尿酸値, content=血液検査で尿酸値がやっと下がってきました！やっぱ牛乳のお陰？, createAt=2022-03-03 18:41:36}");
+		expect.add("{postId=5, userName=null, nickName=匿名, status=ダイエット中, postCategory=塩分, content=検査で高血圧気味と言われた母のためにレシピを模索中・・・, createAt=2022-03-01 18:29:51}");
 		String readValue = mockMvc.perform(post("/api/search")
 										  .param("category","3","7")
 										  .param("status","1","7")

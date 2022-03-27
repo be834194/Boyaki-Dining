@@ -2,6 +2,10 @@ package com.dining.boyaki.model.entity;
 
 public class PostRecord {
 	
+	private String postId; //postから
+	
+	private String userName; //postから
+	
 	private String nickName; //postから
 	
 	private String status;   //AccountInfo+StatusListから
@@ -11,6 +15,22 @@ public class PostRecord {
 	private String content; //Postから
 	
 	private String createAt;  //Postから
+
+	public String getPostId() {
+		return postId;
+	}
+
+	public void setPostId(String postId) {
+		this.postId = postId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
 	public String getNickName() {
 		return nickName;
