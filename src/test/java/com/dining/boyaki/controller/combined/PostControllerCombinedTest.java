@@ -14,6 +14,8 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -126,7 +128,8 @@ public class PostControllerCombinedTest {
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
-	@ExpectedDatabase(value = "/controller/Post/insert/",table="post")
+	@ExpectedDatabase(value = "/controller/Post/insert/",table="post"
+			         ,assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void insertPostでぼやき投稿が1件追加される() throws Exception{
 		PostForm form = new PostForm();
 		form.setUserName("miho");

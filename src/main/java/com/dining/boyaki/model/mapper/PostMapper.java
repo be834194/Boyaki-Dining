@@ -22,5 +22,4 @@ public interface PostMapper {
 			                          @Param("content") String[] content,
 			                          @Param("pageable")Pageable pageable
 			                          );
-	
 }

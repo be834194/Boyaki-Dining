@@ -9,6 +9,8 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
+
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,6 +81,7 @@ public class PostMapperTest {
 	void findPostRecordでユーザ一人の投稿を全件取得する() throws Exception{
 		List<PostRecord> record = postMapper.findPostRecord("sigeno", PageRequest.of(0, 5));
 		assertEquals(5,record.size());
+		assertEquals("11",record.get(0).getPostId());
 		assertEquals("sigeno",record.get(0).getNickName());
 		assertEquals("ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです",record.get(0).getContent());
 		assertEquals("グチ・ぼやき",record.get(0).getPostCategory());
@@ -99,6 +102,7 @@ public class PostMapperTest {
 		List<PostRecord> record = postMapper.searchPostRecord(category,status,content,
 				                                              PageRequest.of(0, 5));
 		assertEquals(5,record.size());
+		assertEquals("11",record.get(0).getPostId());
 		assertEquals("sigeno",record.get(0).getNickName());
 		assertEquals("ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです",record.get(0).getContent());
 		assertEquals("グチ・ぼやき",record.get(0).getPostCategory());
@@ -195,7 +199,8 @@ public class PostMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
-	@ExpectedDatabase(value = "/mapper/Post/insert/",table="post")
+	@ExpectedDatabase(value = "/mapper/Post/insert/",table="post"
+	                 ,assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void insertPostで投稿が1件追加される() throws Exception{
 		Post post = new Post();
 		post.setUserName("miho");

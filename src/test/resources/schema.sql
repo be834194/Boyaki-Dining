@@ -46,12 +46,12 @@ create table IF NOT EXISTS diary_record(
  );
  
  create table IF NOT EXISTS post(
+ postid       bigint       auto_increment primary key,
  username     varchar(255) not null,
  nickname     varchar(255) ,
  content      varchar(255) not null,
  postcategory int          not null,
  createat     datetime,
- primary key(username,createat),
  CONSTRAINT unique_username_post foreign key(username) 
                                  references account(username) on delete cascade,
  CONSTRAINT unique_nickname_post foreign key(nickname) 

@@ -9,6 +9,7 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,6 +67,7 @@ public class PostServiceCombinedTest {
 	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
 		List<PostRecord> record = postService.findPostRecord("sigeno", 0);
 		assertEquals(5,record.size());
+		assertEquals("11",record.get(0).getPostId());
 		assertEquals("sigeno",record.get(0).getNickName());
 		assertEquals("ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです",record.get(0).getContent());
 		assertEquals("グチ・ぼやき",record.get(0).getPostCategory());
@@ -88,6 +90,7 @@ public class PostServiceCombinedTest {
 	void searchPostRecordで全件取得する() throws Exception{
         List<PostRecord> record = postService.searchPostRecord(category,status,text,0);
         assertEquals(5,record.size());
+        assertEquals("11",record.get(0).getPostId());
         assertEquals("sigeno",record.get(0).getNickName());
 		assertEquals("ラジオで聞いた話ですが、睡眠時間が8→6時間に減ると毛穴が二倍に広がるそうです",record.get(0).getContent());
 		assertEquals("グチ・ぼやき",record.get(0).getPostCategory());
@@ -214,7 +217,8 @@ public class PostServiceCombinedTest {
 	}
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
-	@ExpectedDatabase(value = "/service/Post/insert/",table="post")
+	@ExpectedDatabase(value = "/service/Post/insert/",table="post"
+			         ,assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void insertPostで投稿が1件追加される() throws Exception{
 		PostForm form = new PostForm();
 		form.setUserName("miho");

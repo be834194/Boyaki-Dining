@@ -35,6 +35,7 @@
     
     <select id = "findPostRecord" resultMap="PostRecordResultMap">
         SELECT
+            POST.postid,
             POST.nickname,
             S_LIST.statusname,
             P_CATEGORY.postname,
@@ -57,6 +58,7 @@
 
     <select id = "searchPostRecord" resultMap="PostRecordResultMap">
         SELECT
+            POST.postid,
             POST.nickname,
             S_LIST.statusname,
             P_CATEGORY.postname,
@@ -96,6 +98,8 @@
     </select>
     
     <resultMap id="PostRecordResultMap" type="com.dining.boyaki.model.entity.PostRecord">
+      <result property="postId" column="postid"></result>
+      <result property="userName" column="username"></result>
       <result property="nickName" column="nickname"></result>
       <result property="status" column="statusname"></result>
       <result property="postCategory" column="postname"></result>

@@ -66,6 +66,7 @@ public class RestPostRecordControllerTest {
 	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
 		List<PostRecord> records = new ArrayList<PostRecord>();
 		PostRecord record = new PostRecord();
+		record.setPostId("1");
 		record.setNickName("kenken");
 		record.setContent("今日は疲れた");
 		record.setStatus("尿酸値高め");
@@ -73,6 +74,7 @@ public class RestPostRecordControllerTest {
 		record.setCreateAt("2022-03-18 21:18:39");
 		records.add(record);
 		record = new PostRecord();
+		record.setPostId("2");
 		record.setNickName("kenken");
 		record.setContent("朝にコンビニまで散歩、夕方に隣の駅まで散歩して非常に疲れた。我ながら体力がない！");
 		record.setStatus("尿酸値高め");
@@ -82,8 +84,8 @@ public class RestPostRecordControllerTest {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		List<String> expect = new ArrayList<String>();
-		expect.add("{nickName=kenken, status=尿酸値高め, postCategory=グチ・ぼやき, content=今日は疲れた, createAt=2022-03-18 21:18:39}");
-		expect.add("{nickName=kenken, status=尿酸値高め, postCategory=運動・筋トレ, content=朝にコンビニまで散歩、夕方に隣の駅まで散歩して非常に疲れた。我ながら体力がない！, createAt=2022-03-18 22:55:10}");
+		expect.add("{postId=1, userName=null, nickName=kenken, status=尿酸値高め, postCategory=グチ・ぼやき, content=今日は疲れた, createAt=2022-03-18 21:18:39}");
+		expect.add("{postId=2, userName=null, nickName=kenken, status=尿酸値高め, postCategory=運動・筋トレ, content=朝にコンビニまで散歩、夕方に隣の駅まで散歩して非常に疲れた。我ながら体力がない！, createAt=2022-03-18 22:55:10}");
 		when(postService.findPostRecord("kenken", 0)).thenReturn(records);
 		
 		String readValue = mockMvc.perform(get("/api/find")
@@ -100,6 +102,7 @@ public class RestPostRecordControllerTest {
 	void searchPostRecordでjsonを5件分取得する() throws Exception{
 		List<PostRecord> records = new ArrayList<PostRecord>();
 		PostRecord record = new PostRecord();
+		record.setPostId("1");
 		record.setNickName("kenken");
 		record.setContent("今日は疲れた");
 		record.setStatus("尿酸値高め");
@@ -107,6 +110,7 @@ public class RestPostRecordControllerTest {
 		record.setCreateAt("2022-03-18 21:18:39");
 		records.add(record);
 		record = new PostRecord();
+		record.setPostId("2");
 		record.setNickName("匿名");
 		record.setContent("帰りの電車は一駅前に降りて、家まで歩く！少しでも運動したい");
 		record.setStatus("ダイエット中");
@@ -116,8 +120,8 @@ public class RestPostRecordControllerTest {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		List<String> expect = new ArrayList<String>();
-		expect.add("{nickName=kenken, status=尿酸値高め, postCategory=グチ・ぼやき, content=今日は疲れた, createAt=2022-03-18 21:18:39}");
-		expect.add("{nickName=匿名, status=ダイエット中, postCategory=運動・筋トレ, content=帰りの電車は一駅前に降りて、家まで歩く！少しでも運動したい, createAt=2022-03-18 22:55:10}");
+		expect.add("{postId=1, userName=null, nickName=kenken, status=尿酸値高め, postCategory=グチ・ぼやき, content=今日は疲れた, createAt=2022-03-18 21:18:39}");
+		expect.add("{postId=2, userName=null, nickName=匿名, status=ダイエット中, postCategory=運動・筋トレ, content=帰りの電車は一駅前に降りて、家まで歩く！少しでも運動したい, createAt=2022-03-18 22:55:10}");
 		when(postService.searchPostRecord(
 				any(int[].class), any(int[].class), any(String.class), any(int.class))).thenReturn(records);
 		
@@ -140,6 +144,7 @@ public class RestPostRecordControllerTest {
 	void searchPostRecordで条件を絞ってjsonを取得する() throws Exception{
 		List<PostRecord> records = new ArrayList<PostRecord>();
 		PostRecord record = new PostRecord();
+		record.setPostId("2");
 		record.setNickName("kenken");
 		record.setContent("今日は疲れた");
 		record.setStatus("尿酸値高め");
@@ -149,7 +154,7 @@ public class RestPostRecordControllerTest {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		List<String> expect = new ArrayList<String>();
-		expect.add("{nickName=kenken, status=尿酸値高め, postCategory=グチ・ぼやき, content=今日は疲れた, createAt=2022-03-18 21:18:39}");
+		expect.add("{postId=2, userName=null, nickName=kenken, status=尿酸値高め, postCategory=グチ・ぼやき, content=今日は疲れた, createAt=2022-03-18 21:18:39}");
 		when(postService.searchPostRecord(
 				any(int[].class), any(int[].class), any(String.class), any(int.class))).thenReturn(records);
 		

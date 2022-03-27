@@ -7,6 +7,18 @@
    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <script src="https://unpkg.com/vue@next"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <style type="text/css">
+	a.blocklink {
+	   display:block;
+	   width:100%;
+	   text-decoration:none;
+	   color:black;
+	}
+	a span {
+	   text-decoration:underline;
+	   color:blue;
+	}
+  </style>
 </head>
 
 <body>
@@ -30,11 +42,12 @@
 	    
 	    <button type="submit" v-on:click="startSearch">検索</button>
 	</div>
-    <div v-for="(value,key) in PostRecords">
-	    <a v-bind:href="`/index/boyaki/${value.nickName}`">{{value.nickName}}</a> さん
-	    <a>:{{value.status}}</a>
-	    <p>{{value.postCategory}}</p>
-	    <p>{{value.content}} <h6> {{value.createAt}}</h6></p>
+    <div v-for="(value,key) in PostRecords" class="blocklink">
+	    <a v-bind:href="`/index/boyaki/${value.nickName}`">{{value.nickName}} さん
+		    <span>:{{value.status}}</span>
+		    <span>{{value.postCategory}}</span>
+		    <span>{{value.content}} <h6> {{value.createAt}}</h6></span>
+	    </a>
 	</div>
 	<div ref="observe_element">loading</div>
 </div>
