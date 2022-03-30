@@ -36,18 +36,33 @@ public class PostController {
 	
 	@GetMapping("/index/boyaki/{postId}")
 	String showPostDetail(@AuthenticationPrincipal AccountUserDetails details,
-			              @PathVariable("postId")long postid,Model model) {
-		PostRecord record = postService.findOnePostRecord(postid);
+			              @PathVariable("postId")long postId,Model model) {
+		PostRecord record = postService.findOnePostRecord(postId);
 		if(record == null) {
 			return "Common/404";
 		}
+		model.addAttribute("postRecord",record);
+		
 		if(record.getUserName().equals(details.getUsername())) {
 			model.addAttribute("ableDeleted","true");
 		}else {
 			model.addAttribute("ableDeleted","false");
 		}
-		model.addAttribute("postRecord",record);
+		
+		int sumRate = postService.sumRate(postId);
+		model.addAttribute("sumRate",sumRate);
+		
 		return "Post/PostDetail";
+	}
+	
+	@PostMapping("/index/boyaki/rate")
+	String updateRate(@AuthenticationPrincipal AccountUserDetails details,
+			          @RequestParam(value="postId")long postId,Model model) {
+		postService.updateRate(postId, details.getUsername());
+		
+		int sumRate = postService.sumRate(postId);
+		model.addAttribute("sumRate",sumRate);
+		return "Post/PostDetail :: rateFragment";
 	}
 	
 	@PostMapping("/index/boyaki/post/delete")

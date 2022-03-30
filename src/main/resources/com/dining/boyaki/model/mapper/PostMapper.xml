@@ -135,4 +135,42 @@
       <result property="createAt" column="createat"></result>
     </resultMap>
     
+    <select id = "currentRate" resultType="int">
+        SELECT
+            rate
+        FROM
+            likes
+        WHERE
+            postid = #{postId}
+        AND username = #{userName}
+    </select>
+    
+    <select id = "sumRate" resultType="int">
+        SELECT
+            sum(rate)
+        FROM
+            likes
+        WHERE
+            postid = #{postId}
+        GROUP BY postid
+    </select>
+    
+    <insert id = "insertRate">
+        INSERT INTO
+            likes(postid,username,rate)
+        VALUES(
+               #{postId},
+               #{userName},
+               #{rate}
+               )
+    </insert>
+    
+    <update id = "updateRate">
+        UPDATE
+            likes
+        SET rate = #{rate}
+        WHERE postid = #{postId}
+        and   username = #{userName}
+    </update>
+    
 </mapper>

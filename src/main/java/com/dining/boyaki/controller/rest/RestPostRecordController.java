@@ -41,9 +41,9 @@ public class RestPostRecordController {
 	@RequestMapping(value = "/api/search",method=RequestMethod.POST,
 			        produces = "application/json; charset=utf-8")
 	public String searchPostRecord(@RequestParam(value="category") int[]category,
-    		                          @RequestParam(value="status") int[]status,
-    		                          @RequestParam(value="keyword") String text,
-    		                          @RequestParam(value="page") int page)
+    		                       @RequestParam(value="status") int[]status,
+    		                       @RequestParam(value="keyword") String text,
+    		                       @RequestParam(value="page") int page)
     		                        		  throws JsonProcessingException{
 		String jsonMsg = null;
         List<PostRecord>records =  postService.searchPostRecord(category,status,text,page);

@@ -58,6 +58,13 @@ create table IF NOT EXISTS diary_record(
                                  references account_info(nickname) on delete cascade on update cascade
  );
  
+  create table IF NOT EXISTS likes(
+ postid   bigint       ,
+ username varchar(255) ,
+ rate     int,
+ primary key(postid,username)
+ );
+ 
  create table IF NOT EXISTS status_list(
   statusid int not null,
   statusname varchar(255) not null
