@@ -93,6 +93,7 @@ public class PostControllerTest {
 			record.setCreateAt("2022-03-02 11:12:50");
 			when(postService.findOnePostRecord(7)).thenReturn(record);
 			when(postService.findOnePostRecord(333)).thenReturn(null);
+			when(postService.sumRate(7)).thenReturn(4);
 		}
 		
 		@Test
@@ -103,8 +104,10 @@ public class PostControllerTest {
 			       .andExpect(model().attribute("postRecord",
 	                                            hasProperty("userName",is("miho"))))
 			       .andExpect(model().attribute("ableDeleted", "false"))
+			       .andExpect(model().attribute("sumRate", 4))
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
+			verify(postService,times(1)).sumRate(7);
 		}
 		
 		@Test
@@ -115,8 +118,10 @@ public class PostControllerTest {
 			       .andExpect(model().attribute("postRecord",
 	                                            hasProperty("userName",is("miho"))))
 			       .andExpect(model().attribute("ableDeleted", "true"))
+			       .andExpect(model().attribute("sumRate", 4))
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
+			verify(postService,times(1)).sumRate(7);
 		}
 		
 		@Test
@@ -124,9 +129,27 @@ public class PostControllerTest {
 		void showPostDetailで投稿が見つからない場合は404ページを返す() throws Exception{
 			mockMvc.perform(get("/index/boyaki/333"))
 			       .andExpect(status().is2xxSuccessful())
+			       .andExpect(model().hasNoErrors())
 			       .andExpect(view().name("Common/404"));
 			verify(postService,times(1)).findOnePostRecord(333);
 		}
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	void updateRateでいいねが更新される() throws Exception{
+		doNothing().when(postService).updateRate(7,"miho");
+		when(postService.sumRate(7)).thenReturn(5);
+		
+		mockMvc.perform(post("/index/boyaki/rate")
+				       .param("postId", "7")
+				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("sumRate", 5))
+		       .andExpect(view().name("Post/PostDetail :: rateFragment"));
+		verify(postService,times(1)).updateRate(7, "miho");
+		verify(postService,times(1)).sumRate(7);
 	}
 	
 	@Test

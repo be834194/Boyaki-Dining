@@ -100,6 +100,7 @@ public class PostControllerCombinedTest {
 		       .andExpect(model().attribute("postRecord",
                                             hasProperty("userName",is("miho"))))
 		       .andExpect(model().attribute("ableDeleted", "false"))
+		       .andExpect(model().attribute("sumRate", 1))
 		       .andExpect(view().name("Post/PostDetail"));
 	}
 	
@@ -112,6 +113,7 @@ public class PostControllerCombinedTest {
 		       .andExpect(model().attribute("postRecord",
                                             hasProperty("userName",is("miho"))))
 		       .andExpect(model().attribute("ableDeleted", "true"))
+		       .andExpect(model().attribute("sumRate", 1))
 		       .andExpect(view().name("Post/PostDetail"));
 	}
 	
@@ -125,6 +127,34 @@ public class PostControllerCombinedTest {
 	
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	@DatabaseSetup(value="/controller/Post/setup/")
+	@ExpectedDatabase(value = "/controller/Post/likes/",table="likes")
+	void updateRateでいいねが更新される() throws Exception{
+		mockMvc.perform(post("/index/boyaki/rate")
+				       .param("postId", "7")
+				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("sumRate", 2))
+		       .andExpect(view().name("Post/PostDetail :: rateFragment"));
+		mockMvc.perform(post("/index/boyaki/rate")
+			       .param("postId", "2")
+			       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+		           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+	       .andExpect(status().is2xxSuccessful())
+	       .andExpect(model().attribute("sumRate", 1));
+		mockMvc.perform(post("/index/boyaki/rate")
+			       .param("postId", "1")
+			       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+		           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+	       .andExpect(status().is2xxSuccessful())
+	       .andExpect(model().attribute("sumRate", 1));
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	@DatabaseSetup(value="/controller/Post/setup/")
+	@ExpectedDatabase(value = "/controller/Post/delete/",table="post")
 	void deletePostDetailで投稿が削除される() throws Exception{
 		mockMvc.perform(post("/index/boyaki/post/delete")
 				       .param("userName", "miho")

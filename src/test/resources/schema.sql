@@ -63,6 +63,7 @@ create table IF NOT EXISTS diary_record(
  username varchar(255) ,
  rate     int,
  primary key(postid,username)
+ 
  );
  
  create table IF NOT EXISTS status_list(
