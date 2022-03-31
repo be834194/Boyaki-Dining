@@ -154,7 +154,7 @@ public class PostControllerCombinedTest {
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
-	@ExpectedDatabase(value = "/controller/Post/delete/",table="post")
+	@ExpectedDatabase(value = "/controller/Post/delete/")
 	void deletePostDetailで投稿が削除される() throws Exception{
 		mockMvc.perform(post("/index/boyaki/post/delete")
 				       .param("userName", "miho")

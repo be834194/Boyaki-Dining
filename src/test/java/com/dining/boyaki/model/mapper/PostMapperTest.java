@@ -92,7 +92,7 @@ public class PostMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
-	@ExpectedDatabase(value = "/mapper/Post/delete/",table="post")
+	@ExpectedDatabase(value = "/mapper/Post/delete/")
 	void deletePostで投稿が1件削除される() throws Exception{
 		postMapper.deletePost("糸井", 3);
 	}

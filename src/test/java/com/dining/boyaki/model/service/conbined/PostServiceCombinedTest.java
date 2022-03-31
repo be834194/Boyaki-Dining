@@ -107,7 +107,7 @@ public class PostServiceCombinedTest {
 	
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
-	@ExpectedDatabase(value = "/service/Post/delete/",table="post")
+	@ExpectedDatabase(value = "/service/Post/delete/")
 	void deletePostで投稿が1件削除される() throws Exception{
 		postService.deletePost("糸井", 3);
 	}
@@ -138,7 +138,7 @@ public class PostServiceCombinedTest {
 		int rate = postService.sumRate(2);
 		assertEquals(2,rate);
 		
-		rate = postService.sumRate(3);
+		rate = postService.sumRate(7);
 		assertEquals(0,rate);
 	}
 	

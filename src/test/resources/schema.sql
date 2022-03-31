@@ -62,7 +62,11 @@ create table IF NOT EXISTS diary_record(
  postid   bigint       ,
  username varchar(255) ,
  rate     int,
- primary key(postid,username)
+ primary key(postid,username),
+  CONSTRAINT unique_username_likes foreign key(username) 
+                                   references account(username) on delete cascade,
+ CONSTRAINT unique_postid foreign key(postid) 
+                          references post(postid) on delete cascade
  
  );
  
