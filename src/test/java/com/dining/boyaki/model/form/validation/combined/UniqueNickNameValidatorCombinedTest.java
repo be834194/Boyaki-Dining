@@ -42,18 +42,8 @@ public class UniqueNickNameValidatorCombinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/UniqueNickName/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでニックネームが重複せずエラーが発生しない() throws Exception{
-		form.setUserName("加藤健");
-		form.setNickName("kenken");
-		
-		uniqueNickNameValidator.validate(form, bindingResult);
-		assertEquals(0,bindingResult.getFieldErrorCount());
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/validation/UniqueNickName/setup/")
-	void validateでニックネームが重複してユーザ名が一緒ならエラーが発生しない() throws Exception{
 		form.setUserName("加藤健");
 		form.setNickName("加藤健");
 		
@@ -62,7 +52,17 @@ public class UniqueNickNameValidatorCombinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/UniqueNickName/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
+	void validateでニックネームが重複してユーザ名が一緒ならエラーが発生しない() throws Exception{
+		form.setUserName("加藤健");
+		form.setNickName("kenken");
+		
+		uniqueNickNameValidator.validate(form, bindingResult);
+		assertEquals(0,bindingResult.getFieldErrorCount());
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでニックネームが重複してエラーが発生する() throws Exception{
 		form.setUserName("加藤健");
 		form.setNickName("sigeno");
