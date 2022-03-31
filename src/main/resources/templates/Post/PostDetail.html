@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+  <title>投稿詳細</title>
+  <meta charset="UTF-8">
+   <meta name="_csrf" th:content="${_csrf.token}"/>
+   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+<h1>投稿詳細</h1>
+
+<table th:each="obj:${postRecord}">
+<div id="likesApp">
+	<tr>
+        <td>ニックネーム</td>
+        <td th:text="${obj.nickName}"></td>
+    </tr>
+	<tr>
+	    <td>プロフィール</td>
+	    <td th:text="${obj.content}"></td>
+	</tr> 
+	<tr>
+	    <td>健康状態</td>
+	    <td th:text="${obj.status}"></td>
+	</tr>
+	<tr>
+	    <td>投稿種別</td>
+	    <td th:text="${obj.postCategory}"></td>
+	</tr>
+	<tr>
+	    <td th:text="${obj.createAt}"></td>
+	</tr>
+    <tr>
+        <td>
+            <!--<button type="submit" onClick="likes()">いいね</button>-->
+            <span style="cursor: pointer" onClick="likes()">いいね</span>
+            <div id="sumLike" th:fragment="rateFragment">
+	            <span th:text="${sumRate}"></span>
+			</div>
+        </td>
+    </tr>
+	<tr>
+	    <td>
+		    <form th:action="@{/index/boyaki/post/delete}" method="post">
+				<input type="hidden" id="userName" name="userName" th:value="${obj.userName}">
+				<input type="hidden" id="postId" name="postId" th:value="${obj.postId}">
+				<div th:if="${ableDeleted}">
+				     <input type="submit" value="削除" onClick="return check()">
+				</div>
+		    </form>
+	    </td>
+	</tr>
+</div>
+</table>
+
+</div>
+
+</body>
+
+<script type="text/javascript">
+function check(){
+    if (confirm("削除してもよろしいですか？")) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function likes(){
+			var tokenValue = document.head.querySelector("[name=_csrf]").content;
+			var getId = document.getElementById("postId").value;
+			let param = new FormData()
+            param.append('postId', getId)
+            param.append('_csrf',tokenValue)
+            axios.post('/index/boyaki/rate',param, {responseType : 'document'})
+				.then(response =>{
+					const sumLike = document.getElementById('sumLike');
+				    Array.from(response.data.body.childNodes).forEach((node) => {
+				    sumLike.replaceWith(node)
+				    });
+				})
+				.catch(error =>{
+					console.log(error)
+				})
+		}
+</script>
+
+</html>

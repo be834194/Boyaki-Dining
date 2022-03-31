@@ -22,6 +22,53 @@ public class PostService {
 	}
 	
 	@Transactional(readOnly = true)
+	public String findNickName(String userName) {
+		return postMapper.findNickName(userName);
+	}
+	
+	@Transactional(readOnly = true)
+	public AccountInfo findProfile(String nickName) {
+		return postMapper.findProfile(nickName);
+	}
+	
+	@Transactional(readOnly = false)
+	public void insertPost(PostForm form) {
+		Post post = setToPost(form);
+		postMapper.insertPost(post);
+	}
+	
+	@Transactional(readOnly = false)
+	public void deletePost(String userName,long postId) {
+		postMapper.deletePost(userName, postId);
+	}
+	
+	@Transactional(readOnly = true)
+	public PostRecord findOnePostRecord(long postId) {
+		return postMapper.findOnePostRecord(postId);
+	}
+	
+	
+	//
+	@Transactional(readOnly = true)
+	public int sumRate(long postId) {
+		return postMapper.sumRate(postId).orElse(0);
+	}
+	
+	//
+	@Transactional(readOnly = false)
+	public void updateRate(long postId,String userName) {
+		int currentRate = postMapper.currentRate(postId, userName).orElse(-1);
+		if(currentRate == -1) {
+			postMapper.insertRate(postId, userName,1);
+		}else if(currentRate == 0){
+			postMapper.updateRate(postId, userName,1);
+		}else {
+			postMapper.updateRate(postId, userName,0);
+		}
+			
+	}
+	
+	@Transactional(readOnly = true)
 	public List<PostRecord> findPostRecord(String nickName,int page) {
 		List<PostRecord> records = postMapper.findPostRecord(nickName, PageRequest.of(page, 5));
 		return records;
@@ -52,22 +99,6 @@ public class PostService {
 				                  .searchPostRecord(category,status,content,
 				                		            PageRequest.of(page, 5));
 		return records;
-	}
-	
-	@Transactional(readOnly = true)
-	public String findNickName(String userName) {
-		return postMapper.findNickName(userName);
-	}
-	
-	@Transactional(readOnly = true)
-	public AccountInfo findProfile(String nickName) {
-		return postMapper.findProfile(nickName);
-	}
-	
-	@Transactional(readOnly = false)
-	public void insertPost(PostForm form) {
-		Post post = setToPost(form);
-		postMapper.insertPost(post);
 	}
 	
 	public Post setToPost(PostForm form) {

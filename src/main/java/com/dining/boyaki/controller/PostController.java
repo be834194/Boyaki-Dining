@@ -8,11 +8,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.dining.boyaki.model.entity.AccountUserDetails;
-import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.PostCategory;
+import com.dining.boyaki.model.entity.PostRecord;
 import com.dining.boyaki.model.entity.StatusList;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.service.PostService;
@@ -33,15 +34,42 @@ public class PostController {
 		return "Post/PostIndex";
 	}
 	
-	@GetMapping("/index/boyaki/{nickName}")
-	String showProfile(@PathVariable("nickName")String nickName,Model model) {
-		AccountInfo info = postService.findProfile(nickName);
-		if(info == null) {
+	@GetMapping("/index/boyaki/{postId}")
+	String showPostDetail(@AuthenticationPrincipal AccountUserDetails details,
+			              @PathVariable("postId")long postId,Model model) {
+		PostRecord record = postService.findOnePostRecord(postId);
+		if(record == null) {
 			return "Common/404";
 		}
-		model.addAttribute("accountInfo",info);
-		model.addAttribute("statusList", StatusList.values());
-		return "Post/Profile";
+		model.addAttribute("postRecord",record);
+		
+		if(record.getUserName().equals(details.getUsername())) {
+			model.addAttribute("ableDeleted","true");
+		}else {
+			model.addAttribute("ableDeleted","false");
+		}
+		
+		int sumRate = postService.sumRate(postId);
+		model.addAttribute("sumRate",sumRate);
+		
+		return "Post/PostDetail";
+	}
+	
+	@PostMapping("/index/boyaki/rate")
+	String updateRate(@AuthenticationPrincipal AccountUserDetails details,
+			          @RequestParam(value="postId")long postId,Model model) {
+		postService.updateRate(postId, details.getUsername());
+		
+		int sumRate = postService.sumRate(postId);
+		model.addAttribute("sumRate",sumRate);
+		return "Post/PostDetail :: rateFragment";
+	}
+	
+	@PostMapping("/index/boyaki/post/delete")
+	String deletePost(@RequestParam(value="userName")String userName,
+			          @RequestParam(value="postId")long postId) {
+		postService.deletePost(userName,postId);
+		return "redirect:/index/boyaki";
 	}
 	
 	@GetMapping("/index/boyaki/post")

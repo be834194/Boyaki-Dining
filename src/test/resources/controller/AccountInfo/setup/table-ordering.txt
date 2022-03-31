@@ -5,3 +5,4 @@ account_info
 post
 status_list
 post_category
+likes

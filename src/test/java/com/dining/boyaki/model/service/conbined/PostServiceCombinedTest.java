@@ -64,6 +64,86 @@ public class PostServiceCombinedTest {
 	
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
+	void findNickNameでニックネームを1件取得する() throws Exception{
+		String nickName = postService.findNickName("糸井");
+		assertEquals("sigeno",nickName);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
+	void findNickNameでニックネームを取得できない場合はnullが返ってくる() throws Exception{
+		String nickName = postService.findNickName("kenken");
+		assertEquals(null,nickName);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
+	void findProfileでユーザ情報レコードを1件取得する() throws Exception{
+		AccountInfo info = postService.findProfile("匿名");
+		assertEquals("匿名",info.getNickName());
+		assertEquals("5000兆円欲しい！！！",info.getProfile());
+		assertEquals(1,info.getStatus());
+		assertEquals(2,info.getGender());
+		assertEquals(2,info.getAge());
+	}
+	
+	@Test
+	void findProfileでユーザ情報レコードを取得できない場合はnullが返ってくる() throws Exception{
+		AccountInfo result = postService.findProfile("miho");
+		assertEquals(null,result);
+	}
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
+	@ExpectedDatabase(value = "/service/Post/insert/",table="post"
+			         ,assertionMode=DatabaseAssertionMode.NON_STRICT)
+	void insertPostで投稿が1件追加される() throws Exception{
+		PostForm form = new PostForm();
+		form.setUserName("miho");
+		form.setNickName("匿名");
+		form.setContent("糖質制限ってどこまでやればいいの～？");
+		form.setPostCategory(2);
+		postService.insertPost(form);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
+	@ExpectedDatabase(value = "/service/Post/delete/")
+	void deletePostで投稿が1件削除される() throws Exception{
+		postService.deletePost("糸井", 3);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
+	void findOnePostRecordで投稿を一件取得する() {
+		PostRecord result = postService.findOnePostRecord(10);
+		assertEquals("10",result.getPostId());
+		assertEquals("糸井",result.getUserName());
+		assertEquals("sigeno",result.getNickName());
+		assertEquals("ノンアル飽きた！",result.getContent());
+		assertEquals("中性脂肪・コレステロール高め",result.getStatus());
+		assertEquals("ダイエット",result.getPostCategory());
+		assertEquals("2022-03-03 19:32:44",result.getCreateAt());
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
+	void findOnePostRecordで投稿を一件取得できない場合はnullが返ってくる() {
+		PostRecord result = postService.findOnePostRecord(333);
+		assertEquals(null,result);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
+	void sumRateで投稿を件の総いいね数を取得する() throws Exception{
+		int rate = postService.sumRate(2);
+		assertEquals(2,rate);
+		
+		rate = postService.sumRate(7);
+		assertEquals(0,rate);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
 	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
 		List<PostRecord> record = postService.findPostRecord("sigeno", 0);
 		assertEquals(5,record.size());
@@ -83,6 +163,15 @@ public class PostServiceCombinedTest {
 		
 		record = postService.findPostRecord("sigeno", 2);
 		assertTrue(record.isEmpty());
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
+	@ExpectedDatabase(value = "/service/Post/likes/",table="likes")
+	void updateRateでlikeテーブルにデータが追加もしくは更新される() throws Exception{
+		postService.updateRate(1, "加藤健");
+		postService.updateRate(2, "加藤健");
+		postService.updateRate(3, "加藤健");
 	}
 	
 	@Test
@@ -183,49 +272,6 @@ public class PostServiceCombinedTest {
 		assertEquals("加藤健",record.get(0).getNickName());
 		assertEquals("サイゼリヤのサラダがダイエットに効果あるらしい",record.get(0).getContent());
 		assertEquals("2022-02-28 23:30:34",record.get(0).getCreateAt());
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/Post/setup/")
-	void findNickNameでニックネームを1件取得する() throws Exception{
-		String nickName = postService.findNickName("糸井");
-		assertEquals("sigeno",nickName);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/Post/setup/")
-	void findNickNameでニックネームを取得できない場合はnullが返ってくる() throws Exception{
-		String nickName = postService.findNickName("kenken");
-		assertEquals(null,nickName);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/Post/setup/")
-	void findProfileでユーザ情報レコードを1件取得する() throws Exception{
-		AccountInfo info = postService.findProfile("匿名");
-		assertEquals("匿名",info.getNickName());
-		assertEquals("5000兆円欲しい！！！",info.getProfile());
-		assertEquals(1,info.getStatus());
-		assertEquals(2,info.getGender());
-		assertEquals(2,info.getAge());
-	}
-	
-	@Test
-	void findProfileでユーザ情報レコードを取得できない場合はnullが返ってくる() throws Exception{
-		AccountInfo result = postService.findProfile("miho");
-		assertEquals(null,result);
-	}
-	@Test
-	@DatabaseSetup(value = "/service/Post/setup/")
-	@ExpectedDatabase(value = "/service/Post/insert/",table="post"
-			         ,assertionMode=DatabaseAssertionMode.NON_STRICT)
-	void insertPostで投稿が1件追加される() throws Exception{
-		PostForm form = new PostForm();
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setContent("糖質制限ってどこまでやればいいの～？");
-		form.setPostCategory(2);
-		postService.insertPost(form);
 	}
 
 }

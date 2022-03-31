@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override //全体に対するセキュリティ設定を行う
     public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/css/**", "/webjars/**", "/js/**", "/images/**");
+		web.ignoring().antMatchers("/css/**", "/webjars/**", "/js/**", "/images/**","/resources/**");
     }
 
     @Override //URLごとに異なるセキュリティ設定を行う

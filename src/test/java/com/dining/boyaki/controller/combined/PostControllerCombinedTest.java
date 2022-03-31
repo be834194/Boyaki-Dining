@@ -92,23 +92,78 @@ public class PostControllerCombinedTest {
 	}
 	
 	@Test
-	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
+	@WithMockCustomUser(userName="マクベイ",password="sun-fla-cis",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
-	void showProfileでプロフィール画面が表示される() throws Exception{
-		this.mockMvc.perform(get("/index/boyaki/sigeno"))
-			        .andExpect(status().is2xxSuccessful())
-			        .andExpect(model().attribute("accountInfo",
-		                                      hasProperty("nickName",is("sigeno"))))
-			        .andExpect(model().attribute("statusList", StatusList.values()))
-			        .andExpect(view().name("Post/Profile"));
+	void showPostDetailで投稿詳細画面が表示され削除ボタンは表示されない() throws Exception{
+		mockMvc.perform(get("/index/boyaki/7"))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("postRecord",
+                                            hasProperty("userName",is("miho"))))
+		       .andExpect(model().attribute("ableDeleted", "false"))
+		       .andExpect(model().attribute("sumRate", 1))
+		       .andExpect(view().name("Post/PostDetail"));
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	@DatabaseSetup(value="/controller/Post/setup/")
+	void showPostDetailで投稿詳細画面が表示され削除ボタンが表示される() throws Exception{
+		mockMvc.perform(get("/index/boyaki/7"))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("postRecord",
+                                            hasProperty("userName",is("miho"))))
+		       .andExpect(model().attribute("ableDeleted", "true"))
+		       .andExpect(model().attribute("sumRate", 1))
+		       .andExpect(view().name("Post/PostDetail"));
 	}
 	
 	@Test
 	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
-	void showProfileでプロフィールが見つからない場合は404ページを返す() throws Exception{
-		this.mockMvc.perform(get("/index/boyaki/hoge"))
-				    .andExpect(status().is2xxSuccessful())
-				    .andExpect(view().name("Common/404"));
+	void showPostDetailで投稿が見つからない場合は404ページを返す() throws Exception{
+		mockMvc.perform(get("/index/boyaki/333"))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(view().name("Common/404"));
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	@DatabaseSetup(value="/controller/Post/setup/")
+	@ExpectedDatabase(value = "/controller/Post/likes/",table="likes")
+	void updateRateでいいねが更新される() throws Exception{
+		mockMvc.perform(post("/index/boyaki/rate")
+				       .param("postId", "7")
+				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("sumRate", 2))
+		       .andExpect(view().name("Post/PostDetail :: rateFragment"));
+		mockMvc.perform(post("/index/boyaki/rate")
+			       .param("postId", "2")
+			       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+		           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+	       .andExpect(status().is2xxSuccessful())
+	       .andExpect(model().attribute("sumRate", 1));
+		mockMvc.perform(post("/index/boyaki/rate")
+			       .param("postId", "1")
+			       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+		           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+	       .andExpect(status().is2xxSuccessful())
+	       .andExpect(model().attribute("sumRate", 1));
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	@DatabaseSetup(value="/controller/Post/setup/")
+	@ExpectedDatabase(value = "/controller/Post/delete/")
+	void deletePostDetailで投稿が削除される() throws Exception{
+		mockMvc.perform(post("/index/boyaki/post/delete")
+				       .param("userName", "miho")
+				       .param("postId", "7")
+				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+		       .andExpect(status().is3xxRedirection())
+		       .andExpect(model().hasNoErrors())
+		       .andExpect(redirectedUrl("/index/boyaki"));
 	}
 	
 	@Test
