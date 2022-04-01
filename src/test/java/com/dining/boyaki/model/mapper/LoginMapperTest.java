@@ -41,9 +41,12 @@ public class LoginMapperTest {
 	@DatabaseSetup(value = "/mapper/Login/setup/")
 	void findAccountでユーザを一人見つける() throws Exception{
 		Account existAccount = loginMapper.findAccount("加藤健");
-		assertEquals(existAccount.getUserName(), "加藤健");
-		assertEquals(existAccount.getPassword(), "pinballs");
-		assertEquals(existAccount.getRole(), "ROLE_USER");
+		assertEquals("加藤健",existAccount.getUserName());
+		assertEquals("pinballs",existAccount.getPassword());
+		assertEquals("ROLE_USER",existAccount.getRole());
+		
+		existAccount = loginMapper.findAccount("マクベイ");
+		assertEquals(null,existAccount);
 	}
 
 }

@@ -51,6 +51,9 @@ public class AccountInfoMapperTest {
 		assertEquals(3,info.getStatus());
 		assertEquals(3,info.getGender());
 		assertEquals(2,info.getAge());
+		
+		info = accountInfoMapper.findAccountInfo("健太郎");
+		assertEquals(null,info);
 	}
 	
 	@Test

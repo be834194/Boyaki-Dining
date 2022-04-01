@@ -63,6 +63,9 @@ public class PostMapperTest {
 	void findNickNameでニックネームを1件取得する() throws Exception{
 		String nickName = postMapper.findNickName("糸井");
 		assertEquals("sigeno",nickName);
+		
+		nickName = postMapper.findNickName("sigeno");
+		assertEquals(null,nickName);
 	}
 	
 	@Test
@@ -74,6 +77,9 @@ public class PostMapperTest {
 		assertEquals(1,info.getStatus());
 		assertEquals(2,info.getGender());
 		assertEquals(2,info.getAge());
+		
+		info = postMapper.findProfile("健太郎");
+		assertEquals(null,info);
 	}
 	
 	@Test
@@ -108,6 +114,9 @@ public class PostMapperTest {
 		assertEquals("中性脂肪・コレステロール高め",result.getStatus());
 		assertEquals("ダイエット",result.getPostCategory());
 		assertEquals("2022-03-03 19:32:44",result.getCreateAt());
+		
+		result = postMapper.findOnePostRecord(1000);
+		assertEquals(null,result);
 	}
 	
 	@Test
@@ -128,6 +137,9 @@ public class PostMapperTest {
 		record = postMapper.findPostRecord("sigeno", PageRequest.of(1, 5));
 		assertEquals(1,record.size());
 		assertEquals("2022-03-01 12:06:21",record.get(0).getCreateAt());
+		
+		record = postMapper.findPostRecord("sigeno", PageRequest.of(2, 5));
+		assertEquals(0,record.size());
 	}
 	
 	@Test
@@ -150,6 +162,10 @@ public class PostMapperTest {
                                              PageRequest.of(2, 5));
 		assertEquals(1,record.size());
 		assertEquals("2022-02-28 23:30:34",record.get(0).getCreateAt());
+		
+		record = postMapper.searchPostRecord(category,status,content,
+		                                     PageRequest.of(3, 5));
+		assertEquals(0,record.size());
 	}
 	
 	@Test
@@ -246,6 +262,9 @@ public class PostMapperTest {
 	void sumRateで評価状態を取得する() throws Exception{
 		int result =  postMapper.sumRate(2).orElse(0);
 		assertEquals(2,result);
+		
+		result =  postMapper.sumRate(5).orElse(0);
+		assertEquals(0,result);
 	}
 	
 	@Test

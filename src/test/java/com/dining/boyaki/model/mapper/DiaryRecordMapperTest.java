@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
@@ -54,6 +55,9 @@ public class DiaryRecordMapperTest {
 		assertEquals(1,records.get(0).getCategoryId());
 		assertEquals(2,records.get(1).getCategoryId());
 		assertEquals(3,records.get(2).getCategoryId());
+		
+		records = diaryRecordMapper.findAllDiaryRecords("健太郎");
+		assertTrue(records.isEmpty());
 	}
 	
 	@Test
@@ -70,6 +74,9 @@ public class DiaryRecordMapperTest {
 		assertEquals(null,records.getMemo());
 		assertEquals(LocalDateTime.parse("2022-01-26T09:55:41"),records.getCreateAt());
 		assertEquals(LocalDateTime.parse("2022-01-26T09:55:41"),records.getUpdateAt());
+		
+		records= diaryRecordMapper.findOneDiaryRecord("miho",1,Date.valueOf("2022-02-26"));
+		assertEquals(null,records);
 	}
 	
 	@Test
