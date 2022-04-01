@@ -179,15 +179,10 @@ public class UserCalendarControllerCombinedTest {
 		 		          )
 		       .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
 		       .andExpect(view().name("UserCalendar/Edit"));
-	}
-	
-	@Test
-	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
-	@DatabaseSetup(value="/controller/UserCalendar/setup/")
-	void showUserEditContentでレコードが見つからない場合は404ページへ遷移する() throws Exception{
+		
 		mockMvc.perform(get("/index/record/2022-02-23/1"))
-    	       .andExpect(status().is2xxSuccessful())
-               .andExpect(view().name("Common/404"));
+			       	   .andExpect(status().is2xxSuccessful())
+		       .andExpect(view().name("Common/404"));
 	}
 	
 	@Test

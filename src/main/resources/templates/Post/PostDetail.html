@@ -45,7 +45,6 @@
 	<tr>
 	    <td>
 		    <form th:action="@{/index/boyaki/post/delete}" method="post">
-				<input type="hidden" id="userName" name="userName" th:value="${obj.userName}">
 				<input type="hidden" id="postId" name="postId" th:value="${obj.postId}">
 				<div th:if="${ableDeleted}">
 				     <input type="submit" value="削除" onClick="return check()">
