@@ -35,7 +35,7 @@ public class UniqueMailValidatorCombinedTest {
 	BindingResult bindingResult = new BindException(form, "RegisterForm");
 	
 	@Test
-	@DatabaseSetup(value = "/validation/UniqueMail/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでメールアドレスが重複せずエラーが発生しない() throws Exception{
 		form.setMail("disney@gmail.com");
 		uniqueMailValidator.validate(form, bindingResult);
@@ -43,7 +43,7 @@ public class UniqueMailValidatorCombinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/UniqueMail/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでメールアドレスが重複してエラーが発生する() throws Exception{
 		form.setMail("example@ezweb.ne.jp");
 		uniqueMailValidator.validate(form, bindingResult);

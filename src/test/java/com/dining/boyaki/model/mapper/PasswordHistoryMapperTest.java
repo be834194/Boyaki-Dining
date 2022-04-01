@@ -1,6 +1,7 @@
 package com.dining.boyaki.model.mapper;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.time.LocalDateTime;
@@ -43,7 +44,10 @@ public class PasswordHistoryMapperTest {
 	@DatabaseSetup(value = "/mapper/PasswordHistory/setup/")
 	void findPasswordでパスワードを取得する() throws Exception{
 		String password = passwordHistoryMapper.findPassword("miho","miho@gmail.com");
-		assertEquals(password,"ocean-Nu");
+		assertEquals("ocean-Nu",password);
+		
+		password = passwordHistoryMapper.findPassword("miho","homi@gmail.com");
+		assertEquals(null,password);
 	}
 	
 	@Test
@@ -54,6 +58,9 @@ public class PasswordHistoryMapperTest {
 		assertEquals(history.get(0).getUserName(),"加藤健");
 		assertEquals(history.get(0).getUseDay(),LocalDateTime.parse("2022-01-13T09:08:56"));
 		assertEquals(history.get(1).getUseDay(),LocalDateTime.parse("2021-12-14T12:08:28"));
+		
+		history = passwordHistoryMapper.findUseFrom("加藤健", LocalDateTime.of(2022,02,13,12,33,00));
+		assertTrue(history.isEmpty());
 	}
 
 }

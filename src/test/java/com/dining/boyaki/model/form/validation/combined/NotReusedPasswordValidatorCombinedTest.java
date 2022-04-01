@@ -57,7 +57,7 @@ public class NotReusedPasswordValidatorCombinedTest {
     }
 	
 	@Test
-	@DatabaseSetup(value = "/validation/NotReusedPassword/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateで新パスワードが重複せずエラーが発生しない() throws Exception{
 		form.setUserName("加藤健");
 		form.setMail("example@ezweb.ne.jp");
@@ -70,7 +70,7 @@ public class NotReusedPasswordValidatorCombinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/NotReusedPassword/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateで30日以内のパスワード変更履歴がない場合はエラーが発生しない() throws Exception{
 		form.setUserName("糸井");
 		form.setMail("mother@yahoo.co.jp");
@@ -83,7 +83,7 @@ public class NotReusedPasswordValidatorCombinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/NotReusedPassword/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでメールアドレスの誤りでエラーが発生する() throws Exception{
 		form.setUserName("加藤健");
 		form.setMail("hogehoge@ezweb.ne.jp");
@@ -98,7 +98,7 @@ public class NotReusedPasswordValidatorCombinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/NotReusedPassword/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateで旧パスワードと一致してエラーが発生する() throws Exception{
 		form.setUserName("加藤健");
 		form.setMail("example@ezweb.ne.jp");
@@ -113,7 +113,7 @@ public class NotReusedPasswordValidatorCombinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/NotReusedPassword/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateで新パスワードが過去30日以内のパスワードと一致してエラーが発生する() throws Exception{
 		form.setUserName("加藤健");
 		form.setMail("example@ezweb.ne.jp");

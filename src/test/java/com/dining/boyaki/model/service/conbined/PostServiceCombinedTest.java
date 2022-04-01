@@ -67,12 +67,8 @@ public class PostServiceCombinedTest {
 	void findNickNameでニックネームを1件取得する() throws Exception{
 		String nickName = postService.findNickName("糸井");
 		assertEquals("sigeno",nickName);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/Post/setup/")
-	void findNickNameでニックネームを取得できない場合はnullが返ってくる() throws Exception{
-		String nickName = postService.findNickName("kenken");
+		
+		nickName = postService.findNickName("kenken");
 		assertEquals(null,nickName);
 	}
 	
@@ -85,13 +81,11 @@ public class PostServiceCombinedTest {
 		assertEquals(1,info.getStatus());
 		assertEquals(2,info.getGender());
 		assertEquals(2,info.getAge());
+		
+		info = postService.findProfile("miho");
+		assertEquals(null,info);
 	}
 	
-	@Test
-	void findProfileでユーザ情報レコードを取得できない場合はnullが返ってくる() throws Exception{
-		AccountInfo result = postService.findProfile("miho");
-		assertEquals(null,result);
-	}
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
 	@ExpectedDatabase(value = "/service/Post/insert/",table="post"
@@ -123,12 +117,8 @@ public class PostServiceCombinedTest {
 		assertEquals("中性脂肪・コレステロール高め",result.getStatus());
 		assertEquals("ダイエット",result.getPostCategory());
 		assertEquals("2022-03-03 19:32:44",result.getCreateAt());
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/Post/setup/")
-	void findOnePostRecordで投稿を一件取得できない場合はnullが返ってくる() {
-		PostRecord result = postService.findOnePostRecord(333);
+		
+		result = postService.findOnePostRecord(333);
 		assertEquals(null,result);
 	}
 	

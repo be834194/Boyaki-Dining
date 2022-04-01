@@ -142,7 +142,7 @@ public class UserCalendarControllerTest {
 		}
 	
 		@Test
-		void createContentでレコードの重複が発生する() throws Exception{
+		void createContentでレコード重複エラーが発生する() throws Exception{
 			when(diaryRecordService.findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"))).thenReturn(form);
 			
 			mockMvc.perform(post("/index/create/insert")

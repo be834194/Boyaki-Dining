@@ -114,28 +114,22 @@ public class DiaryRecordServiceTest {
 	}
 	
 	@Test
-	void returnTitleでRecord2を返す() throws Exception{
+	void returnTitleで対応するRecordを返す() throws Exception{
 		DiaryRecord diary = new DiaryRecord();
 		diary.setRecord1("白米");
 		diary.setRecord2("生姜焼き");
 		String title = diaryRecordService.returnTitle(diary);
-		assertEquals("生姜焼き",title);
-	}
-	
-	@Test
-	void returnTitleでRecord1を返す() throws Exception{
-		DiaryRecord diary = new DiaryRecord();
+		assertEquals("生姜焼き",title); //record2
+		
+		diary = new DiaryRecord();
 		diary.setRecord1("白米");
-		String title = diaryRecordService.returnTitle(diary);
-		assertEquals("白米",title);
-	}
-	
-	@Test
-	void returnTitleでRecord3を返す() throws Exception{
-		DiaryRecord diary = new DiaryRecord();
+		title = diaryRecordService.returnTitle(diary);
+		assertEquals("白米",title); //record1
+		
+		diary = new DiaryRecord();
 		diary.setRecord3("きゅうりの浅漬け");
-		String title = diaryRecordService.returnTitle(diary);
-		assertEquals("きゅうりの浅漬け",title);
+		title = diaryRecordService.returnTitle(diary);
+		assertEquals("きゅうりの浅漬け",title); //record3
 	}
 	
 	@Test

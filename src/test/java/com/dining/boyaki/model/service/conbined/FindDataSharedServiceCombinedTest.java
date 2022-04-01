@@ -39,12 +39,8 @@ public class FindDataSharedServiceCombinedTest {
 	void findUserNameでユーザ名を取得する() throws Exception{
 		String userName = findDataSharedService.findUserName("糸井");
 		assertEquals("糸井",userName);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/FindData/setup/")
-	void findUserNameでユーザ名が見つからない場合はNullが返ってくる() throws Exception{
-		String userName = findDataSharedService.findUserName("hogehoge");
+		
+		userName = findDataSharedService.findUserName("hogehoge");
 		assertEquals(null,userName);
 	}
 	
@@ -53,11 +49,8 @@ public class FindDataSharedServiceCombinedTest {
 	void findUserNameFromMailでユーザ名を取得する() throws Exception{
 		String userName = findDataSharedService.findUserNameFromMail("miho@gmail.com");
 		assertEquals("miho",userName);
-	}
-	
-	@Test
-	void findUserNameFromMailでユーザ名が見つからない場合はNullが返ってくる() throws Exception{
-		String userName = findDataSharedService.findUserNameFromMail("hogehoge@gmail.com");
+		
+		userName = findDataSharedService.findUserNameFromMail("hogehoge@gmail.com");
 		assertEquals(null,userName);
 	}
 	
@@ -66,12 +59,8 @@ public class FindDataSharedServiceCombinedTest {
 	void findMailでメールアドレスを取得する() throws Exception{
 		String mail = findDataSharedService.findMail("example@ezweb.ne.jp");
 		assertEquals("example@ezweb.ne.jp",mail);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/FindData/setup/")
-	void findMailでメールアドレスが見つからない場合はNullが返ってくる() throws Exception{
-		String mail = findDataSharedService.findMail("hogehoge@gmail.com");
+		
+		mail = findDataSharedService.findMail("hogehoge@gmail.com");
 		assertEquals(null,mail);
 	}
 	
@@ -89,12 +78,8 @@ public class FindDataSharedServiceCombinedTest {
 		assertNull(result.getMemo());
 		assertEquals(LocalDateTime.parse("2022-02-15T23:30:34"),result.getCreateAt());
 		assertEquals(LocalDateTime.parse("2022-02-15T23:30:34"),result.getUpdateAt());
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/FindData/setup/")
-	void findOneDiaryRecordで食事投稿が見つからない場合はNullが返ってくる() throws Exception{
-		DiaryRecord result = findDataSharedService.findOneDiaryRecord("糸井", 2, Date.valueOf("2022-02-09"));
+		
+		result = findDataSharedService.findOneDiaryRecord("糸井", 2, Date.valueOf("2022-02-09"));
 		assertNull(result);
 	}
 	
@@ -104,12 +89,8 @@ public class FindDataSharedServiceCombinedTest {
 		AccountInfo info = findDataSharedService.findNickName("sigeno");
 		assertEquals("糸井",info.getUserName());
 		assertEquals("sigeno",info.getNickName());
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/FindData/setup/")
-	void findNickNameでニックネームが見つからない場合はNullが返ってくる() throws Exception{
-		AccountInfo info = findDataSharedService.findNickName("hogei");
+		
+		info = findDataSharedService.findNickName("hogei");
 		assertNull(info);
 	}
 

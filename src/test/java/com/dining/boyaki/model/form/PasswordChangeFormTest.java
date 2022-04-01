@@ -63,7 +63,7 @@ public class PasswordChangeFormTest {
     }
 	
 	@Test
-	@DatabaseSetup(value = "/form/PasswordChange/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void バリデーション問題なし() throws Exception{
 		form.setUserName("加藤健");
 		form.setMail("example@ezweb.ne.jp");
@@ -80,7 +80,7 @@ public class PasswordChangeFormTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/NotReusedPassword/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void validateで30日以内のパスワード変更履歴がない場合はエラーが発生しない() throws Exception{
 		form.setUserName("糸井");
 		form.setMail("mother@yahoo.co.jp");
@@ -97,7 +97,7 @@ public class PasswordChangeFormTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/NotReusedPassword/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void 未入力や指定サイズ範囲外でフィールドエラー発生() throws Exception{
 		form.setUserName("糸井");
 		form.setMail("");
@@ -124,7 +124,7 @@ public class PasswordChangeFormTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/form/PasswordChange/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void メールアドレスの誤りでエラーが発生する() throws Exception{
 		form.setUserName("miho");
 		form.setMail("miki@gmail.com");
@@ -147,7 +147,7 @@ public class PasswordChangeFormTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/form/PasswordChange/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void 旧パスワードの不一致でエラーが発生する() throws Exception{
 		form.setUserName("糸井");
 		form.setMail("mother@yahoo.co.jp");
@@ -168,7 +168,7 @@ public class PasswordChangeFormTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/form/PasswordChange/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void 新パスワードが旧パスワードと一致してエラーが発生する() throws Exception{
 		form.setUserName("加藤健");
 		form.setMail("example@ezweb.ne.jp");
@@ -189,7 +189,7 @@ public class PasswordChangeFormTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/form/PasswordChange/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void 新パスワードが過去30日以内のパスワードと一致してエラーが発生する() throws Exception{
 		form.setUserName("加藤健");
 		form.setMail("example@ezweb.ne.jp");

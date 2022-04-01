@@ -46,6 +46,9 @@ public class FindDataMapperTest {
 	void findUserNameでユーザを一人見つける() throws Exception{
 		String userName = findDataMapper.findUserName("糸井");
 		assertEquals("糸井",userName);
+		
+		userName = findDataMapper.findUserName("健太郎");
+		assertEquals(null,userName);
 	}
 	
 	@Test
@@ -53,6 +56,9 @@ public class FindDataMapperTest {
 	void findUserNameFromMailでユーザを一人見つける() throws Exception{
 		String userName = findDataMapper.findUserNameFromMail("miho@gmail.com");
 		assertEquals("miho",userName);
+		
+		userName = findDataMapper.findUserNameFromMail("homi@gmail.com");
+		assertEquals(null,userName);
 	}
 	
 	@Test
@@ -60,6 +66,9 @@ public class FindDataMapperTest {
 	void findMailでメールアドレスを一件見つける() throws Exception{
 		String mail = findDataMapper.findMail("example@ezweb.ne.jp");
 		assertEquals("example@ezweb.ne.jp",mail);
+		
+		mail = findDataMapper.findMail("test@ezweb.ne.jp");
+		assertEquals(null,mail);
 	}
 	
 	@Test
@@ -76,6 +85,9 @@ public class FindDataMapperTest {
 		assertEquals(null,record.getMemo());
 		assertEquals(LocalDateTime.parse("2022-02-11T21:37:19"),record.getCreateAt());
 		assertEquals(LocalDateTime.parse("2022-02-11T21:37:19"),record.getUpdateAt());
+		
+		record = findDataMapper.findOneDiaryRecord("加藤健", 1, Date.valueOf("2022-02-19"));
+		assertEquals(null,record);
 	}
 	
 	@Test
@@ -84,5 +96,8 @@ public class FindDataMapperTest {
 		AccountInfo userName = findDataMapper.findNickName("sigeno");
 		assertEquals("糸井",userName.getUserName());
 		assertEquals("sigeno",userName.getNickName());
+		
+		userName = findDataMapper.findNickName("健太郎");
+		assertEquals(null,userName);
 	}
 }

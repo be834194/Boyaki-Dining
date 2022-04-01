@@ -41,10 +41,10 @@ public class AccountInfoFormTest {
 	BindingResult bindingResult = new BindException(form,"AccountInfoForm");
 	
 	@Test
-	@DatabaseSetup(value = "/form/AccountInfo/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void バリデーション問題なし() throws Exception{
 		form.setUserName("miho");
-		form.setNickName("匿名");
+		form.setNickName("axios");
 		form.setProfile("しがない会社員");
 		form.setStatus(0);
 		form.setGender(2);
@@ -57,10 +57,10 @@ public class AccountInfoFormTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/form/AccountInfo/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void ニックネームが重複してユーザ名が一緒ならエラーが発生しない() throws Exception{
 		form.setUserName("miho");
-		form.setNickName("mack");
+		form.setNickName("匿名");
 		form.setProfile("しがない会社員");
 		form.setStatus(0);
 		form.setGender(1);
@@ -75,7 +75,7 @@ public class AccountInfoFormTest {
 	@ParameterizedTest
 	@CsvSource({"亜",
 		        "寿限無寿限無後光の擦り切れ回砂利"})
-	@DatabaseSetup(value = "/form/AccountInfo/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void 指定サイズ範囲外でエラー発生(String nickName) throws Exception{
 		form.setUserName("糸井");
 		form.setNickName(nickName);
@@ -95,7 +95,7 @@ public class AccountInfoFormTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/form/AccountInfo/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void ニックネームが重複してユーザ名が一致しないならエラーが発生する() throws Exception{
 		form.setUserName("加藤健");
 		form.setNickName("sigeno");

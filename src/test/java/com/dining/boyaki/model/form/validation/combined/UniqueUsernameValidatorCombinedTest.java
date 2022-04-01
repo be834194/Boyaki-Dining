@@ -35,7 +35,7 @@ public class UniqueUsernameValidatorCombinedTest {
 	BindingResult bindingResult = new BindException(form, "RegisterForm");
 	
 	@Test
-	@DatabaseSetup(value = "/validation/UniqueUsername/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでユーザ名が重複せずエラーが発生しない() throws Exception{
 		form.setUserName("マクベイ");
 		uniqueUsernameValidator.validate(form, bindingResult);
@@ -43,7 +43,7 @@ public class UniqueUsernameValidatorCombinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/UniqueUsername/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでユーザ名が重複してエラーが発生する() throws Exception{
 		form.setUserName("糸井");
 		uniqueUsernameValidator.validate(form, bindingResult);
@@ -53,7 +53,7 @@ public class UniqueUsernameValidatorCombinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/UniqueUsername/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでニックネームが重複してエラーが発生する() throws Exception{
 		form.setUserName("sigeno");
 		uniqueUsernameValidator.validate(form, bindingResult);

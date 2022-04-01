@@ -157,7 +157,6 @@ public class PostControllerTest {
 	void deletePostDetailで投稿が削除される() throws Exception{
 		doNothing().when(postService).deletePost("miho", 7);
 		mockMvc.perform(post("/index/boyaki/post/delete")
-				       .param("userName", "miho")
 				       .param("postId", "7")
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			           .with(SecurityMockMvcRequestPostProcessors.csrf()))

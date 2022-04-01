@@ -103,6 +103,7 @@ public class AccountInfoControllerCombinedTest {
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 			   .andExpect(status().is3xxRedirection())
+			   .andExpect(model().hasNoErrors())
 			   .andExpect(redirectedUrl("/index/mypage"));
 	}
 	
@@ -152,6 +153,7 @@ public class AccountInfoControllerCombinedTest {
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		       .andExpect(status().is3xxRedirection())
+		       .andExpect(model().hasNoErrors())
 		       .andExpect(flash().attribute("register", "退会処理が完了しました"))
 		       .andExpect(redirectedUrl("/login"));
 	}

@@ -49,7 +49,7 @@ public class RegisterFormTest {
 	BindingResult bindingResult = new BindException(form,"RegistrationForm");
 	
 	@Test
-	@DatabaseSetup(value = "/form/Register/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void バリデーション問題なし() throws Exception{
 		form.setUserName("竹内");
 		form.setPassword("hogetaro");
@@ -90,7 +90,7 @@ public class RegisterFormTest {
 	@ParameterizedTest
 	@CsvSource({"加藤健",
 		        "sigeno"})
-	@DatabaseSetup(value = "/form/Register/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void ユーザ名やニックネームの重複でエラー発生(String userName) throws Exception{
 		form.setUserName(userName);
 		form.setPassword("hogehoge");
@@ -130,7 +130,7 @@ public class RegisterFormTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/form/Register/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void メールアドレスの重複でフィールドエラー発生() throws Exception{
 		form.setUserName("加藤健");
 		form.setPassword("pinballs");
@@ -147,7 +147,7 @@ public class RegisterFormTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/form/Register/setup/")
+	@DatabaseSetup(value = "/form/setup/")
 	void メールアドレスが存在しないとフィールドエラー発生() throws Exception{
 		form.setUserName("加藤健");
 		form.setPassword("pinballs");

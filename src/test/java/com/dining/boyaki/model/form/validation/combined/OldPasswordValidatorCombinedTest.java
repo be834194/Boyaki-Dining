@@ -37,7 +37,7 @@ public class OldPasswordValidatorCombinedTest {
 	BindingResult bindingResult = new BindException(form, "PasswordChangeForm");
 	
 	@Test
-	@DatabaseSetup(value = "/validation/OldPassword/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでパスワードが一致するのでエラーが発生しない() throws Exception{
 		form.setUserName("糸井");
 		form.setMail("mother@yahoo.co.jp");
@@ -50,7 +50,7 @@ public class OldPasswordValidatorCombinedTest {
 	@ParameterizedTest
 	@CsvSource({"糸井,mother@yahoo.co.jp,sigesige",
 		        "糸井,father@yahoo.co.jp,sigeSIGE"})
-	@DatabaseSetup(value = "/validation/OldPassword/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでパスワードの不一致やメールアドレスの誤りでエラーが発生する(
 			String userName,String mail,String oldPassword) throws Exception{
 		form.setUserName(userName);

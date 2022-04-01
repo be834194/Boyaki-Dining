@@ -66,9 +66,9 @@ public class PostController {
 	}
 	
 	@PostMapping("/index/boyaki/post/delete")
-	String deletePost(@RequestParam(value="userName")String userName,
+	String deletePost(@AuthenticationPrincipal AccountUserDetails details,
 			          @RequestParam(value="postId")long postId) {
-		postService.deletePost(userName,postId);
+		postService.deletePost(details.getUsername(),postId);
 		return "redirect:/index/boyaki";
 	}
 	

@@ -35,7 +35,7 @@ public class ExistMailvalidatorCombinedTest {
 	BindingResult bindingResult = new BindException(form, "RegisterForm");
 	
 	@Test
-	@DatabaseSetup(value = "/validation/ExistMail/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでメールアドレスが存在するのでエラーが発生しない() throws Exception{
 		form.setMail("miho@gmail.com");
 		existMailValidator.validate(form, bindingResult);
@@ -43,7 +43,7 @@ public class ExistMailvalidatorCombinedTest {
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/validation/ExistMail/setup/")
+	@DatabaseSetup(value = "/validation/setup/")
 	void validateでメールアドレスが取得出来ないのでエラーが発生する() throws Exception{
 		form.setMail("disney@gmail.com");
 		existMailValidator.validate(form, bindingResult);

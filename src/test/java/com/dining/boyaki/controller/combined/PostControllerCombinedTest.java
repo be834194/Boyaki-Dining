@@ -157,7 +157,6 @@ public class PostControllerCombinedTest {
 	@ExpectedDatabase(value = "/controller/Post/delete/")
 	void deletePostDetailで投稿が削除される() throws Exception{
 		mockMvc.perform(post("/index/boyaki/post/delete")
-				       .param("userName", "miho")
 				       .param("postId", "7")
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
