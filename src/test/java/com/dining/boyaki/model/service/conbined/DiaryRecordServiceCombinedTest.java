@@ -82,12 +82,8 @@ public class DiaryRecordServiceCombinedTest {
 		assertEquals(0,result.getPrice());
 		assertNull(result.getMemo());
 		assertEquals(LocalDateTime.parse("2022-02-15T23:30:34"),result.getCreateAt());
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/DiaryRecord/setup/")
-	void findOneDiaryRecordでDiaryRecordが取得できない場合nullが返ってくる() throws Exception{
-		DiaryRecordForm result = diaryRecordService.findOneDiaryRecord("加藤健", 4, Date.valueOf("2022-02-01"));
+		
+		result = diaryRecordService.findOneDiaryRecord("加藤健", 4, Date.valueOf("2022-02-01"));
 		assertNull(result);
 	}
 	

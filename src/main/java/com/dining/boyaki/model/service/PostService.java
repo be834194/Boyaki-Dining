@@ -48,13 +48,12 @@ public class PostService {
 	}
 	
 	
-	//
 	@Transactional(readOnly = true)
 	public int sumRate(long postId) {
 		return postMapper.sumRate(postId).orElse(0);
 	}
 	
-	//
+	
 	@Transactional(readOnly = false)
 	public void updateRate(long postId,String userName) {
 		int currentRate = postMapper.currentRate(postId, userName).orElse(-1);

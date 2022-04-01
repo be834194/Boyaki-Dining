@@ -36,12 +36,8 @@ public class PasswordHistoryServiceCombinedTest {
 	void findPasswordでパスワードを取得する()  throws Exception{
 		String password = passwordHistoryService.findPassword("miho", "miho@gmail.com");
 		assertEquals("ocean-Nu",password);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/PasswordHistory/setup/")
-	void findPasswordでパスワードを取得できない場合はnullが返ってくる()  throws Exception{
-		String password = passwordHistoryService.findPassword("糸井", "miho@gmail.com");
+		
+		password = passwordHistoryService.findPassword("糸井", "miho@gmail.com");
 		assertEquals(null,password);
 	}
 	
@@ -55,12 +51,8 @@ public class PasswordHistoryServiceCombinedTest {
 		assertEquals(LocalDateTime.of(2022, 01, 13, 9, 8,56),result.get(0).getUseDay());
 		assertEquals("ten_bear",result.get(1).getPassword());
 		assertEquals(LocalDateTime.of(2021, 12, 14, 12, 8, 28),result.get(1).getUseDay());
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/PasswordHistory/setup/")
-	void findUseFromでユーザ一人のPW更新履歴が取得できない場合はnullが返ってくる() throws Exception{
-		List<PasswordHistory> result = passwordHistoryService.findUseFrom("加藤健", LocalDateTime.of(2022, 01, 13, 10, 22, 39));
+		
+		result = passwordHistoryService.findUseFrom("加藤健", LocalDateTime.of(2022, 01, 13, 10, 22, 39));
 		assertTrue(result.isEmpty());
 	}
 

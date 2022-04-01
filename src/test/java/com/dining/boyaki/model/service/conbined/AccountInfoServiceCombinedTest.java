@@ -62,12 +62,8 @@ public class AccountInfoServiceCombinedTest {
 		assertEquals(3,form.getStatus());
 		assertEquals(3,form.getGender());
 		assertEquals(2,form.getAge());
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/AccountInfo/setup/")
-	void findAccountInfoでユーザ情報レコードが取得できない場合はnullが返ってくる() {
-		AccountInfoForm form = accountInfoService.findAccountInfo("sigeno");
+		
+		form = accountInfoService.findAccountInfo("健太郎");
 		assertEquals(null,form);
 	}
 	
