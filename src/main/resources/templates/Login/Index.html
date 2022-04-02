@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <title>Boyaki-Dining</title>
+</head>
+<body>
+<header>
+    <h2>Boyaki-Dining</h2>
+</header>
+<div>日々の食事や運動を記録しつつ、同じような健康の悩みを共有してみませんか？
+<br>グチや悩みを吐き出すだけでも、気持ちが軽くなるかもしれません。
+</div>
+
+<br>
+<a th:href="@{/login}">ログインする</a>
+<br>
+<a th:href="@{/registration}">新規登録はこちらから</a>
+<br>
+<a th:href="@{/resetpassword}">パスワードを忘れた方はこちらから</a>
+</body>
+</html>

@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override //全体に対するセキュリティ設定を行う
     public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/css/**", "/webjars/**", "/js/**", "/images/**","/resources/**");
+		web.ignoring().antMatchers("/css/**", "/webjars/**", "/js/**", "/images/**");
     }
 
     @Override //URLごとに異なるセキュリティ設定を行う
@@ -50,6 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	    .logoutSuccessUrl("/login?logout")
     	    .permitAll();
     	http.authorizeRequests()// アクセス権限の設定
+    	    .antMatchers("/").permitAll()
     	    .antMatchers("/registration","/regist").permitAll()
 		    .antMatchers("/resetpassword","/updatePassword").permitAll()
     	    .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")

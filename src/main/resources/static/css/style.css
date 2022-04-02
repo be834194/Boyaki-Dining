@@ -1,0 +1,12 @@
+header {
+    font-size: 32px;
+    margin: 20px 0 20px 0;
+    color: gray;
+ }
+
+.error-messages {
+    color: #b94a48;
+    display: block;
+    padding-left: 5px;
+    overflow-x: auto;
+}
