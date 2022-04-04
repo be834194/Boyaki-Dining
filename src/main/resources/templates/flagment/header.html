@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+  <title>ぼやき一覧</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+<header class="pageHeader" th:fragment="user-header">
+    <h1>Boyaki-Dining</h1>
+    <nav>
+        <span　class="main-navi"><br>
+            <a th:href="@{/index}">食事記録をつける</a>
+            <a th:href="@{/index/boyaki}">グチをぼやく</a>
+            <a th:href="@{/index/mypage}">マイページへ</a>
+        </span>
+    </nav>
+</header>
+</body>
+
+</html>

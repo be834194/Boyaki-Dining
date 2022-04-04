@@ -1,9 +1,34 @@
-header {
-    font-size: 32px;
+html{
+	font-size:100%
+	}
+body{
+	line-height:1.7;
+	color:#432
+	}
+h2 {
     margin: 20px 0 20px 0;
     color: gray;
- }
+    }
+a {
+	text-decoration: none;
+}
+textarea {
+	resize: none;
+}
+.blocks {
+	display:flex;
+	}
+.pageHeader {
+	display:flex;
+	justify-content:space-between;
+	}
 
+.main-navi {
+	display: flex;
+	font-size: 1.25rem;
+	text-transform: uppercase;
+	list-style: none;
+	}
 .error-messages {
     color: #b94a48;
     display: block;
