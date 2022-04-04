@@ -9,10 +9,9 @@
 	<title>ログイン画面</title>
 </head>
 <body>
+<div th:replace="flagment/loginheader :: login-header"></div><hr>
 <div class="container">
-	<header
-	    <h1>ログイン</h1>
-	</header>
+<h2>ログイン</h2>
     <form th:action="@{/authenticate}" method="post" class="row">
     <div class="col-sm-6">
 		<div class="form-group">
