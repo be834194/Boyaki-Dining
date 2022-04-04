@@ -1,45 +1,42 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://thymeleaf.org">
 <head>
-  <title>投稿詳細</title>
-  <meta charset="UTF-8">
-   <meta name="_csrf" th:content="${_csrf.token}"/>
-   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-  <script src="https://unpkg.com/vue@next"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <title>投稿詳細</title>
 </head>
 
 <body>
-<h1>投稿詳細</h1>
-
-<table th:each="obj:${postRecord}">
-<div id="likesApp">
+<div th:replace="flagment/header :: user-header"></div><hr>
+<h2>投稿詳細</h2>
+<table >
+<div id="likesApp" th:each="obj:${postRecord}">
 	<tr>
-        <td>ニックネーム</td>
-        <td th:text="${obj.nickName}"></td>
+	    <td style="font-size:32px" th:text="${obj.content}"></td>
+	</tr>
+	<tr>
+        <td th:inline="text" style="font-size:14px">[[${obj.nickName}]]さん 
+            <span style="font-size:14px">健康状態：[[${obj.status}]]</span>
+        </td>
     </tr>
 	<tr>
-	    <td>プロフィール</td>
-	    <td th:text="${obj.content}"></td>
-	</tr> 
-	<tr>
-	    <td>健康状態</td>
-	    <td th:text="${obj.status}"></td>
-	</tr>
-	<tr>
-	    <td>投稿種別</td>
-	    <td th:text="${obj.postCategory}"></td>
-	</tr>
-	<tr>
-	    <td th:text="${obj.createAt}"></td>
+	    <td style="font-size:14px" th:inline="text">
+	        <div>投稿種別:[[${obj.postCategory}]] 投稿日時:[[${obj.createAt}]]</div>
+	    </td>
 	</tr>
     <tr>
         <td>
-            <!--<button type="submit" onClick="likes()">いいね</button>-->
-            <span style="cursor: pointer" onClick="likes()">いいね</span>
-            <div id="sumLike" th:fragment="rateFragment">
+            <span style="cursor: pointer;font-size:20px;" onClick="likes()">いいね</span>
+            <span style="font-size:20px;" id="sumLike" th:fragment="rateFragment">
 	            <span th:text="${sumRate}"></span>
-			</div>
+			</span>
         </td>
     </tr>
 	<tr>
@@ -54,8 +51,6 @@
 	</tr>
 </div>
 </table>
-
-</div>
 
 </body>
 

@@ -1,65 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>新規登録画面</title>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <title>新規登録画面</title>
 </head>
 <body>
-<h1>新規登録</h1>
-<form th:action="@{/regist}" method="post" th:object="${registerForm}">
-<table>
-    <tr>
-        <td>ユーザ名</td>
-        <td>
-            <label for="userName"></label>
-            <input type="text" id="userName" name="userName" 
-                   th:value="*{userName}" th:errorclass="err"
-                   placeholder="2文字以上15字以下で入力してください">
+<div th:replace="flagment/loginheader :: login-header"></div><hr>
+<div class="container">
+<h2>新規登録</h2>
+    <form th:action="@{/regist}" method="post" th:object="${registerForm}" class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label for="userName">ユーザ名</label>
+            <input class="form-control" type="text" id="userName" name="userName" 
+                   th:value="*{userName}" placeholder="2文字以上15字以下で入力してください">
             <div th:if="${#fields.hasErrors('userName')}" 
-                 th:errors="*{userName}" th:errorclass="err"></div>
-        </td>
-    </tr>
-    <tr>
-    　　　　<td>メールアドレス</td>
-        <td>
-            <label for="mail"></label>
-            <input type="text" id="mail" name="mail"
-                   th:value="*{mail}" th:errorclass="err" />
+                 th:errors="*{userName}" th:errorclass="error-messages"></div>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="mail">メールアドレス</label>
+            <input class="form-control" type="text" id="mail" name="mail"
+                th:value="*{mail}" />
             <div th:if="${#fields.hasErrors('mail')}" 
-                 th:errors="*{mail}" th:errorclass="err">
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>パスワード</td>
-        <td>
-            <label for="password"></label>
-            <input type="password" id="password" name="password"
-                   th:value="*{password}" th:errorclass="err"
-                   placeholder="8文字以上の半角英数字で入力してください">
+                 th:errors="*{mail}" th:errorclass="error-messages"></div>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="password">パスワード</label>
+            <input class="form-control" type="password" id="password" name="password"
+                   th:value="*{password}" placeholder="8文字以上の半角英数字で入力してください">
             <div th:if="${#fields.hasErrors('password')}" 
-                 th:errors="*{password}" th:errorclass="err">
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>パスワード(再入力)</td>
-        <td>
-            <label for="confirmPassword"></label>
-            <input type="password" id="confirmPassword" name="confirmPassword"
-                   th:value="*{confirmPassword}" th:errorclass="err"
-                   placeholder="パスワードを再入力してください">
+                 th:errors="*{password}" th:errorclass="error-messages"></div>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="confirmPassword">パスワード(再入力)</label>
+            <input class="form-control" type="password" id="confirmPassword" name="confirmPassword"
+                   th:value="*{confirmPassword}" placeholder="パスワードを再入力してください">
             <div th:if="${#fields.hasErrors('confirmPassword')}" 
-                 th:errors="*{confirmPassword}" th:errorclass="err">
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
+                 th:errors="*{confirmPassword}" th:errorclass="error-messages"></div>
+        </div>
+        <br>
+        <div>
             <button type="submit">登録</button>
-        </td>
-    </tr>
-</table>
-</form>
+        </div>        
+    </div>
+    </form>
+
+    <br>
+	<a th:href="@{/}">トップへ戻る</a>
+</div>
 </body>
 </html>

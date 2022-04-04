@@ -71,7 +71,14 @@ public class LoginControllerTest {
     	}
     
     @Test
-	void showloginPageでログイン画面が表示される() throws Exception{
+	void showTopPageでトップ画面が表示される() throws Exception{
+    	this.mockMvc.perform(get("/"))
+    	            .andExpect(status().is2xxSuccessful())
+    	            .andExpect(view().name("Login/Index"));
+    }
+    
+    @Test
+	void showLoginPageでログイン画面が表示される() throws Exception{
     	this.mockMvc.perform(get("/login"))
     	            .andExpect(status().is2xxSuccessful())
     	            .andExpect(view().name("Login/Login"));
