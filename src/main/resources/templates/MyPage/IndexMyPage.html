@@ -1,51 +1,55 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>マイページ</title>
-<meta charset="UTF-8">
+    <title>マイページ</title>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 </head>
 <body>
-<a th:href="@{/index}">トップページへ</a>
-
-<table th:each="obj:${AccountInfoForm}">
-<p th:text="${message}"></p>
-	<tr>
-        <td>ニックネーム</td>
-        <td th:text="${obj.nickName}"></td>
-    </tr>
-	<tr>
-	    <td>プロフィール</td>
-	    <td th:text="${obj.profile}"></td>
-	</tr> 
-	<tr>
-	    <td>健康状態</td>
-	      <span th:each="status:${statusList}">
-	    <td th:if="*{status.statusId} == ${obj.status}"
-	        th:text="*{status.statusName}"></td>
-	    </span>
-	</tr>
-	<tr>
-	    <td>性別</td> 
-	    <td th:if="0 == ${obj.gender}">未設定</td>
-	    <td th:if="1 == ${obj.gender}">男性</td>
-	    <td th:if="2 == ${obj.gender}">女性</td>
-	    <td th:if="3 == ${obj.gender}">なし</td>
-	</tr>
-	<tr>
-	    <td>年齢</td>
-	    <div th:switch="${obj.age}">
-	        <td th:case="0">未設定</td>
-		    <td th:case="1" th:inline="text">[[${obj.age}]]0代以下</td>
-		    <td th:case="8"　th:inline="text">[[${obj.age}]]0代以上</td>
-		    <td th:case="*" th:inline="text">[[${obj.age}]]0代</td>
-	    </div>
-	</tr>
-</table>
-
+<div th:replace="flagment/header :: user-header"></div><hr>
+<h2>プロフィール</h2>
+<div class="container" th:each="obj:${AccountInfoForm}">
+	<table class="col-sm-4" style="font-size: 24px;">
+		<tr>
+	        <td>ニックネーム</td>
+	        <td th:text="${obj.nickName}"></td>
+	    </tr>
+		<tr>
+		    <td>プロフィール</td>
+		    <td th:text="${obj.profile}"></td>
+		</tr> 
+		<tr>
+		    <td>健康状態</td>
+		      <span th:each="status:${statusList}">
+		    <td th:if="*{status.statusId} == ${obj.status}"
+		        th:text="*{status.statusName}"></td>
+		    </span>
+		</tr>
+		<tr>
+		    <td>性別</td> 
+		    <td th:if="0 == ${obj.gender}">未設定</td>
+		    <td th:if="1 == ${obj.gender}">男性</td>
+		    <td th:if="2 == ${obj.gender}">女性</td>
+		    <td th:if="3 == ${obj.gender}">なし</td>
+		</tr>
+		<tr>
+		    <td>年齢</td>
+		    <div th:switch="${obj.age}">
+		        <td th:case="0">未設定</td>
+			    <td th:case="1" th:inline="text">[[${obj.age}]]0代以下</td>
+			    <td th:case="8"　th:inline="text">[[${obj.age}]]0代以上</td>
+			    <td th:case="*" th:inline="text">[[${obj.age}]]0代</td>
+		    </div>
+		</tr>
+	</table>
+</div>
+<br>
 <a th:href="@{/index/mypage/edit}">プロフィールを変更する</a>
-<br/>
+<br>
 <a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
-<br/>
+<br>
 <a th:href="@{/index/mypage/confirm}">退会する</a>
 
 </body>

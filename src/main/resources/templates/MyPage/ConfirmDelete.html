@@ -1,12 +1,21 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>退会確認ページ</title>
-<meta charset="UTF-8">
+    <title>退会確認ページ</title>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 </head>
 <body>
-<a th:href="@{/index}">トップページへ</a>
-<p>退会してよろしいですか？</p>
+<div th:replace="flagment/header :: user-header"></div><hr>
+<h2>退会確認</h2>
+<span>退会すると、以下の情報が全て削除されます。</span>
+<ul>
+    <li>アカウント情報</li>
+    <li>食事記録</li>
+    <li>グチ・ぼやき等の投稿</li>
+</ul>
 <form th:action="@{/index/mypage/confirm/delete}" method="post" th:object="${ConfirmDelete}">
     <div>
         <input type="hidden" id="userName" name="userName" th:value="*{userName}">    
@@ -15,6 +24,13 @@
 	    <button type="submit">退会する</button>
 	</div>
 </form>
+
+<br>
+<a th:href="@{/index/mypage}">マイページへ戻る</a>
+<br>
+<a th:href="@{/index/mypage/edit}">プロフィールを変更する</a>
+<br>
+<a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
 
 </body>
 </html>

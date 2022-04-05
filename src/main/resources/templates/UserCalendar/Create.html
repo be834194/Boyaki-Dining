@@ -11,7 +11,7 @@
 
 <body>
 <div th:replace="flagment/header :: user-header"></div><hr>
-<h2>食事記録</h2>
+<h2>食事記録登録</h2>
 <div class="container">
     <form class="row" id="category" th:action="@{/index/create/insert}" method="post" th:object="${diaryRecordForm}">
     <p th:text="${message}"></p>
