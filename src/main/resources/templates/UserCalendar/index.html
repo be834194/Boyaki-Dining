@@ -1,31 +1,34 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>トップ画面</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel='stylesheet' href='webjars/fullcalendar/3.5.1/dist/fullcalendar.css' />
-<script src="webjars/jquery/3.5.1/jquery.min.js"></script>
-<script src='webjars/moment/2.19.1/min/moment.min.js'></script>
-<script src='webjars/fullcalendar/3.5.1/dist/fullcalendar.js'></script>
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('#calendar').fullCalendar({
-      events: {
-        url : '/api/events/all'
-      },
-      eventRender : function(event, element) {
-      element.find('span.fc-title').html(element.find('span.fc-title').text());
-    }
-    });
-  });
-</script>
+    <title>トップ画面</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel='stylesheet' href='webjars/fullcalendar/3.5.1/dist/fullcalendar.css' />
+    <script src="webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script src='webjars/moment/2.19.1/min/moment.min.js'></script>
+    <script src='webjars/fullcalendar/3.5.1/dist/fullcalendar.js'></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+	  $('#calendar').fullCalendar({
+		events: {
+			url : '/api/events/all',
+			backgroundColor: '#fff799',
+			},
+		eventRender : function(event, element) {
+		element.find('span.fc-title').html(element.find('span.fc-title').text());
+		    }
+	    });
+      });
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 </head>
 <body>
-  <h1>トップページ</h1>
-  <a th:href="@{/index/mypage}">マイページへ</a>
-  <a th:href="@{/index/create}">食事情報を登録</a>
-  <a th:href="@{/index/boyaki}">グチを見る</a>
-  <div id='calendar'></div>
+<div th:replace="flagment/header :: user-header"></div><hr>
+<a th:href="@{/index/create}">食事記録をつける</a> 
+<div id='calendar'>
+</div>
 
 </body>
 </html>
