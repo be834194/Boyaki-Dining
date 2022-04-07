@@ -78,7 +78,7 @@ public class UserCalendarController {
 
 		DiaryRecordForm form = diaryRecordService.findOneDiaryRecord(details.getUsername(), id, parsedDate);
 		if(form == null) {
-			return "Common/404";
+			return "error/404";
 		}
 		
 		model.addAttribute("diaryRecordForm", form);

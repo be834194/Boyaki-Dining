@@ -130,7 +130,7 @@ public class PostControllerTest {
 			mockMvc.perform(get("/index/boyaki/333"))
 			       .andExpect(status().is2xxSuccessful())
 			       .andExpect(model().hasNoErrors())
-			       .andExpect(view().name("Common/404"));
+			       .andExpect(view().name("error/404"));
 			verify(postService,times(1)).findOnePostRecord(333);
 		}
 	}
