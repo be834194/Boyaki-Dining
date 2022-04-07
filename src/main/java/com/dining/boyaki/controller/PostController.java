@@ -39,7 +39,7 @@ public class PostController {
 			              @PathVariable("postId")long postId,Model model) {
 		PostRecord record = postService.findOnePostRecord(postId);
 		if(record == null) {
-			return "Common/404";
+			return "error/404";
 		}
 		model.addAttribute("postRecord",record);
 		

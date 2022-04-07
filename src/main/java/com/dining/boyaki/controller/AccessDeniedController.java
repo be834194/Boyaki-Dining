@@ -9,7 +9,7 @@ public class AccessDeniedController {
 	
 	@GetMapping("/accessdenied")
 	public String showUserCalendar(Model model) {
-		return "Common/403";
+		return "error/403";
 	}
 
 }

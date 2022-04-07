@@ -122,7 +122,7 @@ public class PostControllerCombinedTest {
 	void showPostDetailで投稿が見つからない場合は404ページを返す() throws Exception{
 		mockMvc.perform(get("/index/boyaki/333"))
 		       .andExpect(status().is2xxSuccessful())
-		       .andExpect(view().name("Common/404"));
+		       .andExpect(view().name("error/404"));
 	}
 	
 	@Test

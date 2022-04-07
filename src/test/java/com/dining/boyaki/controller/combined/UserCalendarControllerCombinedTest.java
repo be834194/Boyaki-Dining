@@ -182,7 +182,7 @@ public class UserCalendarControllerCombinedTest {
 		
 		mockMvc.perform(get("/index/record/2022-02-23/1"))
 			       	   .andExpect(status().is2xxSuccessful())
-		       .andExpect(view().name("Common/404"));
+		       .andExpect(view().name("error/404"));
 	}
 	
 	@Test
@@ -190,10 +190,10 @@ public class UserCalendarControllerCombinedTest {
 	void showUserEditContentでParseExceptionかNumberFormatExceptionが発生した場合は404ページへ遷移する() throws Exception{
 		mockMvc.perform(get("/index/record/2022-ab-cd/1"))
 	           .andExpect(status().is2xxSuccessful())
-               .andExpect(view().name("Common/404"));
+               .andExpect(view().name("error/404"));
 		mockMvc.perform(get("/index/record/2022-02-23/Number"))
  		   	   .andExpect(status().is2xxSuccessful())
- 		   	   .andExpect(view().name("Common/404"));
+ 		   	   .andExpect(view().name("error/404"));
 	}
 	
 	@Test
