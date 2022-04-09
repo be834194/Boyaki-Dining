@@ -1,9 +1,13 @@
 package com.dining.boyaki.model.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dining.boyaki.model.entity.Account;
+import com.dining.boyaki.model.entity.PasswordHistory;
 import com.dining.boyaki.model.form.RegisterForm;
 import com.dining.boyaki.model.mapper.UpdatePasswordMapper;
 
@@ -11,19 +15,15 @@ import com.dining.boyaki.model.mapper.UpdatePasswordMapper;
 public class UpdatePasswordService {
 	
 	private final UpdatePasswordMapper updatePasswordMapper;
-	
-    private final ChangeEntitySharedService changeEntitySharedService;
     
     private final FindDataSharedService findDataSharedService;
 	
 	private final PasswordEncoder passwordEncoder;
 	
 	public UpdatePasswordService(UpdatePasswordMapper updatePasswordMapper,
-			                     ChangeEntitySharedService changeEntitySharedService,
 			                     FindDataSharedService findDataSharedService,
 			                     PasswordEncoder passwordEncoder) {
 		this.updatePasswordMapper = updatePasswordMapper;
-		this.changeEntitySharedService = changeEntitySharedService;
 		this.findDataSharedService = findDataSharedService;
 		this.passwordEncoder = passwordEncoder;
 	}
@@ -32,8 +32,12 @@ public class UpdatePasswordService {
 	public void updatePassword(RegisterForm form) {
 		form.setUserName(findDataSharedService.findUserNameFromMail(form.getMail()));
 		form.setPassword(passwordEncoder.encode(form.getPassword()));
-		updatePasswordMapper.updatePassword(changeEntitySharedService.setToAccount(form));
-		updatePasswordMapper.insertPasswordHistory(changeEntitySharedService.setToPasswordHistory(form));
+		
+		Account account = new Account(form.getUserName(),form.getPassword(),form.getMail(),"ROLE_USER");
+		updatePasswordMapper.updatePassword(account);
+		
+		PasswordHistory history = new PasswordHistory(form.getUserName(),form.getPassword(),LocalDateTime.now());
+		updatePasswordMapper.insertPasswordHistory(history);
 	}
 	
 }

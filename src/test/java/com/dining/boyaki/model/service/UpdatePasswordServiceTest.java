@@ -1,6 +1,6 @@
 package com.dining.boyaki.model.service;
 
-import java.time.LocalDateTime;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,9 +27,6 @@ public class UpdatePasswordServiceTest {
 	
 	@Mock
 	UpdatePasswordMapper updatePasswordMapper;
-	
-	@Mock
-	ChangeEntitySharedService changeEntitySharedService;
     
 	@Mock
     FindDataSharedService findDataSharedService;
@@ -51,29 +48,25 @@ public class UpdatePasswordServiceTest {
 		form.setPassword("script-Java");
 		form.setMail("miho@gmail.com");
 		form.setConfirmPassword("script-Java");
-		Account account = new Account();
+		/*Account account = new Account();
 		account.setUserName("miho");
 		account.setPassword("script-Java");
 		account.setMail("miho@gmail.com");
 		PasswordHistory history = new PasswordHistory();
 		history.setUserName("miho");
 		history.setPassword("script-Java");
-		history.setUseDay(LocalDateTime.now());
+		history.setUseDay(LocalDateTime.now());*/
 		
 		when(findDataSharedService.findUserNameFromMail("miho@gmail.com")).thenReturn("miho");
 		when(passwordEncoder.encode(form.getPassword())).thenReturn("script-Java");
-		when(changeEntitySharedService.setToAccount(form)).thenReturn(account);
-		when(changeEntitySharedService.setToPasswordHistory(form)).thenReturn(history);
-		doNothing().when(updatePasswordMapper).updatePassword(account);
-		doNothing().when(updatePasswordMapper).insertPasswordHistory(history);
+		doNothing().when(updatePasswordMapper).updatePassword(any(Account.class));
+		doNothing().when(updatePasswordMapper).insertPasswordHistory(any(PasswordHistory.class));
 		
 		updatePasswordService.updatePassword(form);
 		verify(findDataSharedService,times(1)).findUserNameFromMail("miho@gmail.com");
 		verify(passwordEncoder,times(1)).encode(form.getPassword());
-		verify(changeEntitySharedService,times(1)).setToAccount(form);
-		verify(changeEntitySharedService,times(1)).setToPasswordHistory(form);
-		verify(updatePasswordMapper,times(1)).updatePassword(account);
-		verify(updatePasswordMapper,times(1)).insertPasswordHistory(history);
+		verify(updatePasswordMapper,times(1)).updatePassword(any(Account.class));
+		verify(updatePasswordMapper,times(1)).insertPasswordHistory(any(PasswordHistory.class));
 	}
 
 }

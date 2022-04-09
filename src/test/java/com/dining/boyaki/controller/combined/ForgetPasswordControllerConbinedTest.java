@@ -41,7 +41,6 @@ import com.dining.boyaki.controller.ForgetPasswordController;
 import com.dining.boyaki.model.form.validation.ExistMailValidator;
 import com.dining.boyaki.model.form.RegisterForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
-import com.dining.boyaki.model.service.ChangeEntitySharedService;
 import com.dining.boyaki.model.service.FindDataSharedService;
 import com.dining.boyaki.model.service.UpdatePasswordService;
 import com.dining.boyaki.util.CsvDataSetLoader;
@@ -56,7 +55,7 @@ import com.dining.boyaki.util.CsvDataSetLoader;
 			includeFilters = @ComponentScan.Filter
 			                (type = FilterType.ASSIGNABLE_TYPE,
 			                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
-			                		  ChangeEntitySharedService.class,UpdatePasswordService.class,
+			                		  UpdatePasswordService.class,
 			                		  FindDataSharedService.class,ExistMailValidator.class}))
 @Transactional
 public class ForgetPasswordControllerConbinedTest {

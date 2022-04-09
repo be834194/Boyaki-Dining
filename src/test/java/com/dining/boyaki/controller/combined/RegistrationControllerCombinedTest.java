@@ -45,7 +45,6 @@ import com.dining.boyaki.model.form.validation.UniqueMailValidator;
 import com.dining.boyaki.model.form.validation.UniqueUsernameValidator;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
 import com.dining.boyaki.model.service.FindDataSharedService;
-import com.dining.boyaki.model.service.ChangeEntitySharedService;
 import com.dining.boyaki.model.service.RegistrationService;
 import com.dining.boyaki.util.CsvDataSetLoader;
 
@@ -59,8 +58,7 @@ import com.dining.boyaki.util.CsvDataSetLoader;
 			includeFilters = @ComponentScan.Filter
 			                (type = FilterType.ASSIGNABLE_TYPE,
 			                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
-			                          ChangeEntitySharedService.class,RegistrationService.class,
-			                          FindDataSharedService.class,
+			                          RegistrationService.class,FindDataSharedService.class,
 			                          UniqueMailValidator.class,UniqueUsernameValidator.class}))
 @Transactional
 public class RegistrationControllerCombinedTest {

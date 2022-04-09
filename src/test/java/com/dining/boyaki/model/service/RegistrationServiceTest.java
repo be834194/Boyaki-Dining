@@ -1,6 +1,6 @@
 package com.dining.boyaki.model.service;
 
-import java.time.LocalDateTime;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,9 +32,6 @@ public class RegistrationServiceTest {
 	@Mock
 	RegistrationMapper registrationMapper;
 	
-	@Mock
-	ChangeEntitySharedService changeEntitySharedService;
-	
 	@InjectMocks
 	RegistrationService registrationService;
 	
@@ -50,39 +47,17 @@ public class RegistrationServiceTest {
 		form.setPassword("sun-flan-sis");
 		form.setMail("north-east@gmail.com");
 		form.setConfirmPassword("sun-flan-sis");
-		Account account = new Account();
-		account.setUserName("マクベイ");
-		account.setPassword("sun-flan-sis");
-		account.setRole("ROLE_USER");
-		account.setMail("north-east@gmail.com");
-		PasswordHistory history = new PasswordHistory();
-		history.setUserName("マクベイ");
-		history.setPassword("sun-flan-sis");
-		history.setUseDay(LocalDateTime.now());
-		AccountInfo info = new AccountInfo();
-		info.setUserName("マクベイ");
-		info.setNickName("マクベイ");
-		info.setProfile(null);
-		info.setStatus(0);
-		info.setGender(0);
-		info.setAge(20);
 		
 		when(passwordEncoder.encode(form.getPassword())).thenReturn("sun-flan-sis");
-		when(changeEntitySharedService.setToAccount(form)).thenReturn(account);
-		when(changeEntitySharedService.setToPasswordHistory(form)).thenReturn(history);
-		when(changeEntitySharedService.setToAccountInfo(form)).thenReturn(info);
-		doNothing().when(registrationMapper).insertAccount(account);
-		doNothing().when(registrationMapper).insertPasswordHistory(history);
-		doNothing().when(registrationMapper).insertAccountInfo(info);
+		doNothing().when(registrationMapper).insertAccount(any(Account.class));
+		doNothing().when(registrationMapper).insertPasswordHistory(any(PasswordHistory.class));
+		doNothing().when(registrationMapper).insertAccountInfo(any(AccountInfo.class));
 		
 		registrationService.insertAccount(form);
 		verify(passwordEncoder,times(1)).encode(form.getPassword());
-		verify(changeEntitySharedService,times(1)).setToAccount(form);
-		verify(changeEntitySharedService,times(1)).setToPasswordHistory(form);
-		verify(changeEntitySharedService,times(1)).setToAccountInfo(form);
-		verify(registrationMapper,times(1)).insertAccount(account);
-		verify(registrationMapper,times(1)).insertPasswordHistory(history);
-		verify(registrationMapper,times(1)).insertAccountInfo(info);
+		verify(registrationMapper,times(1)).insertAccount(any(Account.class));
+		verify(registrationMapper,times(1)).insertPasswordHistory(any(PasswordHistory.class));
+		verify(registrationMapper,times(1)).insertAccountInfo(any(AccountInfo.class));
 	}
 
 }
