@@ -44,7 +44,6 @@ import com.dining.boyaki.controller.UserCalendarController;
 import com.dining.boyaki.model.entity.DiaryRecordCategory;
 import com.dining.boyaki.model.form.DiaryRecordForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
-import com.dining.boyaki.model.service.ChangeEntitySharedService;
 import com.dining.boyaki.model.service.DiaryRecordService;
 import com.dining.boyaki.util.CsvDataSetLoader;
 import com.dining.boyaki.util.WithMockCustomUser;
@@ -60,7 +59,7 @@ import com.dining.boyaki.util.WithMockCustomUser;
 			includeFilters = @ComponentScan.Filter
 			                (type = FilterType.ASSIGNABLE_TYPE,
 			                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
-					                  ChangeEntitySharedService.class,DiaryRecordService.class}))
+					                  DiaryRecordService.class}))
 @Transactional
 public class UserCalendarControllerCombinedTest {
 	
