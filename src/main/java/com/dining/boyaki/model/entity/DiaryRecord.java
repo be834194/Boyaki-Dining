@@ -24,6 +24,24 @@ public class DiaryRecord {
 	private LocalDateTime createAt;
 	
 	private LocalDateTime updateAt;
+	
+	public DiaryRecord() {
+		
+	}
+
+	public DiaryRecord(String userName, int categoryId, Date diaryDay, String record1, String record2, String record3,
+			int price, String memo, LocalDateTime createAt, LocalDateTime updateAt) {
+		this.userName = userName;
+		this.categoryId = categoryId;
+		this.diaryDay = diaryDay;
+		this.record1 = record1;
+		this.record2 = record2;
+		this.record3 = record3;
+		this.price = price;
+		this.memo = memo;
+		this.createAt = createAt;
+		this.updateAt = updateAt;
+	}
 
 	public String getUserName() {
 		return userName;

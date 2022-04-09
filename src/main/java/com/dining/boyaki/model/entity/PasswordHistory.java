@@ -9,6 +9,16 @@ public class PasswordHistory {
 	private String password;
 	
 	private LocalDateTime useDay;
+	
+	public PasswordHistory() {
+	
+	}
+
+	public PasswordHistory(String userName, String password, LocalDateTime useDay) {
+		this.userName = userName;
+		this.password = password;
+		this.useDay = useDay;
+	}
 
 	public String getUserName() {
 		return userName;

@@ -13,6 +13,19 @@ public class AccountInfo {
 	private int gender;
 	
 	private int age;
+	
+	public AccountInfo() {
+		
+	}
+
+	public AccountInfo(String userName, String nickName, String profile, int status, int gender, int age) {
+		this.userName = userName;
+		this.nickName = nickName;
+		this.profile = profile;
+		this.status = status;
+		this.gender = gender;
+		this.age = age;
+	}
 
 	public String getUserName() {
 		return userName;

@@ -9,6 +9,17 @@ public class Account {
 	private String mail;
 	
 	private String Role;
+	
+	public Account() {
+		
+	}
+
+	public Account(String userName, String password, String mail, String role) {
+		this.userName = userName;
+		this.password = password;
+		this.mail = mail;
+		this.Role = role;
+	}
 
 	public String getUserName() {
 		return userName;

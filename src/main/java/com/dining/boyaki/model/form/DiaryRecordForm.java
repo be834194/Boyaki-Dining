@@ -1,16 +1,17 @@
 package com.dining.boyaki.model.form;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
 import com.dining.boyaki.model.form.validation.ConfirmDiaryRecord;
 
 @ConfirmDiaryRecord(records = {"record1","record2","record3"})
-public class DiaryRecordForm {
+public class DiaryRecordForm implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private String userName;
 	
@@ -33,6 +34,24 @@ public class DiaryRecordForm {
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createAt;
+	
+	public DiaryRecordForm() {
+		
+	}
+
+	public DiaryRecordForm(String userName,int categoryId,Date diaryDay, 
+			               String record1, String record2, String record3,
+			               int price,String memo, LocalDateTime createAt) {
+		this.userName = userName;
+		this.categoryId = categoryId;
+		this.diaryDay = diaryDay;
+		this.record1 = record1;
+		this.record2 = record2;
+		this.record3 = record3;
+		this.price = price;
+		this.memo = memo;
+		this.createAt = createAt;
+	}
 
 	public String getUserName() {
 		return userName;

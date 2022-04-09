@@ -7,6 +7,16 @@ public class CalendarRecord {
 	private String start;
 	
 	private String end;
+	
+	public CalendarRecord() {
+	
+	}
+
+	public CalendarRecord(String title, String start, String end) {
+		this.title = title;
+		this.start = start;
+		this.end = end;
+	}
 
 	public String getTitle() {
 		return title;
