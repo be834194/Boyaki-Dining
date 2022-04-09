@@ -48,14 +48,6 @@ public class UpdatePasswordServiceTest {
 		form.setPassword("script-Java");
 		form.setMail("miho@gmail.com");
 		form.setConfirmPassword("script-Java");
-		/*Account account = new Account();
-		account.setUserName("miho");
-		account.setPassword("script-Java");
-		account.setMail("miho@gmail.com");
-		PasswordHistory history = new PasswordHistory();
-		history.setUserName("miho");
-		history.setPassword("script-Java");
-		history.setUseDay(LocalDateTime.now());*/
 		
 		when(findDataSharedService.findUserNameFromMail("miho@gmail.com")).thenReturn("miho");
 		when(passwordEncoder.encode(form.getPassword())).thenReturn("script-Java");
