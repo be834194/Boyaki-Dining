@@ -3,16 +3,27 @@ package com.dining.boyaki.model.entity;
 import java.time.LocalDateTime;
 
 public class Post {
+	private String userName;
+	 
+	private String nickName;
+	 
+	private String content;
+	 
+	private int postCategory;
+	 
+	private LocalDateTime createAt;
 	
-	 private String userName;
-	 
-	 private String nickName;
-	 
-	 private String content;
-	 
-	 private int postCategory;
-	 
-	 private LocalDateTime createAt;
+	public Post() {
+		
+	}
+
+	public Post(String userName, String nickName, String content, int postCategory, LocalDateTime createAt) {
+		this.userName = userName;
+		this.nickName = nickName;
+		this.content = content;
+		this.postCategory = postCategory;
+		this.createAt = createAt;
+	}
 
 	public String getUserName() {
 		return userName;

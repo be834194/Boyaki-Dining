@@ -1,8 +1,11 @@
 package com.dining.boyaki.model.form;
 
+import java.io.Serializable;
 import javax.validation.constraints.Size;
 
-public class AccountInfoForm {
+public class AccountInfoForm implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private String userName;
 	
@@ -17,6 +20,19 @@ public class AccountInfoForm {
 	private int gender;
 	
 	private int age;
+	
+	public AccountInfoForm() {
+		
+	}
+
+	public AccountInfoForm(String userName,String nickName, String profile, int status, int gender, int age) {
+		this.userName = userName;
+		this.nickName = nickName;
+		this.profile = profile;
+		this.status = status;
+		this.gender = gender;
+		this.age = age;
+	}
 
 	public String getUserName() {
 		return userName;

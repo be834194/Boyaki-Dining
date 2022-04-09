@@ -1,11 +1,13 @@
 package com.dining.boyaki.model.form;
 
+import java.io.Serializable;
 import javax.validation.constraints.Size;
-
 import com.dining.boyaki.model.form.validation.ConfirmPassword;
 
 @ConfirmPassword(password="password",confirmPassword="confirmPassword")
-public class PasswordChangeForm {
+public class PasswordChangeForm implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private String userName;
 	
@@ -17,6 +19,19 @@ public class PasswordChangeForm {
 	private String password;
 	
 	private String confirmPassword;
+	
+	public PasswordChangeForm() {
+		
+	}
+
+	public PasswordChangeForm(String userName, String mail, String oldPassword, 
+			                  String password, String confirmPassword) {
+		this.userName = userName;
+		this.mail = mail;
+		this.oldPassword = oldPassword;
+		this.password = password;
+		this.confirmPassword = confirmPassword;
+	}
 
 	public String getUserName() {
 		return userName;

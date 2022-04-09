@@ -10,11 +10,26 @@ public class PostRecord {
 	
 	private String status;   //AccountInfo+StatusListから
 	
-	private String postCategory; //PostListから
+	private String postCategory; //PostCategoryから
 	
 	private String content; //Postから
 	
 	private String createAt;  //Postから
+	
+	public PostRecord() {
+		
+	}
+
+	public PostRecord(String postId, String userName, String nickName, String status, String postCategory,
+			String content, String createAt) {
+		this.postId = postId;
+		this.userName = userName;
+		this.nickName = nickName;
+		this.status = status;
+		this.postCategory = postCategory;
+		this.content = content;
+		this.createAt = createAt;
+	}
 
 	public String getPostId() {
 		return postId;

@@ -1,9 +1,12 @@
 package com.dining.boyaki.model.form;
 
+import java.io.Serializable;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotEmpty;
 
-public class PostForm {
+public class PostForm implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private String userName;
 	
@@ -14,6 +17,16 @@ public class PostForm {
 	private String content;
 	
 	private int postCategory;
+	
+	public PostForm() {
+	}
+
+	public PostForm(String userName, String nickName,String content,int postCategory) {
+		this.userName = userName;
+		this.nickName = nickName;
+		this.content = content;
+		this.postCategory = postCategory;
+	}
 
 	public String getUserName() {
 		return userName;
