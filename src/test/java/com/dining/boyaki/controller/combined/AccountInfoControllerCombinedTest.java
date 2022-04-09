@@ -38,9 +38,8 @@ import com.dining.boyaki.model.entity.StatusList;
 import com.dining.boyaki.model.form.AccountInfoForm;
 import com.dining.boyaki.model.form.validation.UniqueNickNameValidator;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
-import com.dining.boyaki.model.service.ChangeEntitySharedService;
-import com.dining.boyaki.model.service.FindDataSharedService;
 import com.dining.boyaki.model.service.AccountInfoService;
+import com.dining.boyaki.model.service.FindDataSharedService;
 import com.dining.boyaki.util.CsvDataSetLoader;
 import com.dining.boyaki.util.WithMockCustomUser;
 
@@ -52,11 +51,11 @@ import com.dining.boyaki.util.WithMockCustomUser;
 			             DbUnitTestExecutionListener.class,
 			             WithSecurityContextTestExecutionListener.class}) 
 @WebMvcTest(controllers = AccountInfoController.class,
-			includeFilters = @ComponentScan.Filter
-			                (type = FilterType.ASSIGNABLE_TYPE,
-			                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
-			                		  AccountInfoService.class,ChangeEntitySharedService.class,
-			                          FindDataSharedService.class,UniqueNickNameValidator.class}))
+includeFilters = @ComponentScan.Filter
+                (type = FilterType.ASSIGNABLE_TYPE,
+                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
+                		  AccountInfoService.class,
+                          FindDataSharedService.class,UniqueNickNameValidator.class}))
 @Transactional
 public class AccountInfoControllerCombinedTest {
 	

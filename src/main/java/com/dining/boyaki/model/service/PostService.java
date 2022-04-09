@@ -33,7 +33,8 @@ public class PostService {
 	
 	@Transactional(readOnly = false)
 	public void insertPost(PostForm form) {
-		Post post = setToPost(form);
+		Post post = new Post(form.getUserName(),form.getNickName(),form.getContent(),
+				             form.getPostCategory(),LocalDateTime.now());
 		postMapper.insertPost(post);
 	}
 	
@@ -98,16 +99,6 @@ public class PostService {
 				                  .searchPostRecord(category,status,content,
 				                		            PageRequest.of(page, 5));
 		return records;
-	}
-	
-	public Post setToPost(PostForm form) {
-		Post post = new Post();
-		post.setUserName(form.getUserName());
-		post.setNickName(form.getNickName());
-		post.setContent(form.getContent());
-		post.setPostCategory(form.getPostCategory());
-		post.setCreateAt(LocalDateTime.now());
-		return post;
 	}
 
 }

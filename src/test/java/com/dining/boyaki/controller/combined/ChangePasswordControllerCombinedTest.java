@@ -40,7 +40,6 @@ import com.dining.boyaki.model.form.validation.NotReusedPasswordValidator;
 import com.dining.boyaki.model.form.validation.OldPasswordValidator;
 import com.dining.boyaki.model.service.AccountInfoService;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
-import com.dining.boyaki.model.service.ChangeEntitySharedService;
 import com.dining.boyaki.model.service.PasswordHistoryService;
 import com.dining.boyaki.model.service.FindDataSharedService;
 import com.dining.boyaki.util.CsvDataSetLoader;
@@ -62,7 +61,7 @@ import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 			includeFilters = @ComponentScan.Filter
 			                (type = FilterType.ASSIGNABLE_TYPE,
 			                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
-			                		  AccountInfoService.class,ChangeEntitySharedService.class,
+			                		  AccountInfoService.class,
 			                          FindDataSharedService.class,PasswordHistoryService.class,
 			                          NotReusedPasswordValidator.class,OldPasswordValidator.class}))
 @Transactional

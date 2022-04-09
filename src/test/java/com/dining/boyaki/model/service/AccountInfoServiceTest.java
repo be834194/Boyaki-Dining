@@ -34,9 +34,6 @@ public class AccountInfoServiceTest {
 	AccountInfoMapper accountInfoMapper;
 	
 	@Mock
-	ChangeEntitySharedService changeEntitySharedService;
-	
-	@Mock
 	PasswordEncoder passwordEncoder;
 	
 	@InjectMocks
@@ -45,44 +42,6 @@ public class AccountInfoServiceTest {
 	@BeforeEach
 	void setUp() {
 		MockitoAnnotations.openMocks(this);
-	}
-	
-	@Test
-    void setToAccountInfoFormでAccountInfoをAccountInfoFormに詰め替える() throws Exception{
-		AccountInfo info = new AccountInfo();
-		info.setUserName("miho");
-		info.setNickName("匿名ちゃん");
-		info.setProfile("毎日定時で帰りたい");
-		info.setStatus(0);
-		info.setGender(2);
-		info.setAge(21);
-		
-		AccountInfoForm form = accountInfoService.setToAccountInfoForm(info);
-		assertEquals("miho",form.getUserName());
-		assertEquals("匿名ちゃん",form.getNickName());
-		assertEquals("毎日定時で帰りたい",form.getProfile());
-		assertEquals(0,form.getStatus());
-		assertEquals(2,form.getGender());
-		assertEquals(21,form.getAge());
-	}
-	
-	@Test
-    void setToAccountInfoでAccountInfoFormをAccountInfoに詰め替える() throws Exception{
-		AccountInfoForm form = new AccountInfoForm();
-		form.setUserName("miho");
-		form.setNickName("匿名ちゃん");
-		form.setProfile("毎日定時で帰りたい");
-		form.setStatus(0);
-		form.setGender(2);
-		form.setAge(21);
-		
-		AccountInfo info = accountInfoService.setToAccountInfo(form);
-		assertEquals("miho",info.getUserName());
-		assertEquals("匿名ちゃん",info.getNickName());
-		assertEquals("毎日定時で帰りたい",info.getProfile());
-		assertEquals(0,info.getStatus());
-		assertEquals(2,info.getGender());
-		assertEquals(21,info.getAge());
 	}
 	
 	@Nested
@@ -159,17 +118,13 @@ public class AccountInfoServiceTest {
 		history.setUseDay(LocalDateTime.now());
 		
 		when(passwordEncoder.encode(form.getPassword())).thenReturn(account.getPassword());
-		when(changeEntitySharedService.setToAccount(form)).thenReturn(account);
-		doNothing().when(accountInfoMapper).updatePassword(account);
-		when(changeEntitySharedService.setToPasswordHistory(form)).thenReturn(history);
-		doNothing().when(accountInfoMapper).insertPasswordHistory(history);
+		doNothing().when(accountInfoMapper).updatePassword(any(Account.class));
+		doNothing().when(accountInfoMapper).insertPasswordHistory(any(PasswordHistory.class));
 		
 		accountInfoService.updatePassword(form);
-		verify(passwordEncoder,times(1)).encode(form.getPassword());
-		verify(changeEntitySharedService,times(1)).setToAccount(form);
-		verify(accountInfoMapper,times(1)).updatePassword(account);
-		verify(changeEntitySharedService,times(1)).setToPasswordHistory(form);
-		verify(accountInfoMapper,times(1)).insertPasswordHistory(history);
+		verify(passwordEncoder,times(1)).encode(form.getPassword());;
+		verify(accountInfoMapper,times(1)).updatePassword(any(Account.class));
+		verify(accountInfoMapper,times(1)).insertPasswordHistory(any(PasswordHistory.class));
 	}
 	
 	@Test

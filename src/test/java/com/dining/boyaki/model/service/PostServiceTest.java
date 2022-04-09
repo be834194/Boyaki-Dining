@@ -99,22 +99,6 @@ public class PostServiceTest {
 		assertEquals(null,result);
 		verify(postMapper,times(1)).findProfile("miho");
 	}
-
-	@Test
-	void setToPostでエンティティを詰め替える() throws Exception{
-		PostForm form = new PostForm();
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setContent("糖質制限ってどこまでやればいいの～？");
-		form.setPostCategory(2);
-		
-		Post post = postService.setToPost(form);
-		assertEquals("miho",post.getUserName());
-		assertEquals("匿名",post.getNickName());
-		assertEquals("糖質制限ってどこまでやればいいの～？",post.getContent());
-		assertEquals(2,post.getPostCategory());
-		assertEquals("2022-03-03T09:31:12",post.getCreateAt().toString());
-	}
 	
 	@Test
 	void insertPostで投稿が1件追加される() throws Exception{
