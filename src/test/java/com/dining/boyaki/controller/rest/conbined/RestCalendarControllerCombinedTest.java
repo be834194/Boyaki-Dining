@@ -29,7 +29,6 @@ import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
 import com.dining.boyaki.controller.rest.RestCalendarController;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
-import com.dining.boyaki.model.service.ChangeEntitySharedService;
 import com.dining.boyaki.model.service.DiaryRecordService;
 import com.dining.boyaki.util.CsvDataSetLoader;
 import com.dining.boyaki.util.WithMockCustomUser;
@@ -45,7 +44,7 @@ import com.dining.boyaki.util.WithMockCustomUser;
             includeFilters = @ComponentScan.Filter
                             (type = FilterType.ASSIGNABLE_TYPE,
                              value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
-                            		  ChangeEntitySharedService.class,DiaryRecordService.class}))
+                            		  DiaryRecordService.class}))
 @Transactional
 public class RestCalendarControllerCombinedTest {
 	
