@@ -16,8 +16,8 @@
 <body>
 <div th:replace="flagment/header :: user-header"></div><hr>
 <h2>投稿詳細</h2>
-<table >
-<div id="likesApp" th:each="obj:${postRecord}">
+<table id="likesApp">
+<div th:each="obj:${postRecord}">
 	<tr>
 	    <td style="font-size:32px" th:text="${obj.content}"></td>
 	</tr>
@@ -33,7 +33,7 @@
 	</tr>
     <tr>
         <td>
-            <span style="cursor: pointer;font-size:20px;" onClick="likes()">いいね</span>
+            <span style="cursor: pointer;font-size:20px;" v-on:click="likes">いいね</span>
             <span style="font-size:20px;" id="sumLike" th:fragment="rateFragment">
 	            <span th:text="${sumRate}"></span>
 			</span>
@@ -51,35 +51,9 @@
 	</tr>
 </div>
 </table>
-
 </body>
 
-<script type="text/javascript">
-function check(){
-    if (confirm("削除してもよろしいですか？")) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function likes(){
-			var tokenValue = document.head.querySelector("[name=_csrf]").content;
-			var getId = document.getElementById("postId").value;
-			let param = new FormData()
-            param.append('postId', getId)
-            param.append('_csrf',tokenValue)
-            axios.post('/index/boyaki/rate',param, {responseType : 'document'})
-				.then(response =>{
-					const sumLike = document.getElementById('sumLike');
-				    Array.from(response.data.body.childNodes).forEach((node) => {
-				    sumLike.replaceWith(node)
-				    });
-				})
-				.catch(error =>{
-					console.log(error)
-				})
-		}
+<script th:src="@{/js/likesApp.js}">
 </script>
 
 </html>
