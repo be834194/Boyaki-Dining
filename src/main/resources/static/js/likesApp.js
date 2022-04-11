@@ -13,11 +13,11 @@ methods:{
 			let param = new FormData()
             param.append('postId', getId)
             param.append('_csrf',tokenValue)
-            axios.post('/index/boyaki/rate',param, {responseType : 'document'})
+            axios.post('/index/boyaki/rate',param, {responseType : 'document',timeout: 5000})
 				.then(response =>{
-					const sumLike = document.getElementById('sumLike');
+					const sumRate = document.getElementById('sumRate');
 				    Array.from(response.data.body.childNodes).forEach((node) => {
-				    sumLike.replaceWith(node)
+				    sumRate.replaceWith(node)
 				    });
 				})
 				.catch(error =>{

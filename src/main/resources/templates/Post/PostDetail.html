@@ -16,8 +16,7 @@
 <body>
 <div th:replace="flagment/header :: user-header"></div><hr>
 <h2>投稿詳細</h2>
-<table id="likesApp">
-<div th:each="obj:${postRecord}">
+<table id="likesApp" th:each="obj:${postRecord}">
 	<tr>
 	    <td style="font-size:32px" th:text="${obj.content}"></td>
 	</tr>
@@ -34,7 +33,7 @@
     <tr>
         <td>
             <span style="cursor: pointer;font-size:20px;" v-on:click="likes">いいね</span>
-            <span style="font-size:20px;" id="sumLike" th:fragment="rateFragment">
+            <span style="font-size:20px;" id="sumRate" th:fragment="rateFragment">
 	            <span th:text="${sumRate}"></span>
 			</span>
         </td>
@@ -49,7 +48,6 @@
 		    </form>
 	    </td>
 	</tr>
-</div>
 </table>
 </body>
 
