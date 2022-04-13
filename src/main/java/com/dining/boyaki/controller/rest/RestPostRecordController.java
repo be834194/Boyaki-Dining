@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.dining.boyaki.model.entity.CommentRecord;
 import com.dining.boyaki.model.entity.PostRecord;
 import com.dining.boyaki.model.service.PostService;
 
@@ -47,6 +48,21 @@ public class RestPostRecordController {
     		                        		  throws JsonProcessingException{
 		String jsonMsg = null;
         List<PostRecord>records =  postService.searchPostRecord(category,status,text,page);
+		
+		ObjectMapper mapper = new ObjectMapper();
+        jsonMsg =  mapper.writerWithDefaultPrettyPrinter().writeValueAsString(records);
+        
+        return jsonMsg;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/api/comments",method=RequestMethod.POST,
+			        produces = "application/json; charset=utf-8")
+	public String searchCommentRecord(@RequestParam(value="postId") long postId,
+			                          @RequestParam(value="page") int page)
+    		                        		  throws JsonProcessingException{
+		String jsonMsg = null;
+        List<CommentRecord>records =  postService.findCommentList(postId, page);
 		
 		ObjectMapper mapper = new ObjectMapper();
         jsonMsg =  mapper.writerWithDefaultPrettyPrinter().writeValueAsString(records);

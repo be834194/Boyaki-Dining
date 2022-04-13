@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
 
 import com.dining.boyaki.model.entity.AccountInfo;
+import com.dining.boyaki.model.entity.Comment;
+import com.dining.boyaki.model.entity.CommentRecord;
 import com.dining.boyaki.model.entity.Post;
 import com.dining.boyaki.model.entity.PostRecord;
 
@@ -20,6 +22,10 @@ public interface PostMapper {
 	void deletePost(@Param("userName")String userName,
 			        @Param("postId")long postId);
 	PostRecord findOnePostRecord(long postId);
+	
+	void insertComment(Comment comment);
+	List<CommentRecord> findCommentRecord(@Param("postId")long postId,
+			                              @Param("pageable")Pageable pageable);
 	
 	List<PostRecord> findPostRecord(@Param("nickName")String nickName,
 			                        @Param("pageable")Pageable pageable);

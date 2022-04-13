@@ -1,5 +1,6 @@
 package com.dining.boyaki.controller;
 
+import java.net.URI;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,11 +11,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.dining.boyaki.model.entity.AccountUserDetails;
 import com.dining.boyaki.model.entity.PostCategory;
 import com.dining.boyaki.model.entity.PostRecord;
 import com.dining.boyaki.model.entity.StatusList;
+import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.service.PostService;
 
@@ -43,6 +46,13 @@ public class PostController {
 		}
 		model.addAttribute("postRecord",record);
 		
+		CommentForm comment = new CommentForm();
+		String nickName = postService.findNickName(details.getUsername());
+		comment.setUserName(details.getUsername());
+		comment.setNickName(nickName);
+		comment.setPostId(postId);
+		model.addAttribute("commentForm",comment);
+		
 		if(record.getUserName().equals(details.getUsername())) {
 			model.addAttribute("ableDeleted","true");
 		}else {
@@ -53,6 +63,19 @@ public class PostController {
 		model.addAttribute("sumRate",sumRate);
 		
 		return "Post/PostDetail";
+	}
+	
+	@PostMapping("/index/boyaki/comment")
+	String insertComment(@ModelAttribute("postForm")@Validated CommentForm form,
+	                     BindingResult result,
+	                     UriComponentsBuilder builder,Model model) {
+		URI location = builder.path("/index/boyaki/" + form.getPostId()).build().toUri();
+		if(result.hasErrors()) {
+			return "redirect:" + location.toString();
+		}
+		postService.insertComment(form);
+		
+		return "redirect:" + location.toString();
 	}
 	
 	@PostMapping("/index/boyaki/rate")
