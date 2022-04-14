@@ -24,7 +24,9 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.model.entity.AccountInfo;
+import com.dining.boyaki.model.entity.CommentRecord;
 import com.dining.boyaki.model.entity.PostRecord;
+import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.service.PostService;
 import com.dining.boyaki.util.CsvDataSetLoader;
@@ -36,8 +38,6 @@ import com.dining.boyaki.util.CsvDataSetLoader;
 @SpringBootTest
 @Transactional
 public class PostServiceCombinedTest {
-	
-	private static LocalDateTime datetime = LocalDateTime.parse("2022-03-08T09:31:12");
 	
 	private static MockedStatic<LocalDateTime> mock;
 	
@@ -51,7 +51,6 @@ public class PostServiceCombinedTest {
 	@BeforeEach
     void setUp() {
     	mock = Mockito.mockStatic(LocalDateTime.class,Mockito.CALLS_REAL_METHODS);
-    	mock.when(LocalDateTime::now).thenReturn(datetime);
     	category = new int[] {};
 		status = new int[] {};
 		text = "　 		";
@@ -88,7 +87,7 @@ public class PostServiceCombinedTest {
 	
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
-	@ExpectedDatabase(value = "/service/Post/insert/",table="post"
+	@ExpectedDatabase(value = "/service/Post/insert/post/",table="post"
 			         ,assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void insertPostで投稿が1件追加される() throws Exception{
 		PostForm form = new PostForm();
@@ -96,6 +95,9 @@ public class PostServiceCombinedTest {
 		form.setNickName("匿名");
 		form.setContent("糖質制限ってどこまでやればいいの～？");
 		form.setPostCategory(2);
+		
+		LocalDateTime datetime = LocalDateTime.parse("2022-03-08T09:31:12");
+    	mock.when(LocalDateTime::now).thenReturn(datetime);
 		postService.insertPost(form);
 	}
 	
@@ -104,6 +106,40 @@ public class PostServiceCombinedTest {
 	@ExpectedDatabase(value = "/service/Post/delete/")
 	void deletePostで投稿が1件削除される() throws Exception{
 		postService.deletePost("糸井", 3);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
+	@ExpectedDatabase(value = "/service/Post/insert/comment/",table="comment"
+	         ,assertionMode=DatabaseAssertionMode.NON_STRICT)
+	void insertCommentで投稿へのコメントが一件追加される() throws Exception{
+		CommentForm form = new CommentForm();
+		form.setPostId(9);
+		form.setUserName("miho");
+		form.setNickName("匿名");
+		form.setContent("牛乳私も試してみます！");
+		
+		LocalDateTime datetime = LocalDateTime.parse("2022-03-10T16:27:38");
+    	mock.when(LocalDateTime::now).thenReturn(datetime);
+		postService.insertComment(form);
+	}
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
+	void findCommentRecordで投稿一つに対するコメントを全件取得する() throws Exception{
+		List<CommentRecord> record = postService.findCommentList(7, 0);
+		assertEquals(5,record.size());
+		assertEquals("sigeno",record.get(0).getNickName());
+		assertEquals("中性脂肪・コレステロール高め",record.get(0).getStatus());
+		assertEquals("test",record.get(0).getContent());;
+		assertEquals("2022-03-10 19:44:28",record.get(0).getCreateAt());
+		assertEquals("2022-03-07 09:52:28",record.get(4).getCreateAt());
+		
+		record = postService.findCommentList(7, 1);
+		assertEquals(1,record.size());
+		assertEquals("2022-03-07 09:44:28",record.get(0).getCreateAt());
+		
+		record = postService.findCommentList(7, 2);
+		assertEquals(0,record.size());
 	}
 	
 	@Test
@@ -127,7 +163,6 @@ public class PostServiceCombinedTest {
 	void sumRateで投稿を件の総いいね数を取得する() throws Exception{
 		int rate = postService.sumRate(2);
 		assertEquals(2,rate);
-		
 		rate = postService.sumRate(7);
 		assertEquals(0,rate);
 	}

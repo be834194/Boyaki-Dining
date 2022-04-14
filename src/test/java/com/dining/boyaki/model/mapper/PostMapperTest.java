@@ -137,7 +137,7 @@ public class PostMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
-	void findCommentRecordでユーザ一人の投稿を全件取得する() throws Exception{
+	void findCommentRecordで投稿一つに対するコメントを全件取得する() throws Exception{
 		List<CommentRecord> record = postMapper.findCommentRecord(7, PageRequest.of(0, 5));
 		assertEquals(5,record.size());
 		assertEquals("sigeno",record.get(0).getNickName());

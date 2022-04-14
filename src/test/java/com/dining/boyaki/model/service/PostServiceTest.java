@@ -24,8 +24,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.data.domain.PageRequest;
 
 import com.dining.boyaki.model.entity.AccountInfo;
+import com.dining.boyaki.model.entity.Comment;
+import com.dining.boyaki.model.entity.CommentRecord;
 import com.dining.boyaki.model.entity.Post;
 import com.dining.boyaki.model.entity.PostRecord;
+import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.mapper.PostMapper;
 
@@ -122,7 +125,7 @@ public class PostServiceTest {
 	}
 	
 	@Test
-	void findOnePostRecordで投稿を一件取得する() {
+	void findOnePostRecordで投稿を一件取得する() throws Exception{
 		PostRecord record = new PostRecord();
 		record.setPostId("10");
 		record.setUserName("糸井");
@@ -145,12 +148,39 @@ public class PostServiceTest {
 	}
 	
 	@Test
-	void findOnePostRecordで投稿を一件取得できない場合はnullが返ってくる() {
+	void findOnePostRecordで投稿を一件取得できない場合はnullが返ってくる() throws Exception{
 		when(postMapper.findOnePostRecord(10)).thenReturn(null);
 		
 		PostRecord result = postService.findOnePostRecord(10);
 		assertEquals(null,result);
 		verify(postMapper,times(1)).findOnePostRecord(10);
+	}
+	
+	@Test
+	void insertCommentで投稿へのコメントが一件追加される() throws Exception{
+		CommentForm form = new CommentForm();
+		form.setPostId(9);
+		form.setUserName("miho");
+		form.setNickName("匿名");
+		form.setContent("牛乳私も試してみます！");
+		doNothing().when(postMapper).insertComment(any(Comment.class));
+		
+		postService.insertComment(form);
+		verify(postMapper,times(1)).insertComment(any(Comment.class));
+	}
+	
+	@Test
+	void findCommentRecordで投稿一つに対するコメントを全件取得する() throws Exception{
+		CommentRecord record1 = new CommentRecord("sigeno","ダイエット中","応援してます","2022-04-14 20:32:47");
+		CommentRecord record2 = new CommentRecord("kenken","尿酸値高め","応援してます","2022-04-13 18:53:12");
+		List<CommentRecord> records = new ArrayList<CommentRecord>();
+		records.add(record1);
+		records.add(record2);
+		when(postMapper.findCommentRecord(3, PageRequest.of(0, 5))).thenReturn(records);
+		
+		List<CommentRecord> result = postService.findCommentList(3, 0);
+		assertEquals(2,result.size());
+		verify(postMapper,times(1)).findCommentRecord(3, PageRequest.of(0, 5));
 	}
 	
 	@Test
