@@ -58,6 +58,17 @@ create table IF NOT EXISTS diary_record(
                                  references account_info(nickname) on delete cascade on update cascade
  );
  
+ create table IF NOT EXISTS comment(
+ commentid    bigint       auto_increment primary key,
+ postid       bigint,
+ username     varchar(255) not null,
+ nickname     varchar(255) not null,
+ content      varchar(255) not null,
+ createat     datetime,
+ CONSTRAINT unique_nickname_comment foreign key(nickname) 
+                                 references account_info(nickname) on delete cascade on update cascade
+ );
+ 
   create table IF NOT EXISTS likes(
  postid   bigint       ,
  username varchar(255) ,

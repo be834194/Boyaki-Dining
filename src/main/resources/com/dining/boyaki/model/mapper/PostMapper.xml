@@ -40,6 +40,46 @@
         and   postid = #{postId}
     </delete>
     
+    <insert id = "insertComment" parameterType="com.dining.boyaki.model.entity.Comment">
+        INSERT INTO
+            comment(postid,username,nickname,content,createat)
+        VALUES(
+               #{postId},
+               #{userName},
+               #{nickName},
+               #{content},
+               #{createAt}
+               )
+    </insert>
+    
+    <select id = "findCommentRecord" resultMap="CommentRecordResultMap">
+        SELECT
+            COMMENT.nickname,
+            S_LIST.statusname,
+            COMMENT.content,
+            CAST(COMMENT.createat as CHAR) as createat
+        FROM
+            comment as COMMENT
+        INNER JOIN account_info as INFO
+              ON   COMMENT.nickname = INFO.nickname
+        INNER JOIN status_list as S_LIST
+              ON   INFO.status = S_LIST.statusid
+        WHERE
+            comment.postid = #{postId}
+        ORDER BY Comment.createat DESC
+        LIMIT #{pageable.pageSize}
+        OFFSET #{pageable.offset}
+    </select>
+    
+    <resultMap id="CommentRecordResultMap" type="com.dining.boyaki.model.entity.CommentRecord">
+      <result property="nickName" column="nickname"></result>
+      <result property="status" column="statusname"></result>
+      <result property="content" column="content"></result>
+      <result property="createAt" column="createat"></result>
+    </resultMap>
+
+
+    
     <select id = "findOnePostRecord" resultMap="PostRecordResultMap">
         SELECT
             POST.postid,

@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,6 +38,7 @@ import com.dining.boyaki.config.SuccessHandler;
 import com.dining.boyaki.model.entity.PostCategory;
 import com.dining.boyaki.model.entity.PostRecord;
 import com.dining.boyaki.model.entity.StatusList;
+import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
 import com.dining.boyaki.model.service.PostService;
@@ -83,16 +85,12 @@ public class PostControllerTest {
 		
 		@BeforeEach
 		void setUp(){
-			record = new PostRecord();
-			record.setPostId("7");
-			record.setUserName("miho");
-			record.setNickName("匿名");
-			record.setContent("先月から体重1キロ落ち増した！今月もダイエット頑張るぞ！！");
-			record.setStatus("ダイエット中");
-			record.setPostCategory("ダイエット");
-			record.setCreateAt("2022-03-02 11:12:50");
+			record = new PostRecord("7","miho","匿名","ダイエット中","ダイエット",
+					"先月から体重1キロ落ち増した！今月もダイエット頑張るぞ！！","2022-03-02 11:12:50");
 			when(postService.findOnePostRecord(7)).thenReturn(record);
 			when(postService.findOnePostRecord(333)).thenReturn(null);
+			when(postService.findNickName("マクベイ")).thenReturn("マッキー");
+			when(postService.findNickName("miho")).thenReturn("匿名");
 			when(postService.sumRate(7)).thenReturn(4);
 		}
 		
@@ -102,8 +100,12 @@ public class PostControllerTest {
 			mockMvc.perform(get("/index/boyaki/7"))
 			       .andExpect(status().is2xxSuccessful())
 			       .andExpect(model().attribute("postRecord",
-	                                            hasProperty("userName",is("miho"))))
+	                                            hasProperty("nickName",is("匿名"))))
 			       .andExpect(model().attribute("ableDeleted", "false"))
+			       .andExpect(model().attribute("commentForm", 
+			    		                        hasProperty("userName",is("マクベイ"))))
+			       .andExpect(model().attribute("commentForm", 
+	                                            hasProperty("nickName",is("マッキー"))))
 			       .andExpect(model().attribute("sumRate", 4))
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
@@ -116,8 +118,12 @@ public class PostControllerTest {
 			mockMvc.perform(get("/index/boyaki/7"))
 			       .andExpect(status().is2xxSuccessful())
 			       .andExpect(model().attribute("postRecord",
-	                                            hasProperty("userName",is("miho"))))
+	                                            hasProperty("nickName",is("匿名"))))
 			       .andExpect(model().attribute("ableDeleted", "true"))
+			       .andExpect(model().attribute("commentForm", 
+	                                            hasProperty("userName",is("miho"))))
+			       .andExpect(model().attribute("commentForm", 
+                                                hasProperty("nickName",is("匿名"))))
 			       .andExpect(model().attribute("sumRate", 4))
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
@@ -132,6 +138,44 @@ public class PostControllerTest {
 			       .andExpect(model().hasNoErrors())
 			       .andExpect(view().name("error/404"));
 			verify(postService,times(1)).findOnePostRecord(333);
+		}
+	}
+	
+	@Nested
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+    class createComment {
+		
+		CommentForm form;
+		
+		@BeforeEach
+		void setUp() {
+			form = new CommentForm(5,"miho","匿名","応援してます");
+			doNothing().when(postService).insertComment(form);
+		}
+		
+		@Test
+		void insertCommentで投稿に対してコメントが追加される() throws Exception{
+			mockMvc.perform(post("/index/boyaki/comment")
+			               .flashAttr("commentForm", form)
+				           .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+				   .andExpect(status().is3xxRedirection())
+				   .andExpect(model().hasNoErrors())
+				   .andExpect(redirectedUrl("http://localhost/index/boyaki/5"));
+			verify(postService,times(1)).insertComment(form);
+		}
+		
+		@Test
+		void insertCommentでバリデーションエラーが発生する() throws Exception{
+			form.setContent("");
+			mockMvc.perform(post("/index/boyaki/comment")
+			               .flashAttr("commentForm", form)
+				           .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+				   .andExpect(status().is3xxRedirection())
+				   .andExpect(flash().attribute("validMessage", "1～100文字以内でコメントを入力してください"))
+				   .andExpect(redirectedUrl("http://localhost/index/boyaki/5"));
+			verify(postService,times(0)).insertComment(form);
 		}
 	}
 	
@@ -183,7 +227,7 @@ public class PostControllerTest {
 	
 	@Nested
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
-    class createContent {
+    class createPost {
 		
 		PostForm form = new PostForm();
 		

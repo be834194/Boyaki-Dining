@@ -7,8 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.PageRequest;
 
 import com.dining.boyaki.model.entity.AccountInfo;
+import com.dining.boyaki.model.entity.Comment;
+import com.dining.boyaki.model.entity.CommentRecord;
 import com.dining.boyaki.model.entity.Post;
 import com.dining.boyaki.model.entity.PostRecord;
+import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.mapper.PostMapper;
 
@@ -48,6 +51,19 @@ public class PostService {
 		return postMapper.findOnePostRecord(postId);
 	}
 	
+	//
+	@Transactional(readOnly = false)
+	public void insertComment(CommentForm form) {
+		Comment comment = new Comment(form.getPostId(),form.getUserName(),form.getNickName(),form.getContent(),
+				                      LocalDateTime.now());
+		postMapper.insertComment(comment);
+	}
+	
+	//
+	@Transactional(readOnly = true)
+	public List<CommentRecord> findCommentList(long postId, int page){
+		return postMapper.findCommentRecord(postId, PageRequest.of(page, 5));
+	}
 	
 	@Transactional(readOnly = true)
 	public int sumRate(long postId) {

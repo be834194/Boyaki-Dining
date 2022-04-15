@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.PageRequest;
 
 import com.dining.boyaki.model.entity.AccountInfo;
+import com.dining.boyaki.model.entity.Comment;
+import com.dining.boyaki.model.entity.CommentRecord;
 import com.dining.boyaki.model.entity.Post;
 import com.dining.boyaki.model.entity.PostRecord;
 import com.dining.boyaki.util.CsvDataSetLoader;
@@ -84,7 +86,7 @@ public class PostMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
-	@ExpectedDatabase(value = "/mapper/Post/insert/",table="post"
+	@ExpectedDatabase(value = "/mapper/Post/insert/post/",table="post"
 	                 ,assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void insertPostで投稿が1件追加される() throws Exception{
 		Post post = new Post();
@@ -105,7 +107,7 @@ public class PostMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
-	void findOnePostRecordで投稿を一件取得する() {
+	void findOnePostRecordで投稿を一件取得する() throws Exception{
 		PostRecord result = postMapper.findOnePostRecord(10);
 		assertEquals("10",result.getPostId());
 		assertEquals("糸井",result.getUserName());
@@ -117,6 +119,39 @@ public class PostMapperTest {
 		
 		result = postMapper.findOnePostRecord(1000);
 		assertEquals(null,result);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/mapper/Post/setup/")
+	@ExpectedDatabase(value = "/mapper/Post/insert/comment/",table="comment"
+                     ,assertionMode=DatabaseAssertionMode.NON_STRICT)
+	void insertCommentで投稿へのコメントが一件追加される() throws Exception{
+		Comment comment = new Comment();
+		comment.setPostId(9);
+		comment.setUserName("miho");
+		comment.setNickName("匿名");
+		comment.setContent("牛乳私も試してみます！");
+		comment.setCreateat(LocalDateTime.parse("2022-03-10T16:27:38"));
+		postMapper.insertComment(comment);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/mapper/Post/setup/")
+	void findCommentRecordで投稿一つに対するコメントを全件取得する() throws Exception{
+		List<CommentRecord> record = postMapper.findCommentRecord(7, PageRequest.of(0, 5));
+		assertEquals(5,record.size());
+		assertEquals("sigeno",record.get(0).getNickName());
+		assertEquals("中性脂肪・コレステロール高め",record.get(0).getStatus());
+		assertEquals("test",record.get(0).getContent());;
+		assertEquals("2022-03-10 19:44:28",record.get(0).getCreateAt());
+		assertEquals("2022-03-07 09:52:28",record.get(4).getCreateAt());
+		
+		record = postMapper.findCommentRecord(7, PageRequest.of(1, 5));
+		assertEquals(1,record.size());
+		assertEquals("2022-03-07 09:44:28",record.get(0).getCreateAt());
+		
+		record = postMapper.findCommentRecord(7, PageRequest.of(2, 5));
+		assertEquals(0,record.size());
 	}
 	
 	@Test
@@ -269,14 +304,14 @@ public class PostMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
-	@ExpectedDatabase(value = "/mapper/Post/likes/insert/",table="likes")
+	@ExpectedDatabase(value = "/mapper/Post/insert/likes/",table="likes")
 	void inserttRateで評価状態を追加する() throws Exception{
 		postMapper.insertRate(3, "miho", 1);
 	}
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
-	@ExpectedDatabase(value = "/mapper/Post/likes/update/",table="likes")
+	@ExpectedDatabase(value = "/mapper/Post/update/",table="likes")
 	void inserttRateで評価状態を更新する() throws Exception{
 		postMapper.updateRate(1, "miho", 1);
 	}

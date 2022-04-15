@@ -31,6 +31,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
+import com.dining.boyaki.model.entity.CommentRecord;
 import com.dining.boyaki.model.entity.PostRecord;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
 import com.dining.boyaki.model.service.PostService;
@@ -99,7 +100,7 @@ public class RestPostRecordControllerTest {
 	
 	@Test
 	@WithMockCustomUser(userName="マクベイ",password="sun_flan_sis",role="ROLE_USER")
-	void searchPostRecordでjsonを5件分取得する() throws Exception{
+	void searchPostRecordでjsonを取得する() throws Exception{
 		List<PostRecord> records = new ArrayList<PostRecord>();
 		PostRecord record = new PostRecord();
 		record.setPostId("1");
@@ -171,6 +172,32 @@ public class RestPostRecordControllerTest {
 		List<?> result = mapper.readValue(readValue, List.class);
 		assertEquals(expect.toString(),result.toString());
 		verify(postService,times(1)).searchPostRecord(any(int[].class), any(int[].class), any(String.class), any(int.class));
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="マクベイ",password="sun_flan_sis",role="ROLE_USER")
+	void searchCommentRecordで投稿に対するコメントをjsonを取得する() throws Exception{
+		List<CommentRecord> records = new ArrayList<CommentRecord>();
+		CommentRecord record = new CommentRecord("sigeno","中性脂肪・コレステロール高め","test","2022-03-08 13:44:28");
+		records.add(record);
+		record = new CommentRecord("加藤健","尿酸値高め","応援してます","2022-03-07 09:52:28");
+		records.add(record);
+		when(postService.findCommentList(7, 0)).thenReturn(records);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		List<String> expect = new ArrayList<String>();
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, content=test, createAt=2022-03-08 13:44:28}");
+		expect.add("{nickName=加藤健, status=尿酸値高め, content=応援してます, createAt=2022-03-07 09:52:28}");
+		String readValue = mockMvc.perform(post("/api/comments")
+								  .param("postId","7")
+								  .param("page","0")
+								  .contentType(MediaType.APPLICATION_JSON_VALUE)
+								  .with(SecurityMockMvcRequestPostProcessors.csrf()))
+					       .andExpect(status().is2xxSuccessful())
+					       .andReturn().getResponse().getContentAsString();
+		List<?>result = mapper.readValue(readValue, List.class);
+		assertEquals(expect.toString(),result.toString());
+		verify(postService,times(1)).findCommentList(7, 0);
 	}
 	
 

@@ -3,6 +3,7 @@ password_history
 diary_record
 account_info
 post
+comment
 status_list
 post_category
 likes
