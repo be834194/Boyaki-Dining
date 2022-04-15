@@ -29,7 +29,7 @@ var likesApp = {
 					document.getElementById("scroll").innerText = '該当するコメントは見つかりませんでした'
 					this.observer.unobserve(this.observe_element)
 				} else if(response.data.length == 0 && this.page != 0){
-					document.getElementById("scroll").innerText = 'これ以上のコメントははありません'
+					document.getElementById("scroll").innerText = 'これ以上のコメントはありません'
 					this.observer.unobserve(this.observe_element)
 				}
 				 else{

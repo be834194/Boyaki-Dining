@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -66,11 +67,12 @@ public class PostController {
 	}
 	
 	@PostMapping("/index/boyaki/comment")
-	String insertComment(@ModelAttribute("postForm")@Validated CommentForm form,
-	                     BindingResult result,
-	                     UriComponentsBuilder builder,Model model) {
+	String insertComment(@ModelAttribute("commentForm")@Validated CommentForm form,
+	                     BindingResult result,UriComponentsBuilder builder,
+	                     RedirectAttributes model) {
 		URI location = builder.path("/index/boyaki/" + form.getPostId()).build().toUri();
 		if(result.hasErrors()) {
+			model.addFlashAttribute("validMessage", "1～100文字以内でコメントを入力してください");
 			return "redirect:" + location.toString();
 		}
 		postService.insertComment(form);

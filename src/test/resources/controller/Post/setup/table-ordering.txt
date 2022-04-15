@@ -1,6 +1,7 @@
 account
 account_info
 post
+comment
 post_category
 status_list
 likes

@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,6 +43,7 @@ import com.dining.boyaki.config.SuccessHandler;
 import com.dining.boyaki.controller.PostController;
 import com.dining.boyaki.model.entity.PostCategory;
 import com.dining.boyaki.model.entity.StatusList;
+import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
 import com.dining.boyaki.model.service.PostService;
@@ -63,8 +65,6 @@ import com.dining.boyaki.util.WithMockCustomUser;
 @Transactional
 public class PostControllerCombinedTest {
 	
-	private static LocalDateTime datetime = LocalDateTime.parse("2022-03-08T09:31:12");
-	
 	private static MockedStatic<LocalDateTime> mock;
 	
 	@Autowired
@@ -73,7 +73,6 @@ public class PostControllerCombinedTest {
 	@BeforeEach
 	void setUp() {
 		mock = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS);
-		mock.when(LocalDateTime::now).thenReturn(datetime);
 	}
 	
 	@AfterEach
@@ -92,14 +91,18 @@ public class PostControllerCombinedTest {
 	}
 	
 	@Test
-	@WithMockCustomUser(userName="マクベイ",password="sun-fla-cis",role="ROLE_USER")
+	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
 	void showPostDetailで投稿詳細画面が表示され削除ボタンは表示されない() throws Exception{
 		mockMvc.perform(get("/index/boyaki/7"))
 		       .andExpect(status().is2xxSuccessful())
 		       .andExpect(model().attribute("postRecord",
-                                            hasProperty("userName",is("miho"))))
+                                            hasProperty("nickName",is("匿名"))))
 		       .andExpect(model().attribute("ableDeleted", "false"))
+		       .andExpect(model().attribute("commentForm", 
+				                            hasProperty("userName",is("加藤健"))))
+				.andExpect(model().attribute("commentForm", 
+				                             hasProperty("nickName",is("加藤健"))))
 		       .andExpect(model().attribute("sumRate", 1))
 		       .andExpect(view().name("Post/PostDetail"));
 	}
@@ -111,8 +114,12 @@ public class PostControllerCombinedTest {
 		mockMvc.perform(get("/index/boyaki/7"))
 		       .andExpect(status().is2xxSuccessful())
 		       .andExpect(model().attribute("postRecord",
-                                            hasProperty("userName",is("miho"))))
+                                            hasProperty("nickName",is("匿名"))))
 		       .andExpect(model().attribute("ableDeleted", "true"))
+		       .andExpect(model().attribute("commentForm", 
+				                            hasProperty("userName",is("miho"))))
+				.andExpect(model().attribute("commentForm", 
+				                             hasProperty("nickName",is("匿名"))))
 		       .andExpect(model().attribute("sumRate", 1))
 		       .andExpect(view().name("Post/PostDetail"));
 	}
@@ -128,6 +135,38 @@ public class PostControllerCombinedTest {
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
+	@ExpectedDatabase(value = "/controller/Post/insert/comment/",table="comment"
+			         ,assertionMode=DatabaseAssertionMode.NON_STRICT)
+	void insertCommentで投稿に対してコメントが追加される() throws Exception{
+		LocalDateTime datetime = LocalDateTime.parse("2022-03-10T16:27:38");
+		mock.when(LocalDateTime::now).thenReturn(datetime);
+		CommentForm form = new CommentForm(9,"miho","匿名","牛乳私も試してみます！");
+		mockMvc.perform(post("/index/boyaki/comment")
+		               .flashAttr("commentForm", form)
+			           .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			   .andExpect(status().is3xxRedirection())
+			   .andExpect(model().hasNoErrors())
+			   .andExpect(redirectedUrl("http://localhost/index/boyaki/9"));
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	@DatabaseSetup(value="/controller/Post/setup/")
+	void insertCommentでバリデーションエラーが発生する() throws Exception{
+		CommentForm form = new CommentForm(9,"miho","匿名","");
+		mockMvc.perform(post("/index/boyaki/comment")
+		               .flashAttr("commentForm", form)
+			           .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			   .andExpect(status().is3xxRedirection())
+			   .andExpect(flash().attribute("validMessage", "1～100文字以内でコメントを入力してください"))
+			   .andExpect(redirectedUrl("http://localhost/index/boyaki/9"));
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	@DatabaseSetup(value="/controller/Post/setup/")
 	@ExpectedDatabase(value = "/controller/Post/likes/",table="likes")
 	void updateRateでいいねが更新される() throws Exception{
 		mockMvc.perform(post("/index/boyaki/rate")
@@ -138,17 +177,17 @@ public class PostControllerCombinedTest {
 		       .andExpect(model().attribute("sumRate", 2))
 		       .andExpect(view().name("Post/PostDetail :: rateFragment"));
 		mockMvc.perform(post("/index/boyaki/rate")
-			       .param("postId", "2")
-			       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-		           .with(SecurityMockMvcRequestPostProcessors.csrf()))
-	       .andExpect(status().is2xxSuccessful())
-	       .andExpect(model().attribute("sumRate", 1));
+				       .param("postId", "2")
+				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("sumRate", 1));
 		mockMvc.perform(post("/index/boyaki/rate")
-			       .param("postId", "1")
-			       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-		           .with(SecurityMockMvcRequestPostProcessors.csrf()))
-	       .andExpect(status().is2xxSuccessful())
-	       .andExpect(model().attribute("sumRate", 1));
+				       .param("postId", "1")
+				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("sumRate", 1));
 	}
 	
 	@Test
@@ -182,13 +221,13 @@ public class PostControllerCombinedTest {
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
-	@ExpectedDatabase(value = "/controller/Post/insert/",table="post"
+	@ExpectedDatabase(value = "/controller/Post/insert/post/",table="post"
 			         ,assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void insertPostでぼやき投稿が1件追加される() throws Exception{
-		PostForm form = new PostForm();
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setContent("糖質制限ってどこまでやればいいの～？");
+        LocalDateTime datetime = LocalDateTime.parse("2022-03-08T09:31:12");
+		mock.when(LocalDateTime::now).thenReturn(datetime);
+		
+		PostForm form = new PostForm("miho","匿名","糖質制限ってどこまでやればいいの～？",2);
 		form.setPostCategory(2);
 		this.mockMvc.perform(post("/index/boyaki/post/insert")
 			                .flashAttr("postForm", form)

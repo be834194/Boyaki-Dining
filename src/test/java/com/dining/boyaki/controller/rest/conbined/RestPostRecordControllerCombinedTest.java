@@ -142,5 +142,39 @@ public class RestPostRecordControllerCombinedTest {
 		List<?>result = mapper.readValue(readValue, List.class);
 		assertEquals(expect.toString(),result.toString());
 	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_Nu",role="ROLE_USER")
+	@DatabaseSetup(value="/controller/Post/setup/")
+	void searchCommentRecordで投稿に対するコメントをjsonを取得する() throws Exception{
+		ObjectMapper mapper = new ObjectMapper();
+		List<String> expect = new ArrayList<String>();
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, content=test, createAt=2022-03-10 19:44:28}");
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, content=test, createAt=2022-03-09 06:44:28}");
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, content=test, createAt=2022-03-08 22:44:28}");
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, content=test, createAt=2022-03-08 13:44:28}");
+		expect.add("{nickName=加藤健, status=尿酸値高め, content=応援してます, createAt=2022-03-07 09:52:28}");
+		String readValue = mockMvc.perform(post("/api/comments")
+								  .param("postId","7")
+								  .param("page","0")
+								  .contentType(MediaType.APPLICATION_JSON_VALUE)
+								  .with(SecurityMockMvcRequestPostProcessors.csrf()))
+					       .andExpect(status().is2xxSuccessful())
+					       .andReturn().getResponse().getContentAsString();
+		List<?>result = mapper.readValue(readValue, List.class);
+		assertEquals(expect.toString(),result.toString());
+		
+		expect = new ArrayList<String>();
+		expect.add("{nickName=sigeno, status=中性脂肪・コレステロール高め, content=応援してます, createAt=2022-03-07 09:44:28}");
+		readValue = mockMvc.perform(post("/api/comments")
+								  .param("postId","7")
+								  .param("page","1")
+								  .contentType(MediaType.APPLICATION_JSON_VALUE)
+								  .with(SecurityMockMvcRequestPostProcessors.csrf()))
+					       .andExpect(status().is2xxSuccessful())
+					       .andReturn().getResponse().getContentAsString();
+		result = mapper.readValue(readValue, List.class);
+		assertEquals(expect.toString(),result.toString());
+	}
 
 }
