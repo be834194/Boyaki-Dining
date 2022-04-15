@@ -17,57 +17,47 @@
 <body>
 <div th:replace="flagment/header :: user-header"></div><hr>
 <h2>投稿詳細</h2>
-<div id="likesApp">
-<table th:each="obj:${postRecord}">
-	<tr>
-	    <td style="font-size:32px" th:text="${obj.content}"></td>
-	</tr>
-	<tr>
-        <td th:inline="text" style="font-size:14px">[[${obj.nickName}]]さん 
-            <span style="font-size:14px">健康状態：[[${obj.status}]]</span>
-        </td>
-    </tr>
-	<tr>
-	    <td style="font-size:14px" th:inline="text">
-	        <div>投稿種別:[[${obj.postCategory}]] 投稿日時:[[${obj.createAt}]]</div>
-	    </td>
-	</tr>
-    <tr>
-        <td>
-            <span style="cursor: pointer;font-size:20px;" v-on:click="likes">いいね</span>
-            <span style="font-size:20px;" id="sumRate" th:fragment="rateFragment">
-	            <span th:text="${sumRate}"></span>
-			</span>
-        </td>
-    </tr>
-	<tr>
-	    <td>
-		    <form th:action="@{/index/boyaki/post/delete}" method="post">
-				<input type="hidden" id="postId" name="postId" th:value="${obj.postId}">
-				<div th:if="${ableDeleted}">
-				     <input type="submit" value="削除" onClick="return check()">
-				</div>
-		    </form>
-	    </td>
-	</tr>
-</table>
+<div class="container" id="likesApp" th:each="obj:${postRecord}">
+    <div style="font-size:32px" th:text="${obj.content}"></div>
 
-<form th:action="@{/index/boyaki/comment}" th:object=${commentForm} method="post">
-    <input type="textarea" id="content" name="content" th:field="*{content}">
-    <input type="hidden" id="userName" name="userName" th:field="*{userName}">
-    <input type="hidden" id="nickName" name="nickName" th:field="*{nickName}">
-    <input type="hidden" id="postId" name="postId" th:field="*{postId}">
-    <input type="submit" value="投稿する">
-</form>
+    <div th:inline="text" style="font-size:14px">[[${obj.nickName}]]さん 
+        <span style="font-size:14px">健康状態：[[${obj.status}]]</span>
+    </div>
+	<div class="blocks">
+		<span style="font-size:14px" th:inline="text">
+		        投稿種別:[[${obj.postCategory}]] 投稿日時:[[${obj.createAt}]]
+		</span>&nbsp;&nbsp;
+	    <span style="cursor: pointer;font-size:20px;" v-on:click="likes">いいね</span>
+	    <span style="font-size:20px;" id="sumRate" th:fragment="rateFragment">
+		        &nbsp;<span th:text="${sumRate}"></span>
+		</span>
+		<form th:action="@{/index/boyaki/post/delete}" method="post">
+		    <input type="hidden" id="postId" name="postId" th:value="${obj.postId}">
+			<div th:if="${ableDeleted}">
+			    <input type="submit" value="削除" onClick="return check()">
+			</div>
+		</form>
+	</div>
+	<div class="col-sm-6">
+		<form class="form-group" th:action="@{/index/boyaki/comment}" th:object=${commentForm} method="post">
+		    <textarea class="form-control" id="content" name="content" th:field="*{content}"
+		              placeholder="1~100文字以内でコメントを記入してください"></textarea>
+		    <input type="hidden" id="userName" name="userName" th:field="*{userName}">
+		    <input type="hidden" id="nickName" name="nickName" th:field="*{nickName}">
+		    <input type="hidden" id="postId" name="postId" th:field="*{postId}">
+		    <input type="submit" value="コメントする">
+		</form>
+	</div>
+	<span th:text=${validMessage}></span>
 
-<div v-for="(value,key) in CommentRecords" class="blocklink">
-	<span>{{value.nickName}} さん </span>
-		<div>{{value.content}} 
-		<h6> {{value.createAt}}</h6>
-		</div>
-	<hr>
-</div>
-<div id="scroll" ref="observe_element">loading...</div>
+	<div v-for="(value,key) in CommentRecords" class="blocklink">
+		<span>{{value.nickName}} さん </span>
+			<div>{{value.content}} 
+			<h6> {{value.createAt}}</h6>
+			</div>
+		<hr>
+	</div>
+	<div id="scroll" ref="observe_element">これ以上のコメントはありません</div>
 
 </div>
 </body>
