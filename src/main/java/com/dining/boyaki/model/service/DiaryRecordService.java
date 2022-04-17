@@ -89,9 +89,7 @@ public class DiaryRecordService {
     public void insertDiaryRecord(DiaryRecordForm form) {
     	DiaryRecord diary = new DiaryRecord(form.getUserName(),form.getCategoryId(),form.getDiaryDay(),
                                             form.getRecord1(),form.getRecord2(),form.getRecord3(),
-                                            form.getPrice(),form.getMemo(),form.getCreateAt(),LocalDateTime.now());
-    	diary.setCreateAt(LocalDateTime.now());
-    	diary.setUpdateAt(diary.getCreateAt());
+                                            form.getPrice(),form.getMemo(),form.getCreateAt(),form.getCreateAt());
     	diaryRecordMapper.insertDiaryRecord(diary);
     }
     

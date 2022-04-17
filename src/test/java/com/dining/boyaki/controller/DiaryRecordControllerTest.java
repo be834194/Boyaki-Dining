@@ -48,12 +48,12 @@ import com.dining.boyaki.util.WithMockCustomUser;
 
 @AutoConfigureMockMvc
 @AutoConfigureMybatis
-@WebMvcTest(controllers = UserCalendarController.class,
+@WebMvcTest(controllers = DiaryRecordController.class,
             includeFilters = @ComponentScan.Filter
                             (type = FilterType.ASSIGNABLE_TYPE,
                              value = {AccountUserDetailsService.class,BeanConfig.class,
             		                  SuccessHandler.class}))
-public class UserCalendarControllerTest {
+public class DiaryRecordControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;

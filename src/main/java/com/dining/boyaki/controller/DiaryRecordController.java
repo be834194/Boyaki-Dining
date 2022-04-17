@@ -1,6 +1,7 @@
 package com.dining.boyaki.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,11 +25,11 @@ import com.dining.boyaki.model.form.DiaryRecordForm;
 import com.dining.boyaki.model.service.DiaryRecordService;
 
 @Controller
-public class UserCalendarController {
+public class DiaryRecordController {
 	
 	private final DiaryRecordService diaryRecordService;
 	
-	public UserCalendarController(DiaryRecordService diaryRecordService) {
+	public DiaryRecordController(DiaryRecordService diaryRecordService) {
 		this.diaryRecordService = diaryRecordService;
 	}
 	
@@ -64,6 +65,7 @@ public class UserCalendarController {
 			return "UserCalendar/Create";
 		}
 		form.setUserName(details.getUsername());
+		form.setCreateAt(LocalDateTime.now());
 		diaryRecordService.insertDiaryRecord(form);
 		return "redirect:/index";
 	}
