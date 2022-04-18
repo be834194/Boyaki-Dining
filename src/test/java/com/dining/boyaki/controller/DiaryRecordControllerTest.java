@@ -101,7 +101,7 @@ public class DiaryRecordControllerTest {
 			form.setRecord1("ハイボール一缶");
 			form.setRecord2(null);
 			form.setRecord3("スクワット20回");
-			form.setPrice(0);
+			form.setImageName(null);
 			form.setMemo(null);
 			doNothing().when(diaryRecordService).insertDiaryRecord(form);
         }
@@ -171,7 +171,7 @@ public class DiaryRecordControllerTest {
 			form.setRecord1(null);
 			form.setRecord2("グラノーラ");
 			form.setRecord3(null);
-			form.setPrice(100);
+			form.setImageName("2022/02/03.jpg");;
 			form.setMemo(null);
 			form.setCreateAt(LocalDateTime.parse("2022-02-23T09:43:28"));
 		}
@@ -223,7 +223,7 @@ public class DiaryRecordControllerTest {
 			form.setRecord1(null);
 			form.setRecord2("グラノーラ");
 			form.setRecord3(null);
-			form.setPrice(100);
+			form.setImageName(null);
 			form.setMemo("自販機でコーヒー買った");
 			form.setCreateAt(LocalDateTime.parse("2022-02-23T09:43:28"));
 			doNothing().when(diaryRecordService).insertDiaryRecord(form);
@@ -302,7 +302,6 @@ public class DiaryRecordControllerTest {
 		form.setRecord1(null);
 		form.setRecord2("グラノーラ");
 		form.setRecord3(null);
-		form.setPrice(100);
 		form.setMemo("自販機でコーヒー買った");
 		form.setCreateAt(LocalDateTime.parse("2022-02-23T09:43:28"));
 		

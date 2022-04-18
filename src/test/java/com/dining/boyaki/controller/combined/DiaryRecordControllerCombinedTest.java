@@ -101,8 +101,8 @@ public class DiaryRecordControllerCombinedTest {
 			
 	@Test
 	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
-	@DatabaseSetup(value="/controller/UserCalendar/setup/")
-	@ExpectedDatabase(value="/controller/UserCalendar/insert/",table="diary_record")
+	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
+	@ExpectedDatabase(value="/controller/DiaryRecord/insert/",table="diary_record")
 	void createContentで食事記録が登録される() throws Exception{
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setCategoryId(2);
@@ -110,7 +110,7 @@ public class DiaryRecordControllerCombinedTest {
 		form.setRecord1("白米");
 		form.setRecord2("生姜焼き");
 		form.setRecord3("きのこのマリネ");
-		form.setPrice(0);
+		form.setImageName("FLeLXKVUUAAgeF0.jpeg");
 		form.setMemo(null);
 		datetime = LocalDateTime.of(2022, 2, 26, 14, 01, 25);
 		mock.when(LocalDateTime::now).thenReturn(datetime);
@@ -126,7 +126,7 @@ public class DiaryRecordControllerCombinedTest {
 	
 	@Test
 	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
-	@DatabaseSetup(value="/controller/UserCalendar/setup/")
+	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
 	void createContentでバリデーションエラーが発生する() throws Exception{
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setDiaryDay(null);
@@ -146,7 +146,7 @@ public class DiaryRecordControllerCombinedTest {
 	
 	@Test
 	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
-	@DatabaseSetup(value="/controller/UserCalendar/setup/")
+	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
 	void createContentでレコードの重複が発生する() throws Exception{
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setCategoryId(2);
@@ -154,7 +154,7 @@ public class DiaryRecordControllerCombinedTest {
 		form.setRecord1("白米");
 		form.setRecord2("生姜焼き");
 		form.setRecord3("きのこのマリネ");
-		form.setPrice(0);
+		form.setImageName("FLeLXKVUUAAgeF0.jpeg");
 		form.setMemo(null);
 		
 		mockMvc.perform(post("/index/create/insert")
@@ -169,7 +169,7 @@ public class DiaryRecordControllerCombinedTest {
 	
 	@Test
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
-	@DatabaseSetup(value="/controller/UserCalendar/setup/")
+	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
 	void showUserEditContentで食事記録編集画面へ遷移する() throws Exception{
 		mockMvc.perform(get("/index/record/2022-01-31/3"))
 		       .andExpect(status().is2xxSuccessful())
@@ -197,8 +197,8 @@ public class DiaryRecordControllerCombinedTest {
 	
 	@Test
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
-	@DatabaseSetup(value="/controller/UserCalendar/setup/")
-	@ExpectedDatabase(value="/controller/UserCalendar/update/",table="diary_record")
+	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
+	@ExpectedDatabase(value="/controller/DiaryRecord/update/",table="diary_record")
 	void updateContentで食事記録を更新する() throws Exception{
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setCategoryId(3);
@@ -206,7 +206,7 @@ public class DiaryRecordControllerCombinedTest {
 		form.setRecord1("うどん");
 		form.setRecord2("唐揚げ");
 		form.setRecord3(null);
-		form.setPrice(320);
+		form.setImageName(null);
 		form.setMemo("冷凍食品");
 		form.setCreateAt(LocalDateTime.parse("2022-02-02T10:22:57"));
 		datetime = LocalDateTime.of(2022, 2, 02, 16, 23, 33);
@@ -224,7 +224,7 @@ public class DiaryRecordControllerCombinedTest {
 	
 	@Test
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
-	@DatabaseSetup(value="/controller/UserCalendar/setup/")
+	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
 	void updateContentでバリデーションエラーが発生する() throws Exception{
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setDiaryDay(null);
@@ -245,7 +245,7 @@ public class DiaryRecordControllerCombinedTest {
 	
 	@Test
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
-	@DatabaseSetup(value="/controller/UserCalendar/setup/")
+	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
 	void updateContentでレコード重複エラーが発生する() throws Exception{
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setCategoryId(2);
@@ -253,7 +253,7 @@ public class DiaryRecordControllerCombinedTest {
 		form.setRecord1("うどん");
 		form.setRecord2("唐揚げ");
 		form.setRecord3(null);
-		form.setPrice(320);
+		form.setImageName(null);
 		form.setMemo("冷凍食品");
 		form.setCreateAt(LocalDateTime.parse("2022-02-02T10:22:57"));
 		
@@ -270,8 +270,8 @@ public class DiaryRecordControllerCombinedTest {
 	
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
-	@DatabaseSetup(value="/controller/UserCalendar/setup/")
-	@ExpectedDatabase(value="/controller/UserCalendar/delete/",table="diary_record")
+	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
+	@ExpectedDatabase(value="/controller/DiaryRecord/delete/",table="diary_record")
 	void deleteContentで食事記録を削除する() throws Exception{
 		DiaryRecordForm form = new DiaryRecordForm();
 		form.setCategoryId(3);
@@ -279,7 +279,6 @@ public class DiaryRecordControllerCombinedTest {
 		form.setRecord1(null);
 		form.setRecord2("チキンステーキ");
 		form.setRecord3("余りもの野菜炒め");
-		form.setPrice(0);
 		form.setMemo(null);
 		form.setCreateAt(LocalDateTime.parse("2022-01-26T18:42:15"));
 		

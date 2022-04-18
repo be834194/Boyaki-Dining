@@ -74,7 +74,7 @@ public class FindDataSharedServiceCombinedTest {
 		assertEquals(null,result.getRecord1());
 		assertEquals("ポテトチップス",result.getRecord2());
 		assertEquals("腕立て伏せ15回×3セット",result.getRecord3());
-		assertEquals(0,result.getPrice());
+		assertEquals(null,result.getImageName());
 		assertNull(result.getMemo());
 		assertEquals(LocalDateTime.parse("2022-02-15T23:30:34"),result.getCreateAt());
 		assertEquals(LocalDateTime.parse("2022-02-15T23:30:34"),result.getUpdateAt());

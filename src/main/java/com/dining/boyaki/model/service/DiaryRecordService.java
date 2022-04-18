@@ -80,7 +80,7 @@ public class DiaryRecordService {
     	}
     	DiaryRecordForm form = new DiaryRecordForm(diary.getUserName(),diary.getCategoryId(),diary.getDiaryDay(),
     			                                   diary.getRecord1(),diary.getRecord2(),diary.getRecord3(),
-    			                                   diary.getPrice(),diary.getMemo(),diary.getCreateAt());
+    			                                   diary.getImageName(),diary.getMemo(),diary.getCreateAt());
     	return form;
     	
     }
@@ -89,7 +89,7 @@ public class DiaryRecordService {
     public void insertDiaryRecord(DiaryRecordForm form) {
     	DiaryRecord diary = new DiaryRecord(form.getUserName(),form.getCategoryId(),form.getDiaryDay(),
                                             form.getRecord1(),form.getRecord2(),form.getRecord3(),
-                                            form.getPrice(),form.getMemo(),form.getCreateAt(),form.getCreateAt());
+                                            form.getImageName(),form.getMemo(),form.getCreateAt(),form.getCreateAt());
     	diaryRecordMapper.insertDiaryRecord(diary);
     }
     
@@ -97,7 +97,7 @@ public class DiaryRecordService {
     public void updateDiaryRecord(DiaryRecordForm form) {
     	DiaryRecord diary = new DiaryRecord(form.getUserName(),form.getCategoryId(),form.getDiaryDay(),
     			                            form.getRecord1(),form.getRecord2(),form.getRecord3(),
-    			                            form.getPrice(),form.getMemo(),form.getCreateAt(),LocalDateTime.now());
+    			                            form.getImageName(),form.getMemo(),form.getCreateAt(),LocalDateTime.now());
     	diaryRecordMapper.updateDiaryRecord(diary);
     }
     
@@ -105,7 +105,7 @@ public class DiaryRecordService {
     public void deleteDiaryRecord(DiaryRecordForm form) {
     	DiaryRecord diary = new DiaryRecord(form.getUserName(),form.getCategoryId(),form.getDiaryDay(),
                                             form.getRecord1(),form.getRecord2(),form.getRecord3(),
-                                            form.getPrice(),form.getMemo(),form.getCreateAt(),LocalDateTime.now());
+                                            form.getImageName(),form.getMemo(),form.getCreateAt(),LocalDateTime.now());
     	diaryRecordMapper.deleteDiaryRecord(diary);
     }
 

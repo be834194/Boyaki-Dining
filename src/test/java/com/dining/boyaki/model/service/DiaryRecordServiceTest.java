@@ -50,7 +50,7 @@ public class DiaryRecordServiceTest {
 		diary.setRecord1("食パン2枚");
 		diary.setRecord2("目玉焼き");
 		diary.setRecord3(null);
-		diary.setPrice(0);
+		diary.setImageName("20220215.jpg");
 		diary.setMemo(null);
 		diary.setCreateAt(LocalDateTime.parse("2022-02-15T11:22:33"));
 		form.setCategoryId(1);
@@ -58,7 +58,7 @@ public class DiaryRecordServiceTest {
 		form.setRecord1("食パン2枚");
 		form.setRecord2("目玉焼き");
 		form.setRecord3(null);
-		form.setPrice(0);
+		form.setImageName("20220215.jpg");
 		form.setMemo(null);
 		form.setCreateAt(LocalDateTime.parse("2022-02-15T11:22:33"));
     }
@@ -146,7 +146,7 @@ public class DiaryRecordServiceTest {
 		assertEquals("食パン2枚",result.getRecord1());
 		assertEquals("目玉焼き",result.getRecord2());
 		assertNull(result.getRecord3());
-		assertEquals(0,result.getPrice());
+		assertEquals("20220215.jpg",result.getImageName());
 		assertNull(result.getMemo());
 		assertEquals(LocalDateTime.parse("2022-02-15T11:22:33"),result.getCreateAt());
 		verify(diaryRecordMapper,times(1)).findOneDiaryRecord("miho", 0, Date.valueOf("2022-02-15"));

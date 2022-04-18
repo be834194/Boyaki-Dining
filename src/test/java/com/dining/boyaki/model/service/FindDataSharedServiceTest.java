@@ -92,7 +92,7 @@ public class FindDataSharedServiceTest {
 		diary.setRecord1("");
 		diary.setRecord2("ポテトチップス");
 		diary.setRecord3("腕立て伏せ15回×3セット");
-		diary.setPrice(0);
+		diary.setImageName(null);
 		diary.setMemo(null);
 		diary.setCreateAt(LocalDateTime.parse("2022-02-15T23:30:34"));
 		when(findDataMapper.findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-15"))).thenReturn(diary);
@@ -104,7 +104,7 @@ public class FindDataSharedServiceTest {
 		assertEquals("",result.getRecord1());
 		assertEquals("ポテトチップス",result.getRecord2());
 		assertEquals("腕立て伏せ15回×3セット",result.getRecord3());
-		assertEquals(0,result.getPrice());
+		assertEquals(null,result.getImageName());
 		assertNull(result.getMemo());
 		assertEquals(LocalDateTime.parse("2022-02-15T23:30:34"),result.getCreateAt());
 		verify(findDataMapper,times(1)).findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-15"));

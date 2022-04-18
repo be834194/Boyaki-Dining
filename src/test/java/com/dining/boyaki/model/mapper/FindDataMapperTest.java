@@ -81,7 +81,7 @@ public class FindDataMapperTest {
 		assertEquals("玄米ご飯",record.getRecord1());
 		assertEquals("ウインナー",record.getRecord2());
 		assertEquals("小松菜のお浸し",record.getRecord3());
-		assertEquals(0,record.getPrice());
+		assertEquals(null,record.getImageName());
 		assertEquals(null,record.getMemo());
 		assertEquals(LocalDateTime.parse("2022-02-11T21:37:19"),record.getCreateAt());
 		assertEquals(LocalDateTime.parse("2022-02-11T21:37:19"),record.getUpdateAt());

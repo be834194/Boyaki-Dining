@@ -79,7 +79,7 @@ public class DiaryRecordServiceCombinedTest {
 		assertEquals(null,result.getRecord1());
 		assertEquals("ポテトチップス",result.getRecord2());
 		assertEquals("腕立て伏せ15回×3セット",result.getRecord3());
-		assertEquals(0,result.getPrice());
+		assertEquals(null,result.getImageName());
 		assertNull(result.getMemo());
 		assertEquals(LocalDateTime.parse("2022-02-15T23:30:34"),result.getCreateAt());
 		
@@ -100,7 +100,7 @@ public class DiaryRecordServiceCombinedTest {
 		form.setRecord1("白米");
 		form.setRecord2("生姜焼き");
 		form.setRecord3("きのこのマリネ");
-		form.setPrice(0);
+		form.setImageName("FLeLXKVUUAAgeF0.jpeg");
 		form.setMemo(null);
 		form.setCreateAt(datetime);
 		diaryRecordService.insertDiaryRecord(form);
@@ -119,7 +119,7 @@ public class DiaryRecordServiceCombinedTest {
 		form.setRecord1("うどん");
 		form.setRecord2("唐揚げ");
 		form.setRecord3(null);
-		form.setPrice(320);
+		form.setImageName(null);
 		form.setMemo("冷凍食品");
 		form.setCreateAt(LocalDateTime.parse("2022-02-02T10:22:57"));
 		diaryRecordService.updateDiaryRecord(form);
@@ -136,7 +136,7 @@ public class DiaryRecordServiceCombinedTest {
 		form.setRecord1(null);
 		form.setRecord2("チキンステーキ");
 		form.setRecord3("余りもの野菜炒め");
-		form.setPrice(0);
+		form.setImageName(null);
 		form.setMemo(null);
 		form.setCreateAt(LocalDateTime.parse("2022-01-26T18:42:15"));
 		diaryRecordService.deleteDiaryRecord(form);
