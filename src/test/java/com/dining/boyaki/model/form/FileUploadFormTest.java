@@ -68,11 +68,16 @@ public class FileUploadFormTest {
 		Path path = Paths.get(upFile.getCanonicalPath());
 		byte[] bytes = Files.readAllBytes(path);
 		MultipartFile file = new MockMultipartFile("file","testApp.js","multipart/form-data",bytes);
-    	
     	form.setMultipartFile(file);
-    	
     	validator.validate(form, bindingResult);
     	assertEquals(1,bindingResult.getFieldErrorCount());
+    	assertTrue(bindingResult.getFieldError("multipartFile")
+    			                .toString().contains("ファイルサイズが大きすぎるか、ファイル形式が不正です。"));
+    	
+    	file = new MockMultipartFile("file","testApp.png","text/javascript",bytes);
+    	form.setMultipartFile(file);
+    	validator.validate(form, bindingResult);
+    	assertEquals(2,bindingResult.getFieldErrorCount());
     	assertTrue(bindingResult.getFieldError("multipartFile")
     			                .toString().contains("ファイルサイズが大きすぎるか、ファイル形式が不正です。"));
     }
