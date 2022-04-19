@@ -32,7 +32,7 @@
     
     <select id="findOneDiaryRecord" resultType="com.dining.boyaki.model.entity.DiaryRecord">
         select
-            username,categoryid,diaryday,record1,record2,record3,price,memo,createat,updateat
+            username,categoryid,diaryday,record1,record2,record3,imagename,memo,createat,updateat
         from
             diary_record
         where

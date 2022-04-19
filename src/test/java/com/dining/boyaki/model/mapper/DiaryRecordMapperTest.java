@@ -70,7 +70,7 @@ public class DiaryRecordMapperTest {
 		assertEquals("グラノーラ",records.getRecord1());
 		assertEquals(null,records.getRecord2());
 		assertEquals("ヨーグルト",records.getRecord3());
-		assertEquals(0,records.getPrice());
+		assertEquals("20220312_172549007.jpg",records.getImageName());
 		assertEquals(null,records.getMemo());
 		assertEquals(LocalDateTime.parse("2022-01-26T09:55:41"),records.getCreateAt());
 		assertEquals(LocalDateTime.parse("2022-01-26T09:55:41"),records.getUpdateAt());
@@ -90,7 +90,7 @@ public class DiaryRecordMapperTest {
 		record.setRecord1("白米");
 		record.setRecord2("生姜焼き");
 		record.setRecord3("きのこのマリネ");
-		record.setPrice(0);
+		record.setImageName("FLeLXKVUUAAgeF0.jpeg");
 		record.setMemo(null);
 		record.setCreateAt(LocalDateTime.parse("2022-02-26T14:01:25"));
 		record.setUpdateAt(LocalDateTime.parse("2022-02-26T14:01:25"));
@@ -108,7 +108,7 @@ public class DiaryRecordMapperTest {
 		record.setRecord1("うどん");
 		record.setRecord2("唐揚げ");
 		record.setRecord3(null);
-		record.setPrice(320);
+		record.setImageName(null);
 		record.setMemo("冷凍食品");
 		record.setCreateAt(LocalDateTime.parse("2022-02-02T10:22:57"));
 		record.setUpdateAt(LocalDateTime.parse("2022-02-02T16:23:33"));

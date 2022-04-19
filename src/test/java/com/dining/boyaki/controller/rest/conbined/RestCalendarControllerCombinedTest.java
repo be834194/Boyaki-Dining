@@ -53,7 +53,7 @@ public class RestCalendarControllerCombinedTest {
 	
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_Nu",role="ROLE_USER")
-	@DatabaseSetup(value="/controller/RestCalendar/setup/")
+	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
 	void getCalendarRecordでFullCalendarに表示させるjsonを取得する() throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		List<String> expect = new ArrayList<String>();

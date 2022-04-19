@@ -1,2 +1,0 @@
-account
-diary_record

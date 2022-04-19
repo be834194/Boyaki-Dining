@@ -16,7 +16,7 @@
 
     <select id="findOneDiaryRecord" resultType="com.dining.boyaki.model.entity.DiaryRecord">
         SELECT
-            username,categoryid,diaryday,record1,record2,record3,price,memo,createat,updateat
+            username,categoryid,diaryday,record1,record2,record3,imagename,memo,createat,updateat
         FROM
             diary_record
         WHERE
@@ -27,7 +27,7 @@
     
     <insert id="insertDiaryRecord">
         INSERT INTO
-            diary_record(username,categoryid,diaryday,record1,record2,record3,price,memo,createat,updateat)
+            diary_record(username,categoryid,diaryday,record1,record2,record3,imagename,memo,createat,updateat)
         VALUES
            (#{userName},
             #{categoryId},
@@ -35,7 +35,7 @@
             #{record1},
             #{record2},
             #{record3},
-            #{price},
+            #{imageName},
             #{memo},
             #{createAt},
             #{updateAt})
@@ -51,7 +51,7 @@
             record1 = #{record1},
             record2 = #{record2},
             record3 = #{record3},
-            price = #{price},
+            imagename = #{imageName},
             memo = #{memo},
             updateat = #{updateAt}
         WHERE 

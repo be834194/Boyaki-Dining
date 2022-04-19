@@ -17,7 +17,7 @@ public class DiaryRecord {
 	
 	private String record3;
 	
-	private int price;
+	private String imageName;
 	
 	private String memo;
 	
@@ -30,14 +30,14 @@ public class DiaryRecord {
 	}
 
 	public DiaryRecord(String userName, int categoryId, Date diaryDay, String record1, String record2, String record3,
-			int price, String memo, LocalDateTime createAt, LocalDateTime updateAt) {
+			String imageName, String memo, LocalDateTime createAt, LocalDateTime updateAt) {
 		this.userName = userName;
 		this.categoryId = categoryId;
 		this.diaryDay = diaryDay;
 		this.record1 = record1;
 		this.record2 = record2;
 		this.record3 = record3;
-		this.price = price;
+		this.imageName = imageName;
 		this.memo = memo;
 		this.createAt = createAt;
 		this.updateAt = updateAt;
@@ -91,12 +91,12 @@ public class DiaryRecord {
 		this.record3 = record3;
 	}
 
-	public int getPrice() {
-		return price;
+	public String getImageName() {
+		return imageName;
 	}
 
-	public void setPrice(int price) {
-		this.price = price;
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
 	}
 
 	public String getMemo() {
