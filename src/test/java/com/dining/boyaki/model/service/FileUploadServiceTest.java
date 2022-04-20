@@ -77,6 +77,24 @@ public class FileUploadServiceTest {
 	}
 	
 	@Test
+	void fileValidでtrueが返ってくる() throws Exception{
+		boolean result = fileUploadService.fileValid(fileUploadForm);
+		assertEquals(true,result);
+	}
+	
+	@Test
+	void fileValidでfalseが返ってくる() throws Exception{
+		File upFile = new File("src/test/resources/image/testApp.js");
+		Path path = Paths.get(upFile.getCanonicalPath());
+		byte[] bytes = Files.readAllBytes(path);
+		MultipartFile file = new MockMultipartFile("file","testApp.js","multipart/form-data",bytes);
+		fileUploadForm.setMultipartFile(file);
+		
+		boolean result = fileUploadService.fileValid(fileUploadForm);
+		assertEquals(false,result);
+	}
+	
+	@Test
 	void fileUploadでファイルがアップロードされる() throws Exception{
 		when(s3Client.putObject(any(), any(), any(File.class))).thenReturn(new PutObjectResult());
 		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));

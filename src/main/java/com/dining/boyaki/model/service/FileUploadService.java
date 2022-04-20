@@ -3,8 +3,12 @@ package com.dining.boyaki.model.service;
 import java.time.format.DateTimeFormatter;
 import java.io.IOException;
 import java.io.FileOutputStream;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Base64;
+
+import javax.imageio.ImageIO;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
 import org.apache.commons.imaging.ImageWriteException;
@@ -28,6 +32,27 @@ public class FileUploadService {
 	public FileUploadService(AmazonS3 s3Client,ExifRewriter exifRewriter) {
 		this.s3Client = s3Client;
 		this.exifRewriter = exifRewriter;
+	}
+	
+	public boolean fileValid(FileUploadForm fileUploadForm) throws IOException{
+		File uploadFile = new File(fileUploadForm.getMultipartFile().getOriginalFilename());
+
+	    try(FileOutputStream fos = new FileOutputStream(uploadFile)){
+	    	fos.write(fileUploadForm.getMultipartFile().getBytes());
+			fos.close();
+			BufferedImage bi = ImageIO.read(uploadFile);
+			if (bi != null) {
+				uploadFile.delete();
+				return true;
+			} else {
+				uploadFile.delete();
+				return false;
+			}
+	    }catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
+		
 	}
 	
 	public String fileUpload(FileUploadForm fileUploadForm,String s3PathName) 
