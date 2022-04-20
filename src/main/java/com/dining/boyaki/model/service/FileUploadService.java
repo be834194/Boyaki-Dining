@@ -23,8 +23,11 @@ public class FileUploadService {
 	
 	private final AmazonS3 s3Client;
 	
-	public FileUploadService(AmazonS3 s3Client) {
+	private final ExifRewriter exifRewriter;
+	
+	public FileUploadService(AmazonS3 s3Client,ExifRewriter exifRewriter) {
 		this.s3Client = s3Client;
+		this.exifRewriter = exifRewriter;
 	}
 	
 	public String fileUpload(FileUploadForm fileUploadForm,String s3PathName) 
@@ -39,7 +42,7 @@ public class FileUploadService {
         try (FileOutputStream uploadFileStream = new FileOutputStream(uploadFile)){
         	byte[] bytes = fileUploadForm.getMultipartFile().getBytes();
         	//JpegイメージからEXIFメタデータを削除して、結果をストリームに書き込む
-        	new ExifRewriter().removeExifMetadata(bytes, uploadFileStream);
+        	exifRewriter.removeExifMetadata(bytes, uploadFileStream);
         	
         	//S3の格納先オブジェクト名,ファイル名,ファイル
         	s3Client.putObject(s3PathName, fileName, uploadFile);
@@ -68,7 +71,7 @@ public class FileUploadService {
             return base64Data;
         } catch (IOException e) {
             e.printStackTrace();
-            return "error!";
+            return "!";
         }
 	}
 
