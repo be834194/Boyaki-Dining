@@ -54,9 +54,6 @@ public class FileUploadServiceTest {
 	@Mock
 	ExifRewriter exifRewriter;
 	
-	@Mock
-	FileOutputStream fileOutputStream;
-	
 	@InjectMocks
 	FileUploadService fileUploadService;
 	

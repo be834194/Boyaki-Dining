@@ -71,7 +71,7 @@ public class FileUploadService {
             return base64Data;
         } catch (IOException e) {
             e.printStackTrace();
-            return "!";
+            return "";
         }
 	}
 
