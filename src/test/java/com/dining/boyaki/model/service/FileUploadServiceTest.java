@@ -134,6 +134,7 @@ public class FileUploadServiceTest {
 		
 		String result = fileUploadService.fileDownload("spring-infra-wp-study/wp-content/uploads/", "test.png");
 		assertTrue(!result.isEmpty());
+		verify(s3Client,times(1)).getObject(any(String.class), any(String.class));
 	}
 	
 	@Test
@@ -146,6 +147,7 @@ public class FileUploadServiceTest {
 		
 		String result = fileUploadService.fileDownload("spring-infra-wp-study/wp-content/uploads/", "test.png");
 		assertTrue(result.isEmpty());
+		verify(s3Client,times(1)).getObject(any(String.class), any(String.class));
 	}
 
 }
