@@ -1,5 +1,6 @@
 package com.dining.boyaki.config;
 
+import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
 import org.passay.PasswordValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,5 +22,10 @@ public class BeanConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+	
+	@Bean  //Jpeg,JFIFイメージのExif書き込み,更新,削除機能のインタフェース
+	public ExifRewriter exifRewriter() {
+		return new ExifRewriter();
+	}
 
 }
