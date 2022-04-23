@@ -78,6 +78,12 @@ public class FileUploadServiceTest {
 	
 	@Test
 	void fileValidでtrueが返ってくる() throws Exception{
+		File upFile = new File("src/test/resources/image/3840_2160.jpg");
+		Path path = Paths.get(upFile.getCanonicalPath());
+		byte[] bytes = Files.readAllBytes(path);
+		MultipartFile file = new MockMultipartFile("file","3840_2160.jpg","multipart/form-data",bytes);
+		fileUploadForm.setMultipartFile(file);
+		
 		boolean result = fileUploadService.fileValid(fileUploadForm);
 		assertEquals(true,result);
 	}

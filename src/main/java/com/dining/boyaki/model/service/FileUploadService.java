@@ -58,7 +58,7 @@ public class FileUploadService {
 	public String fileUpload(FileUploadForm fileUploadForm,String s3PathName) 
 			       throws IOException,ImageWriteException,ImageReadException{
 		DateTimeFormatter fm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
-		String extension = FilenameUtils.getExtension(fileUploadForm.getMultipartFile().getOriginalFilename());
+		String extension = FilenameUtils.getExtension(fileUploadForm.getMultipartFile().getOriginalFilename()).toLowerCase();
         String fileName = fileUploadForm.getCreateAt().format(fm) +"." + extension;
         
         File uploadFile = new File(fileName);
@@ -71,6 +71,7 @@ public class FileUploadService {
         	
         	//S3の格納先オブジェクト名,ファイル名,ファイル
         	s3Client.putObject(s3PathName, fileName, uploadFile);
+        	uploadFile.delete();
         	return fileName;
         } catch (AmazonServiceException e) {
         	e.printStackTrace();

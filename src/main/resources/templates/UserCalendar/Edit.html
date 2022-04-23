@@ -13,9 +13,9 @@
 <div th:replace="flagment/header :: user-header"></div><hr>
 <h2>食事記録編集</h2>
 <div class="container">
-	<form class="row" id="category" th:action="@{/index/record/commit}" method="POST" th:object="${diaryRecordForm}">
+	<form class="row" id="category" enctype="multipart/form-data" th:action="@{/index/record/commit}" method="POST">
 	<p th:text="${message}"></p>
-	<div class="col-sm-6">
+	<div class="col-sm-6" th:object="${diaryRecordForm}">
 	    <div class="form-group">
 	        <label for="cateogryId">カテゴリ</label>
 	        <select class="form-control" id="categoryId" name="categoryId" v-model="vueId" v-on:click="doDisabled">
@@ -54,18 +54,29 @@
 	        </label> 
 	        <input class="form-control" type="text" id="record3" name="record3" th:field="*{record3}" v-on:click="doDisabled">
 	        <div th:if="${#fields.hasErrors('record3')}" th:errors="*{record3}" th:errorclass="err"></div>
-	    </div><br>
+	    </div>
 	    <div class="form-group">
 	        <label for="memo">メモ</label> 
 	        <textarea class="form-control" id="memo" name="memo" th:field="*{memo}" v-on:click="doDisabled"></textarea>
 	    </div>
 	    <div>
 	        <input type="hidden" id="createAt" name="createAt" th:field="*{createAt}">
-	    </div><br>
+	    </div>
+	    <div>
+	        <input type="hidden" id="imageName" name="imageName" th:field="*{imageName}">
+	    </div>
+	    <div th:object="${fileUploadForm}">
+            <input type="file" th:field="*{multipartFile}">
+            <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="err"></div>
+        </div>
 	    <button type="submit" id="update" name="update" value="update">保存</button>
 	    &nbsp;&nbsp;
 	    <button type="submit" id="delete" name="delete" value="delete"
 	            v-on:click="check" v-bind:disabled="disabled">削除</button>
+	</div>
+	<div class="col-sm-6" th:if="${exist}">
+	    <br>
+	    <img th:src="${image}" width="420" height="420"><br>
 	</div>
 	</form>
 </div>

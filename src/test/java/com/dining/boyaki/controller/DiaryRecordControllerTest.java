@@ -5,6 +5,7 @@ import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,10 +17,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Base64;
 
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -32,18 +41,23 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
+import com.amazonaws.AmazonServiceException;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
 import com.dining.boyaki.model.entity.DiaryRecordCategory;
 import com.dining.boyaki.model.form.DiaryRecordForm;
+import com.dining.boyaki.model.form.FileUploadForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
 import com.dining.boyaki.model.service.DiaryRecordService;
+import com.dining.boyaki.model.service.FileUploadService;
 import com.dining.boyaki.util.WithMockCustomUser;
 
 @AutoConfigureMockMvc
@@ -63,6 +77,9 @@ public class DiaryRecordControllerTest {
 	
 	@MockBean
 	DiaryRecordService diaryRecordService;
+	
+	@MockBean
+	FileUploadService fileUploadService;
 	
 	@BeforeEach
 	void setUp() {
@@ -85,6 +102,7 @@ public class DiaryRecordControllerTest {
 		mockMvc.perform(get("/index/create"))
 		       .andExpect(status().is2xxSuccessful())
 		       .andExpect(model().attributeExists("diaryRecordForm"))
+		       .andExpect(model().attributeExists("fileUploadForm"))
 		       .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
 	           .andExpect(view().name("UserCalendar/Create"));
 	}
@@ -92,53 +110,85 @@ public class DiaryRecordControllerTest {
 	@Nested
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
     class createContent {
-		DiaryRecordForm form = new DiaryRecordForm();
-		
+		DiaryRecordForm form;
+		FileUploadForm file;
 		@BeforeEach
-        void setUp() {
-			form.setCategoryId(4);
-			form.setDiaryDay(Date.valueOf("2022-02-19"));
-			form.setRecord1("ハイボール一缶");
-			form.setRecord2(null);
-			form.setRecord3("スクワット20回");
-			form.setImageName(null);
-			form.setMemo(null);
+        void setUp() throws Exception{
+			file = new FileUploadForm();
+			form = new DiaryRecordForm(null,4,Date.valueOf("2022-02-19"),
+					                   "ハイボール一缶",null,"スクワット20回",
+					                   null,null,null);
 			doNothing().when(diaryRecordService).insertDiaryRecord(form);
+			when(diaryRecordService.findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"))).thenReturn(null);
+			when(fileUploadService.fileValid(file)).thenReturn(true);
+			when(fileUploadService.fileUpload(any(FileUploadForm.class), any(String.class)))
+			                      .thenReturn("2022-02-19 22-19-37.jpg");
         }
 		
 		@Test
 		void createContentで食事記録が登録される() throws Exception{
-			when(diaryRecordService.findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"))).thenReturn(null);
-			
+			//画像無し
 			mockMvc.perform(post("/index/create/insert")
 				           .flashAttr("diaryRecordForm", form)
-				           .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				           .flashAttr("fileUploadForm", file)
+				           .contentType(MediaType.MULTIPART_FORM_DATA)
 				           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			       .andExpect(model().hasNoErrors())
 				   .andExpect(status().is3xxRedirection())
 		           .andExpect(redirectedUrl("/index"));
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"));
 			verify(diaryRecordService,times(1)).insertDiaryRecord(form);
+			verify(fileUploadService,times(0)).fileValid(file);
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+			
+			//画像有り
+			File upFile = new File("src/test/resources/image/3840_2160.jpg");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			MultipartFile multipartFile = new MockMultipartFile("file","3840_2160.jpg","multipart/form-data",bytes);
+			file.setMultipartFile(multipartFile);
+			mockMvc.perform(post("/index/create/insert")
+				           .flashAttr("diaryRecordForm", form)
+				           .flashAttr("fileUploadForm", file)
+				           .contentType(MediaType.MULTIPART_FORM_DATA)
+				           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			       .andExpect(model().hasNoErrors())
+				   .andExpect(status().is3xxRedirection())
+		           .andExpect(redirectedUrl("/index"));
+			verify(diaryRecordService,times(2)).findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"));
+			verify(diaryRecordService,times(2)).insertDiaryRecord(form);
+			verify(fileUploadService,times(1)).fileValid(file);
+			verify(fileUploadService,times(1)).fileUpload(any(FileUploadForm.class), any(String.class));
 		}
 		
 		@Test
 		void createContentでバリデーションエラーが発生する() throws Exception{
-			DiaryRecordForm form = new DiaryRecordForm();
 			form.setDiaryDay(null);
 			form.setRecord1(null);
 			form.setRecord2(null);
 			form.setRecord3(null);
-			when(diaryRecordService.findOneDiaryRecord(any(), anyInt(), any())).thenReturn(null);
+			File upFile = new File("src/test/resources/image/testApp.js");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			MultipartFile multipartFile = new MockMultipartFile("file","testApp.js","multipart/form-data",bytes);
+			file.setMultipartFile(multipartFile);
 			
 			mockMvc.perform(post("/index/create/insert")
 		      		       .flashAttr("diaryRecordForm", form)
-		      		       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+		      		       .flashAttr("fileUploadForm", file)
+		      		       .contentType(MediaType.MULTIPART_FORM_DATA)
 		      		       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		       	   .andExpect(status().is2xxSuccessful())
+		       	   .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
 		       	   .andExpect(model().attributeHasFieldErrors("diaryRecordForm"
 		       			   ,"diaryDay","record1","record2","record3"))
+		       	   .andExpect(model().attributeHasFieldErrors("fileUploadForm"
+		       			   ,"multipartFile"))
 		           .andExpect(view().name("UserCalendar/Create"));
 			verify(diaryRecordService,times(0)).findOneDiaryRecord(any(), anyInt(), any());
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
+			verify(fileUploadService,times(0)).fileValid(file);
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
 		}
 	
 		@Test
@@ -147,47 +197,191 @@ public class DiaryRecordControllerTest {
 			
 			mockMvc.perform(post("/index/create/insert")
 						   .flashAttr("diaryRecordForm", form)
-		                   .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+						   .flashAttr("fileUploadForm", file)
+		                   .contentType(MediaType.MULTIPART_FORM_DATA)
 		                   .with(SecurityMockMvcRequestPostProcessors.csrf()))
                    .andExpect(status().is2xxSuccessful())
                    .andExpect(model().hasNoErrors())
+                   .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
                    .andExpect(model().attribute("message", "既に同じカテゴリ、同じ日付で登録されています"))
                    .andExpect(view().name("UserCalendar/Create"));
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"));
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
+			verify(fileUploadService,times(0)).fileValid(file);
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+		}
+		
+		@Test
+		void createContentでファイル形式エラーが発生する() throws Exception{
+			File upFile = new File("src/test/resources/image/aws.jpeg");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			MultipartFile multipartFile = new MockMultipartFile("file","aws.jpeg","multipart/form-data",bytes);
+			file.setMultipartFile(multipartFile);
+			when(fileUploadService.fileValid(file)).thenReturn(false);
+			
+			mockMvc.perform(post("/index/create/insert")
+						   .flashAttr("diaryRecordForm", form)
+						   .flashAttr("fileUploadForm", file)
+		                   .contentType(MediaType.MULTIPART_FORM_DATA)
+		                   .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                   .andExpect(status().is2xxSuccessful())
+                   .andExpect(model().hasNoErrors())
+                   .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
+                   .andExpect(model().attribute("message", "ファイル形式が不正です"))
+                   .andExpect(view().name("UserCalendar/Create"));
+			verify(diaryRecordService,times(1)).findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"));
+			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
+			verify(fileUploadService,times(1)).fileValid(file);
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+		}
+		
+		@Test
+		void fileValidでIOExceptionが発生する() throws Exception{
+			File upFile = new File("src/test/resources/image/aws.jpeg");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			MultipartFile multipartFile = new MockMultipartFile("file","aws.jpeg","multipart/form-data",bytes);
+			file.setMultipartFile(multipartFile);
+			doThrow(new IOException("")).when(fileUploadService).fileValid(file);
+			
+			mockMvc.perform(post("/index/create/insert")
+						   .flashAttr("diaryRecordForm", form)
+						   .flashAttr("fileUploadForm", file)
+		                   .contentType(MediaType.MULTIPART_FORM_DATA)
+		                   .with(SecurityMockMvcRequestPostProcessors.csrf()))
+	               .andExpect(status().is2xxSuccessful())
+	               .andExpect(model().hasNoErrors())
+	               .andExpect(view().name("error/Other"));
+		}
+		
+		@Test
+		void fileUploadでIOExceptionが発生する() throws Exception{
+			File upFile = new File("src/test/resources/image/aws.jpeg");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			MultipartFile multipartFile = new MockMultipartFile("file","aws.jpeg","multipart/form-data",bytes);
+			file.setMultipartFile(multipartFile);
+			doThrow(new IOException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class));
+			
+			mockMvc.perform(post("/index/create/insert")
+						   .flashAttr("diaryRecordForm", form)
+						   .flashAttr("fileUploadForm", file)
+		                   .contentType(MediaType.MULTIPART_FORM_DATA)
+		                   .with(SecurityMockMvcRequestPostProcessors.csrf()))
+	               .andExpect(status().is2xxSuccessful())
+	               .andExpect(model().hasNoErrors())
+	               .andExpect(view().name("error/Other"));
+		}
+		
+		@Test
+		void fileUploadでAmazonServiceExceptionが発生する() throws Exception{
+			File upFile = new File("src/test/resources/image/aws.jpeg");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			MultipartFile multipartFile = new MockMultipartFile("file","aws.jpeg","multipart/form-data",bytes);
+			file.setMultipartFile(multipartFile);
+			doThrow(new AmazonServiceException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class));
+			
+			mockMvc.perform(post("/index/create/insert")
+						   .flashAttr("diaryRecordForm", form)
+						   .flashAttr("fileUploadForm", file)
+		                   .contentType(MediaType.MULTIPART_FORM_DATA)
+		                   .with(SecurityMockMvcRequestPostProcessors.csrf()))
+	               .andExpect(status().is2xxSuccessful())
+	               .andExpect(model().hasNoErrors())
+	               .andExpect(view().name("error/Other"));
+		}
+		
+		@Test
+		void fileUploadでImageWriteExceptionが発生する() throws Exception{
+			File upFile = new File("src/test/resources/image/aws.jpeg");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			MultipartFile multipartFile = new MockMultipartFile("file","aws.jpeg","multipart/form-data",bytes);
+			file.setMultipartFile(multipartFile);
+			doThrow(new ImageWriteException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class));
+			
+			mockMvc.perform(post("/index/create/insert")
+						   .flashAttr("diaryRecordForm", form)
+						   .flashAttr("fileUploadForm", file)
+		                   .contentType(MediaType.MULTIPART_FORM_DATA)
+		                   .with(SecurityMockMvcRequestPostProcessors.csrf()))
+	               .andExpect(status().is2xxSuccessful())
+	               .andExpect(model().hasNoErrors())
+	               .andExpect(view().name("error/Other"));
+		}
+		
+		@Test
+		void fileUploadでImageReadExceptionが発生する() throws Exception{
+			File upFile = new File("src/test/resources/image/aws.jpeg");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			MultipartFile multipartFile = new MockMultipartFile("file","aws.jpeg","multipart/form-data",bytes);
+			file.setMultipartFile(multipartFile);
+			doThrow(new ImageReadException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class));
+			
+			mockMvc.perform(post("/index/create/insert")
+						   .flashAttr("diaryRecordForm", form)
+						   .flashAttr("fileUploadForm", file)
+		                   .contentType(MediaType.MULTIPART_FORM_DATA)
+		                   .with(SecurityMockMvcRequestPostProcessors.csrf()))
+	               .andExpect(status().is2xxSuccessful())
+	               .andExpect(model().hasNoErrors())
+	               .andExpect(view().name("error/Other"));
 		}
 	}
 	
 	@Nested
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
 	class showUserEditContent{
-		DiaryRecordForm form = new DiaryRecordForm();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		
+		DiaryRecordForm form;
+		FileUploadForm file;
 		@BeforeEach
-		void setUp() {
-			form.setCategoryId(1);
-			form.setDiaryDay(Date.valueOf("2022-02-23"));
-			form.setRecord1(null);
-			form.setRecord2("グラノーラ");
-			form.setRecord3(null);
-			form.setImageName("2022/02/03.jpg");;
-			form.setMemo(null);
-			form.setCreateAt(LocalDateTime.parse("2022-02-23T09:43:28"));
+        void setUp() throws Exception{
+			form  = new DiaryRecordForm("糸井",1,Date.valueOf("2022-02-23"),
+					                   null,"グラノーラ",null,
+					                   null,null,LocalDateTime.parse("2022-02-23T09:43:28"));
 		}
 	
 		@Test
 		void showUserEditContentで食事記録編集画面へ遷移する() throws Exception{
+			//画像無し
 			when(diaryRecordService.findOneDiaryRecord("糸井", 1, format.parse("2022-02-23"))).thenReturn(form);
-		
 			mockMvc.perform(get("/index/record/2022-02-23/1"))
 		           .andExpect(status().is2xxSuccessful())
 		           .andExpect(model().attribute("diaryRecordForm"
 		        		                       ,hasProperty("createAt",is(LocalDateTime.parse("2022-02-23T09:43:28"))))
 		    		          )
+		           .andExpect(model().attributeExists("fileUploadForm"))
 		           .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
+		           .andExpect(model().attribute("exist", false))
+		           .andExpect(model().attributeDoesNotExist("image"))
 		           .andExpect(view().name("UserCalendar/Edit"));
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
+			verify(fileUploadService,times(0)).fileDownload(any(String.class), any(String.class));
+			
+			//画像有り
+			form.setImageName("3840_2160.jpg");
+			File upFile = new File("src/test/resources/image/3840_2160.jpg");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			String base64Data = Base64.getEncoder().encodeToString(bytes);
+			when(fileUploadService.fileDownload(any(String.class), any(String.class))).thenReturn(base64Data);
+			mockMvc.perform(get("/index/record/2022-02-23/1"))
+		           .andExpect(status().is2xxSuccessful())
+		           .andExpect(model().attribute("diaryRecordForm"
+		        		                       ,hasProperty("createAt",is(LocalDateTime.parse("2022-02-23T09:43:28"))))
+		    		          )
+		           .andExpect(model().attributeExists("fileUploadForm"))
+		           .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
+		           .andExpect(model().attribute("exist", true))
+		           .andExpect(model().attributeExists("image"))
+		           .andExpect(view().name("UserCalendar/Edit"));
+			verify(diaryRecordService,times(2)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
+			verify(fileUploadService,times(1)).fileDownload(any(String.class), any(String.class));
+			
 		}
 		
 		@Test
@@ -214,56 +408,84 @@ public class DiaryRecordControllerTest {
 	@Nested
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
     class updateContent {
-		DiaryRecordForm form = new DiaryRecordForm();
-		
+		DiaryRecordForm form;
+		FileUploadForm file;
 		@BeforeEach
-		void setUp() {
-			form.setCategoryId(1);
-			form.setDiaryDay(Date.valueOf("2022-02-23"));
-			form.setRecord1(null);
-			form.setRecord2("グラノーラ");
-			form.setRecord3(null);
-			form.setImageName(null);
-			form.setMemo("自販機でコーヒー買った");
-			form.setCreateAt(LocalDateTime.parse("2022-02-23T09:43:28"));
+		void setUp() throws Exception{
+			file = new FileUploadForm();
+			form = new DiaryRecordForm("糸井",1,Date.valueOf("2022-02-23"),
+					                   null,"グラノーラ",null,
+					                   null,"自販機でコーヒー買った",LocalDateTime.parse("2022-02-23T09:43:28"));
 			doNothing().when(diaryRecordService).insertDiaryRecord(form);
+			when(diaryRecordService.findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"))).thenReturn(form);
+			when(fileUploadService.fileValid(file)).thenReturn(true);
+			when(fileUploadService.fileUpload(any(FileUploadForm.class), any(String.class)))
+			                      .thenReturn("isorepublic-breakfast-table-1.jpg");
 		}
 		
 		@Test
 		void updateContentで食事記録を更新する() throws Exception{
-			when(diaryRecordService.findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"))).thenReturn(form);
-		
+			//画像無し
 			mockMvc.perform(post("/index/record/commit")
 					       .flashAttr("diaryRecordForm", form)
+					       .flashAttr("fileUploadForm", file)
 					       .param("update", "update")
-					       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					       .contentType(MediaType.MULTIPART_FORM_DATA)
 					       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		           .andExpect(status().is3xxRedirection())
 		           .andExpect(model().hasNoErrors())
 		           .andExpect(redirectedUrl("/index"));
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
 			verify(diaryRecordService,times(1)).updateDiaryRecord(form);
+			verify(fileUploadService,times(0)).fileValid(file);
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+			
+			//画像有り
+			File upFile = new File("src/test/resources/image/isorepublic-breakfast-table-1.jpg");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			MultipartFile multipartFile = new MockMultipartFile("file","isorepublic-breakfast-table-1.jpg","multipart/form-data",bytes);
+			file.setMultipartFile(multipartFile);
+			mockMvc.perform(post("/index/record/commit")
+					       .flashAttr("diaryRecordForm", form)
+					       .flashAttr("fileUploadForm", file)
+					       .param("update", "update")
+					       .contentType(MediaType.MULTIPART_FORM_DATA)
+					       .with(SecurityMockMvcRequestPostProcessors.csrf()))
+		           .andExpect(status().is3xxRedirection())
+		           .andExpect(model().hasNoErrors())
+		           .andExpect(redirectedUrl("/index"));
+			verify(diaryRecordService,times(2)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
+			verify(diaryRecordService,times(2)).updateDiaryRecord(form);
+			verify(fileUploadService,times(1)).fileValid(file);
+			verify(fileUploadService,times(1)).fileUpload(any(FileUploadForm.class), any(String.class));
 		}
 	
 		@Test
 		void updateContentでバリデーションエラーが発生する() throws Exception{
-			form.setCategoryId(1);
 			form.setDiaryDay(null);
 			form.setRecord1(null);
 			form.setRecord2(null);
 			form.setRecord3(null);
 			form.setCreateAt(LocalDateTime.parse("2022-02-23T09:43:28"));
-			
-			when(diaryRecordService.findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"))).thenReturn(form);
+			File upFile = new File("src/test/resources/image/testApp.js");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			MultipartFile multipartFile = new MockMultipartFile("file","testApp.js","multipart/form-data",bytes);
+			file.setMultipartFile(multipartFile);
 			
 			mockMvc.perform(post("/index/record/commit")
 	                       .flashAttr("diaryRecordForm", form)
+	                       .flashAttr("fileUploadForm", file)
 	                       .param("update", "update")
-	                       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+	                       .contentType(MediaType.MULTIPART_FORM_DATA)
 	                       .with(SecurityMockMvcRequestPostProcessors.csrf()))
 	               .andExpect(status().is2xxSuccessful())
+	               .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
 			       .andExpect(model().attributeHasFieldErrors("diaryRecordForm"
 			    		   ,"diaryDay","record1","record2","record3"))
+			       .andExpect(model().attributeHasFieldErrors("fileUploadForm"
+		       			   ,"multipartFile"))
 			       .andExpect(view().name("UserCalendar/Edit"));
 			verify(diaryRecordService,times(0)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
@@ -281,30 +503,54 @@ public class DiaryRecordControllerTest {
 			
 			mockMvc.perform(post("/index/record/commit")
 		                   .flashAttr("diaryRecordForm", form)
+		                   .flashAttr("fileUploadForm", file)
 		                   .param("update", "update")
-		                   .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+		                   .contentType(MediaType.MULTIPART_FORM_DATA)
 		                   .with(SecurityMockMvcRequestPostProcessors.csrf()))
 	               .andExpect(status().is2xxSuccessful())
 	               .andExpect(model().hasNoErrors())
+	               .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
 	               .andExpect(model().attribute("message", "既に同じカテゴリ、同じ日付で登録されています"))
 	               .andExpect(view().name("UserCalendar/Edit"));
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
+			verify(fileUploadService,times(0)).fileValid(file);
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+		}
+		
+		@Test
+		void updateContentでファイル形式エラーが発生する() throws Exception{
+			File upFile = new File("src/test/resources/image/aws.jpeg");
+			Path path = Paths.get(upFile.getCanonicalPath());
+			byte[] bytes = Files.readAllBytes(path);
+			MultipartFile multipartFile = new MockMultipartFile("file","aws.jpeg","multipart/form-data",bytes);
+			file.setMultipartFile(multipartFile);
+			when(fileUploadService.fileValid(file)).thenReturn(false);
+			
+			mockMvc.perform(post("/index/record/commit")
+		                   .flashAttr("diaryRecordForm", form)
+		                   .flashAttr("fileUploadForm", file)
+		                   .param("update", "update")
+		                   .contentType(MediaType.MULTIPART_FORM_DATA)
+		                   .with(SecurityMockMvcRequestPostProcessors.csrf()))
+		            .andExpect(status().is2xxSuccessful())
+		            .andExpect(model().hasNoErrors())
+		            .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
+		            .andExpect(model().attribute("message", "ファイル形式が不正です"))
+		            .andExpect(view().name("UserCalendar/Edit"));
+			verify(diaryRecordService,times(1)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
+			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
+			verify(fileUploadService,times(1)).fileValid(file);
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
 		}
 	}
 	
 	@Test
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
 	void deleteContentで食事記録を削除する() throws Exception{
-		DiaryRecordForm form = new DiaryRecordForm();
-		form.setCategoryId(1);
-		form.setDiaryDay(Date.valueOf("2022-02-23"));
-		form.setRecord1(null);
-		form.setRecord2("グラノーラ");
-		form.setRecord3(null);
-		form.setMemo("自販機でコーヒー買った");
-		form.setCreateAt(LocalDateTime.parse("2022-02-23T09:43:28"));
-		
+		DiaryRecordForm form = new DiaryRecordForm("糸井",1,Date.valueOf("2022-02-23"),
+				                                   null,"グラノーラ",null,
+				                                   null,"自販機でコーヒー買った",LocalDateTime.parse("2022-02-23T09:43:28"));
 		doNothing().when(diaryRecordService).deleteDiaryRecord(form);
 		
 		mockMvc.perform(post("/index/record/commit")
