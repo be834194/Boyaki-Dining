@@ -13,9 +13,9 @@
 <div th:replace="flagment/header :: user-header"></div><hr>
 <h2>食事記録登録</h2>
 <div class="container">
-    <form class="row" id="category" th:action="@{/index/create/insert}" method="post" th:object="${diaryRecordForm}">
+    <form class="row" id="category" enctype="multipart/form-data" th:action="@{/index/create/insert}" method="post" >
     <p th:text="${message}"></p>
-    <div class="col-sm-6">
+    <div class="col-sm-6" th:object="${diaryRecordForm}">
 	    <div class="form-group">
 	        <label for="cateogryId">カテゴリ</label> 
 	        <select class="form-control" id="categoryId" name="categoryId" v-model="vueId">
@@ -53,14 +53,18 @@
 	        </label> 
 	        <input class="form-control" type="text" id="record3" name="record3" th:field="*{record3}">
 	        <div th:if="${#fields.hasErrors('record3')}" th:errors="*{record3}" th:errorclass="err"></div>
-	    </div><br>
+	    </div>
 	    <div class="form-group">
 	        <label for="price">メモ</label> 
 	        <textarea class="form-control" id="memo" name="memo" th:field="*{memo}"></textarea>
 	    </div>
 	    <div class="form-group">
 	        <input type="hidden" id="createAt" name="createAt" th:field="*{createAt}">
-	    </div><br>
+	    </div>
+	    <div th:object="${fileUploadForm}">
+            <input type="file" th:field="*{multipartFile}">
+            <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="err"></div>
+        </div>
 	    <button type="submit">登録</button>
 	</div>
 	</form>
