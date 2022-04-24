@@ -1,18 +1,16 @@
 package com.dining.boyaki.model.service;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.ImageReadException;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
@@ -38,15 +36,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.util.IOUtils;
 import com.dining.boyaki.model.form.FileUploadForm;
 
 @RunWith(SpringRunner.class)
 @Transactional
 public class FileUploadServiceTest {
 	
-	private static MockedStatic<IOUtils> mock;
+	private static MockedStatic<UUID> uuid;
 	
 	@Mock
 	AmazonS3 s3Client;
@@ -57,23 +53,25 @@ public class FileUploadServiceTest {
 	@InjectMocks
 	FileUploadService fileUploadService;
 	
+	File upFile;
 	FileUploadForm fileUploadForm = new FileUploadForm();
 	
 	@BeforeEach
 	void setUp() throws Exception{
-		File upFile = new File("src/test/resources/image/3840_2160.jpg");
+		upFile = new File("src/test/resources/image/3840_2160.jpg");
 		Path path = Paths.get(upFile.getCanonicalPath());
 		byte[] bytes = Files.readAllBytes(path);
 		MultipartFile file = new MockMultipartFile("file","3840_2160.jpg","multipart/form-data",bytes);
 		fileUploadForm.setMultipartFile(file);
 		fileUploadForm.setCreateAt(LocalDateTime.of(2022, 4, 20, 21, 04, 45));
+		
 		MockitoAnnotations.openMocks(this);
-		mock = Mockito.mockStatic(IOUtils.class, Mockito.CALLS_REAL_METHODS);
+		uuid = Mockito.mockStatic(UUID.class,Mockito.CALLS_REAL_METHODS);
 	}
 	
 	@AfterEach //mockStaticのモック化の解除
     void tearDown() throws Exception {
-        mock.close();
+		uuid.close();
 	}
 	
 	@Test
@@ -102,11 +100,13 @@ public class FileUploadServiceTest {
 	
 	@Test
 	void fileUploadでファイルがアップロードされる() throws Exception{
+		UUID uuidName = UUID.fromString("f3241f8f-006e-4429-8438-f42adb1d1869");
+		uuid.when(UUID::randomUUID).thenReturn(uuidName);
 		when(s3Client.putObject(any(), any(), any(File.class))).thenReturn(new PutObjectResult());
 		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
 		
 		String fileName =  fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/");
-		assertEquals(fileName,"2022-04-20 21-04-45.jpg");
+		assertEquals("f3241f8f-006e-4429-8438-f42adb1d1869 2022-04-20 21-04-45.jpg",fileName);
 		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
 		verify(s3Client,times(1)).putObject(any(), any(), any(File.class));
 	}
@@ -147,31 +147,6 @@ public class FileUploadServiceTest {
 		assertEquals(ImageReadException.class,e.getClass());
 		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
 		verify(s3Client,times(0)).putObject(any(), any(), any(File.class));
-	}
-	
-	@Test
-	void fileDownloadでファイルがダウンロードされる() throws Exception{
-		FileInputStream stream = new FileInputStream("src/test/resources/image/3840_2160.jpg");
-		S3Object s3Object = new S3Object();
-		s3Object.setObjectContent(stream);
-		when(s3Client.getObject(any(String.class), any(String.class))).thenReturn(s3Object);
-		
-		String result = fileUploadService.fileDownload("spring-infra-wp-study/wp-content/uploads/", "test.png");
-		assertTrue(!result.isEmpty());
-		verify(s3Client,times(1)).getObject(any(String.class), any(String.class));
-	}
-	
-	@Test
-	void fileDownloadでIOExceptionが発生する() throws Exception{
-		FileInputStream stream = new FileInputStream("src/test/resources/image/3840_2160.jpg");
-		S3Object s3Object = new S3Object();
-		s3Object.setObjectContent(stream);
-		when(s3Client.getObject(any(String.class), any(String.class))).thenReturn(s3Object);
-		mock.when(() -> IOUtils.toByteArray(stream)).thenThrow(new IOException());
-		
-		String result = fileUploadService.fileDownload("spring-infra-wp-study/wp-content/uploads/", "test.png");
-		assertTrue(result.isEmpty());
-		verify(s3Client,times(1)).getObject(any(String.class), any(String.class));
 	}
 
 }

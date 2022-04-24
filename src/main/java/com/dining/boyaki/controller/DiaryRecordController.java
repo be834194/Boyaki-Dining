@@ -34,6 +34,8 @@ public class DiaryRecordController {
 	
 	private final FileUploadService fileUploadService;
 	
+	private final static String s3Path = "boyaki-dining-image/DiaryRecord";
+	
 	public DiaryRecordController(DiaryRecordService diaryRecordService,
 			FileUploadService fileUploadService) {
 		this.diaryRecordService = diaryRecordService;
@@ -80,7 +82,6 @@ public class DiaryRecordController {
 		//ファイルが空でない場合に、ファイルの中身をチェックする
 		if(!Objects.isNull(file.getMultipartFile())){
 			if(fileUploadService.fileValid(file)) {
-				String s3Path = "boyaki-dining-image/DiaryRecord/" + details.getUsername();
 				file.setCreateAt(dateTime);
 				imageName = fileUploadService.fileUpload(file, s3Path);	
 			}else {
@@ -112,9 +113,9 @@ public class DiaryRecordController {
 		}
 		
 		if(form.getImageName() != null) {
-			String image = fileUploadService.fileDownload("boyaki-dining-image/DiaryRecord/" + details.getUsername(), form.getImageName());
+			String src = "https://boyaki-dining-image.s3.ap-northeast-1.amazonaws.com/DiaryRecord/" + form.getImageName();
 			model.addAttribute("exist", true);
-			model.addAttribute("image", "data:image/jpg;base64,"+image);
+			model.addAttribute("image", src);
 		} else {
 			model.addAttribute("exist", false);
 		}
@@ -147,7 +148,6 @@ public class DiaryRecordController {
 		//ファイルが空でない場合に、ファイルの中身をチェックする
 		if(!Objects.isNull(file.getMultipartFile())){
 			if(fileUploadService.fileValid(file)) {
-				String s3Path = "boyaki-dining-image/DiaryRecord/" + details.getUsername();
 				file.setCreateAt(dateTime);
 				imageName = fileUploadService.fileUpload(file, s3Path);	
 			}else {
