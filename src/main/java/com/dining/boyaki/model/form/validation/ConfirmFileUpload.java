@@ -15,7 +15,7 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME) //アノテーションの読み込みタイミング
 public @interface ConfirmFileUpload {
 	
-	String message() default "ファイルサイズが大きすぎるか、ファイル形式が不正です。";
+	String message() default "ファイル拡張子がjpg,jpegであることを確認してください";
 	Class<?>[] groups() default {};
 	Class<? extends Payload>[] payload() default {};
 	
