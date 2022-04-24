@@ -35,7 +35,7 @@ public class FileUploadFormTest {
     	validator.validate(form, bindingResult);
     	assertEquals(0,bindingResult.getFieldErrorCount());
     	
-    	//サイズ、形式が問題ない場合
+    	//形式が問題ない場合
     	File upFile = new File("src/test/resources/image/3840_2160.jpg");
 		Path path = Paths.get(upFile.getCanonicalPath());
 		byte[] bytes = Files.readAllBytes(path);
@@ -47,39 +47,23 @@ public class FileUploadFormTest {
     }
     
     @Test
-    void ファイルサイズ超過でバリデーションエラー発生() throws Exception{
-    	File upFile = new File("src/test/resources/image/6760135001_14c59a1490_o.jpg");
-		Path path = Paths.get(upFile.getCanonicalPath());
-		byte[] bytes = Files.readAllBytes(path);
-		MultipartFile file = new MockMultipartFile("file","6760135001_14c59a1490_o.jpg","multipart/form-data",bytes);
-    	
-    	form.setMultipartFile(file);
-    	
-    	validator.validate(form, bindingResult);
-    	assertEquals(1,bindingResult.getFieldErrorCount());
-    	assertTrue(bindingResult.getFieldError("multipartFile")
-    			                .toString().contains("ファイルサイズが大きすぎるか、ファイル形式が不正です。"));
-    	
-    }
-    
-    @Test
     void メディアタイプやでバリデーションエラー発生() throws Exception{
     	File upFile = new File("src/test/resources/image/testApp.js");
 		Path path = Paths.get(upFile.getCanonicalPath());
 		byte[] bytes = Files.readAllBytes(path);
-		MultipartFile file = new MockMultipartFile("file","testApp.js","multipart/form-data",bytes);
+		MultipartFile file = new MockMultipartFile("file","testApp.js","text/javascript",bytes);
     	form.setMultipartFile(file);
     	validator.validate(form, bindingResult);
     	assertEquals(1,bindingResult.getFieldErrorCount());
     	assertTrue(bindingResult.getFieldError("multipartFile")
-    			                .toString().contains("ファイルサイズが大きすぎるか、ファイル形式が不正です。"));
+    			                .toString().contains("ファイル拡張子がjpg,jpegであることを確認してください"));
     	
-    	file = new MockMultipartFile("file","testApp.png","text/javascript",bytes);
+    	file = new MockMultipartFile("file","testApp.png","multipart/form-data",bytes);
     	form.setMultipartFile(file);
     	validator.validate(form, bindingResult);
     	assertEquals(2,bindingResult.getFieldErrorCount());
     	assertTrue(bindingResult.getFieldError("multipartFile")
-    			                .toString().contains("ファイルサイズが大きすぎるか、ファイル形式が不正です。"));
+    			                .toString().contains("ファイル拡張子がjpg,jpegであることを確認してください"));
     }
 
 }

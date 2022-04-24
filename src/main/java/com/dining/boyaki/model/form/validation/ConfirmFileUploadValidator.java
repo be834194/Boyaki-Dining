@@ -17,17 +17,12 @@ public class ConfirmFileUploadValidator implements ConstraintValidator<ConfirmFi
 			return true;
 		}
 		
-		//ファイルサイズの確認、10MB以上ならエラー
-		if(10485760 <= multipartFile.getSize()) {
-			return false;
-		}
-		
 		//メディアタイプ、拡張子の確認
 		MediaType mediaType = MediaType.parseMediaType(multipartFile.getContentType());
 		String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
 		
-		List<MediaType> mediaTypeList = Arrays.asList(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG , MediaType.MULTIPART_FORM_DATA);
-	    List<String> extList = Arrays.asList("jpg", "jpeg", "png");
+		List<MediaType> mediaTypeList = Arrays.asList(MediaType.IMAGE_JPEG,MediaType.MULTIPART_FORM_DATA);
+	    List<String> extList = Arrays.asList("jpg", "jpeg");
 	    
 	    return  mediaTypeList.stream().anyMatch((mType) -> mediaType.includes(mType))
 	                        && extList.stream().anyMatch((v) -> extension.toLowerCase().equals(v));
