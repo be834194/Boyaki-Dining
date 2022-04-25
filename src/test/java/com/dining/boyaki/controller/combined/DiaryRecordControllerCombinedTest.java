@@ -240,7 +240,7 @@ public class DiaryRecordControllerCombinedTest {
 	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
 	void showUserEditContentで食事記録編集画面へ遷移する() throws Exception{
 		String src = 
-		"https://boyaki-dining-image.s3.ap-northeast-1.amazonaws.com/DiaryRecord/2a7de85e-0234-423e-8aca-fc6dce1a753b 2022-02-24 20-13-59..jpg";
+		"https://boyaki-dining-image.s3.ap-northeast-1.amazonaws.com/DiaryRecord/2a7de85e-0234-423e-8aca-fc6dce1a753b 2022-02-24 20-13-59..jpg?hoge";
 		//画像有り
 		mockMvc.perform(get("/index/record/2022-01-31/3"))
 		       .andExpect(status().is2xxSuccessful())
@@ -305,15 +305,14 @@ public class DiaryRecordControllerCombinedTest {
 		//画像有り
 		form = new DiaryRecordForm("糸井",3,Date.valueOf("2022-01-31"),
 		                "うどん","唐揚げ",null,
-		                null,"冷凍食品",LocalDateTime.parse("2022-02-02T10:22:57"));
+		                "2a7de85e-0234-423e-8aca-fc6dce1a753b 2022-02-24 20-13-59..jpg",
+		                "冷凍食品",LocalDateTime.parse("2022-02-02T10:22:57"));
 		file = new FileUploadForm();
 		File upFile = new File("src/test/resources/image/3840_2160.jpg");
 		Path path = Paths.get(upFile.getCanonicalPath());
 		byte[] bytes = Files.readAllBytes(path);
 		MultipartFile multipartFile = new MockMultipartFile("file","3840_2160.jpg","multipart/form-data",bytes);
 		file.setMultipartFile(multipartFile);
-		uuidName = UUID.fromString("f3241f8f-006e-4429-9610-f42adb1d0202");
-		uuid.when(UUID::randomUUID).thenReturn(uuidName);
 		datetime = LocalDateTime.of(2022, 2, 02, 16, 23, 33);
 		mock.when(LocalDateTime::now).thenReturn(datetime);
 		

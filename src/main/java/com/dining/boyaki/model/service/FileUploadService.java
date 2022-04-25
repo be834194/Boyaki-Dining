@@ -51,12 +51,15 @@ public class FileUploadService {
 		
 	}
 	
-	public String fileUpload(FileUploadForm fileUploadForm,String s3PathName) 
+	public String fileUpload(FileUploadForm fileUploadForm,String s3PathName,String fileName) 
 			       throws IOException,ImageWriteException,ImageReadException{
 		DateTimeFormatter fm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
 		String extension = FilenameUtils.getExtension(fileUploadForm.getMultipartFile().getOriginalFilename()).toLowerCase();
-        String fileName = UUID.randomUUID() + " " + fileUploadForm.getCreateAt().format(fm) +"." + extension;
-        
+        //画像の新規アップロードはUUID,画像更新は何もしない
+		if(fileName == null) {
+        	fileName = UUID.randomUUID() + " " + fileUploadForm.getCreateAt().format(fm) +"." + extension;
+        }
+		
         File uploadFile = new File(fileName);
     
         //try-with-resources

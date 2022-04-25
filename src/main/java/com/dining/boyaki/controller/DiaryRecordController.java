@@ -83,7 +83,7 @@ public class DiaryRecordController {
 		if(!Objects.isNull(file.getMultipartFile())){
 			if(fileUploadService.fileValid(file)) {
 				file.setCreateAt(dateTime);
-				imageName = fileUploadService.fileUpload(file, s3Path);	
+				imageName = fileUploadService.fileUpload(file, s3Path,null);	
 			}else {
 				model.addAttribute("lists", DiaryRecordCategory.values());
 				model.addAttribute("message","ファイル形式が不正です");
@@ -113,7 +113,7 @@ public class DiaryRecordController {
 		}
 		
 		if(form.getImageName() != null) {
-			String src = "https://boyaki-dining-image.s3.ap-northeast-1.amazonaws.com/DiaryRecord/" + form.getImageName();
+			String src = "https://boyaki-dining-image.s3.ap-northeast-1.amazonaws.com/DiaryRecord/" + form.getImageName() +"?hoge";
 			model.addAttribute("exist", true);
 			model.addAttribute("image", src);
 		} else {
@@ -149,7 +149,7 @@ public class DiaryRecordController {
 		if(!Objects.isNull(file.getMultipartFile())){
 			if(fileUploadService.fileValid(file)) {
 				file.setCreateAt(dateTime);
-				imageName = fileUploadService.fileUpload(file, s3Path);	
+				imageName = fileUploadService.fileUpload(file, s3Path, imageName);	
 			}else {
 				model.addAttribute("lists", DiaryRecordCategory.values());
 				model.addAttribute("message","ファイル形式が不正です");
