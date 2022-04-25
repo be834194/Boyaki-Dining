@@ -105,10 +105,15 @@ public class FileUploadServiceTest {
 		when(s3Client.putObject(any(), any(), any(File.class))).thenReturn(new PutObjectResult());
 		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
 		
-		String fileName =  fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/");
+		String fileName =  fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/",null);
 		assertEquals("f3241f8f-006e-4429-8438-f42adb1d1869 2022-04-20 21-04-45.jpg",fileName);
 		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
 		verify(s3Client,times(1)).putObject(any(), any(), any(File.class));
+		
+		fileName =  fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/","hogehoge.jpg");
+		assertEquals("hogehoge.jpg",fileName);
+		verify(exifRewriter,times(2)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
+		verify(s3Client,times(2)).putObject(any(), any(), any(File.class));
 	}
 	
 	@Test
@@ -118,7 +123,7 @@ public class FileUploadServiceTest {
 		
 		            //発生するであろう例外のクラス、ラムダ式でテスト対象の処理
 		Throwable e = assertThrows(Exception.class,
-				() -> {fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/");});
+				() -> {fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/",null);});
 		assertEquals(AmazonServiceException.class,e.getClass());
 		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
 		verify(s3Client,times(1)).putObject(any(), any(), any(File.class));
@@ -131,7 +136,7 @@ public class FileUploadServiceTest {
 		doThrow(new ImageWriteException("読み込み失敗")).when(exifRewriter).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));	
 		
 		Throwable e = assertThrows(Exception.class,
-				() -> {fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/");});
+				() -> {fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/",null);});
 		assertEquals(ImageWriteException.class,e.getClass());
 		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
 		verify(s3Client,times(0)).putObject(any(), any(), any(File.class));
@@ -143,7 +148,7 @@ public class FileUploadServiceTest {
 		doThrow(new ImageReadException("読み込み失敗")).when(exifRewriter).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));	
 		
 		Throwable e = assertThrows(Exception.class,
-				() -> {fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/");});
+				() -> {fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/",null);});
 		assertEquals(ImageReadException.class,e.getClass());
 		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
 		verify(s3Client,times(0)).putObject(any(), any(), any(File.class));

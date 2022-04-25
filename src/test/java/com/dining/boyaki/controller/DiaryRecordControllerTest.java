@@ -120,7 +120,7 @@ public class DiaryRecordControllerTest {
 			doNothing().when(diaryRecordService).insertDiaryRecord(form);
 			when(diaryRecordService.findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"))).thenReturn(null);
 			when(fileUploadService.fileValid(file)).thenReturn(true);
-			when(fileUploadService.fileUpload(any(FileUploadForm.class), any(String.class)))
+			when(fileUploadService.fileUpload(any(FileUploadForm.class), any(String.class), any()))
 			                      .thenReturn("2022-02-19 22-19-37.jpg");
         }
 		
@@ -138,7 +138,7 @@ public class DiaryRecordControllerTest {
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"));
 			verify(diaryRecordService,times(1)).insertDiaryRecord(form);
 			verify(fileUploadService,times(0)).fileValid(file);
-			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class), any());
 			
 			//画像有り
 			File upFile = new File("src/test/resources/image/3840_2160.jpg");
@@ -157,7 +157,7 @@ public class DiaryRecordControllerTest {
 			verify(diaryRecordService,times(2)).findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"));
 			verify(diaryRecordService,times(2)).insertDiaryRecord(form);
 			verify(fileUploadService,times(1)).fileValid(file);
-			verify(fileUploadService,times(1)).fileUpload(any(FileUploadForm.class), any(String.class));
+			verify(fileUploadService,times(1)).fileUpload(any(FileUploadForm.class), any(String.class), any());
 		}
 		
 		@Test
@@ -187,7 +187,7 @@ public class DiaryRecordControllerTest {
 			verify(diaryRecordService,times(0)).findOneDiaryRecord(any(), anyInt(), any());
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
 			verify(fileUploadService,times(0)).fileValid(file);
-			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class), any());
 		}
 	
 		@Test
@@ -207,7 +207,7 @@ public class DiaryRecordControllerTest {
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"));
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
 			verify(fileUploadService,times(0)).fileValid(file);
-			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class), any());
 		}
 		
 		@Test
@@ -232,7 +232,7 @@ public class DiaryRecordControllerTest {
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("miho", 4, Date.valueOf("2022-02-19"));
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
 			verify(fileUploadService,times(1)).fileValid(file);
-			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class), any());
 		}
 		
 		@Test
@@ -261,7 +261,7 @@ public class DiaryRecordControllerTest {
 			byte[] bytes = Files.readAllBytes(path);
 			MultipartFile multipartFile = new MockMultipartFile("file","aws.jpeg","multipart/form-data",bytes);
 			file.setMultipartFile(multipartFile);
-			doThrow(new IOException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class));
+			doThrow(new IOException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class), any());
 			
 			mockMvc.perform(post("/index/create/insert")
 						   .flashAttr("diaryRecordForm", form)
@@ -280,7 +280,7 @@ public class DiaryRecordControllerTest {
 			byte[] bytes = Files.readAllBytes(path);
 			MultipartFile multipartFile = new MockMultipartFile("file","aws.jpeg","multipart/form-data",bytes);
 			file.setMultipartFile(multipartFile);
-			doThrow(new AmazonServiceException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class));
+			doThrow(new AmazonServiceException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class), any());
 			
 			mockMvc.perform(post("/index/create/insert")
 						   .flashAttr("diaryRecordForm", form)
@@ -299,7 +299,7 @@ public class DiaryRecordControllerTest {
 			byte[] bytes = Files.readAllBytes(path);
 			MultipartFile multipartFile = new MockMultipartFile("file","aws.jpeg","multipart/form-data",bytes);
 			file.setMultipartFile(multipartFile);
-			doThrow(new ImageWriteException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class));
+			doThrow(new ImageWriteException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class), any());
 			
 			mockMvc.perform(post("/index/create/insert")
 						   .flashAttr("diaryRecordForm", form)
@@ -318,7 +318,7 @@ public class DiaryRecordControllerTest {
 			byte[] bytes = Files.readAllBytes(path);
 			MultipartFile multipartFile = new MockMultipartFile("file","aws.jpeg","multipart/form-data",bytes);
 			file.setMultipartFile(multipartFile);
-			doThrow(new ImageReadException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class));
+			doThrow(new ImageReadException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class), any());
 			
 			mockMvc.perform(post("/index/create/insert")
 						   .flashAttr("diaryRecordForm", form)
@@ -361,7 +361,7 @@ public class DiaryRecordControllerTest {
 			
 			//画像有り
 			form.setImageName("hogehoge.jpg");
-			String src = "https://boyaki-dining-image.s3.ap-northeast-1.amazonaws.com/DiaryRecord/hogehoge.jpg";
+			String src = "https://boyaki-dining-image.s3.ap-northeast-1.amazonaws.com/DiaryRecord/hogehoge.jpg?hoge";
 			mockMvc.perform(get("/index/record/2022-02-23/1"))
 		           .andExpect(status().is2xxSuccessful())
 		           .andExpect(model().attribute("diaryRecordForm"
@@ -411,7 +411,7 @@ public class DiaryRecordControllerTest {
 			doNothing().when(diaryRecordService).insertDiaryRecord(form);
 			when(diaryRecordService.findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"))).thenReturn(form);
 			when(fileUploadService.fileValid(file)).thenReturn(true);
-			when(fileUploadService.fileUpload(any(FileUploadForm.class), any(String.class)))
+			when(fileUploadService.fileUpload(any(FileUploadForm.class), any(String.class), any()))
 			                      .thenReturn("isorepublic-breakfast-table-1.jpg");
 		}
 		
@@ -430,7 +430,7 @@ public class DiaryRecordControllerTest {
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
 			verify(diaryRecordService,times(1)).updateDiaryRecord(form);
 			verify(fileUploadService,times(0)).fileValid(file);
-			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class), any());
 			
 			//画像有り
 			File upFile = new File("src/test/resources/image/isorepublic-breakfast-table-1.jpg");
@@ -450,7 +450,7 @@ public class DiaryRecordControllerTest {
 			verify(diaryRecordService,times(2)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
 			verify(diaryRecordService,times(2)).updateDiaryRecord(form);
 			verify(fileUploadService,times(1)).fileValid(file);
-			verify(fileUploadService,times(1)).fileUpload(any(FileUploadForm.class), any(String.class));
+			verify(fileUploadService,times(1)).fileUpload(any(FileUploadForm.class), any(String.class), any());
 		}
 	
 		@Test
@@ -507,7 +507,7 @@ public class DiaryRecordControllerTest {
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
 			verify(fileUploadService,times(0)).fileValid(file);
-			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class), any());
 		}
 		
 		@Test
@@ -533,7 +533,7 @@ public class DiaryRecordControllerTest {
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
 			verify(diaryRecordService,times(0)).insertDiaryRecord(form);
 			verify(fileUploadService,times(1)).fileValid(file);
-			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class));
+			verify(fileUploadService,times(0)).fileUpload(any(FileUploadForm.class), any(String.class), any());
 		}
 	}
 	
