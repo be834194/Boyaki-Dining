@@ -62,7 +62,7 @@
 	        <input type="hidden" id="createAt" name="createAt" th:field="*{createAt}">
 	    </div>
 	    <div th:object="${fileUploadForm}">
-            <input type="file" th:field="*{multipartFile}">
+            <input type="file" th:field="*{multipartFile}" v-on:change="uploads">
             <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="err"></div>
         </div>
 	    <button type="submit">登録</button>
@@ -70,16 +70,7 @@
 	</form>
 </div>
 
-<script>
-var getId = document.getElementById('categoryId').value;
-var category = {
-	data(){
-		return{
-			vueId:getId
-		}
-	}
-};
-Vue.createApp(category).mount('#category');
+<script th:src="@{/js/createDiaryRecord.js}">
 </script>
 </body>
 
