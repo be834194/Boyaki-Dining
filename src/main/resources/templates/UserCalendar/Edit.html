@@ -66,13 +66,13 @@
 	        <input type="hidden" id="imageName" name="imageName" th:field="*{imageName}">
 	    </div>
 	    <div th:object="${fileUploadForm}">
-            <input type="file" th:field="*{multipartFile}">
+            <input type="file" th:field="*{multipartFile}" v-on:change="uploads">
             <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="err"></div>
         </div>
 	    <button type="submit" id="update" name="update" value="update">保存</button>
 	    &nbsp;&nbsp;
 	    <button type="submit" id="delete" name="delete" value="delete"
-	            v-on:click="check" v-bind:disabled="disabled">削除</button>
+	            onClick="return check()" v-bind:disabled="disabled">削除</button>
 	</div>
 	<div class="col-sm-6" th:if="${exist}">
 	    <br>
@@ -81,29 +81,7 @@
 	</form>
 </div>
 
-<script>
-var getId = document.getElementById('categoryId').value;
-var category = {
-	data(){
-		return{
-			vueId:getId,
-			disabled:false
-		}
-	},
-	methods:{
-		doDisabled(){
-			this.disabled = true
-		},
-		check(){
-		    if (confirm("削除してもよろしいですか？")) {
-		        return true;
-		    } else {
-		        return false;
-		    }
-		}
-	}
-};
-Vue.createApp(category).mount('#category');
+<script th:src="@{/js/editDiaryRecord.js}">
 </script>
 </body>
 
