@@ -1,16 +1,16 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://thymeleaf.org">
 <head>
+    <title>ぼやく</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
 		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
-    <title>ぼやく</title>
 </head>
 
 <body>
-<div th:replace="flagment/header :: user-header"></div><hr>
+<div th:replace="flagment/header :: user-header"></div>
 <h2>ぼやく</h2>
 <div class="container">
 	<form th:action="@{/index/boyaki/post/insert}" method="POST" th:object="${postForm}">

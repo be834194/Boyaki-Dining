@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 </head>
 <body>
-<div th:replace="flagment/header :: user-header"></div><hr>
+<div th:replace="flagment/header :: user-header"></div>
 <h2>プロフィール</h2>
 <div class="container" th:each="obj:${AccountInfoForm}">
 	<table class="col-sm-4" style="font-size: 24px;">

@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 </head>
 <body>
-<div th:replace="flagment/header :: user-header"></div><hr>
+<div th:replace="flagment/header :: user-header"></div>
 <h2>プロフィール編集</h2>
 <div class="container">
 	<form class="col-sm-6" th:action="@{/index/mypage/edit/update}" method="post" th:object="${AccountInfoForm}">
