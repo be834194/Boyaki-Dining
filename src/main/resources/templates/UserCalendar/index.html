@@ -12,7 +12,7 @@
 	  $('#calendar').fullCalendar({
 		events: {
 			url : '/api/events/all',
-			backgroundColor: '#fff799',
+			backgroundColor: '#ffffff',
 			},
 		eventRender : function(event, element) {
 		element.find('span.fc-title').html(element.find('span.fc-title').text());
@@ -25,11 +25,11 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 </head>
 <body>
-<div th:replace="flagment/header :: user-header"></div><hr>
-<h2>食事記録一覧</h2>
-<a th:href="@{/index/create}">記録をつける</a> 
-<div id='calendar'>
+<div th:replace="flagment/header :: user-header"></div>
+<div class="between-blocks">
+	<h2>食事記録一覧</h2>
+	<h4><a th:href="@{/index/create}">記録をつける</a></h4>
 </div>
-
+<div id='calendar'></div>
 </body>
 </html>

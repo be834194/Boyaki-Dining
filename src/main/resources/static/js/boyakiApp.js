@@ -5,22 +5,20 @@ var boyakiApp = {
 			status:[],
 			keyword:"",
 			page:0,
-			PostRecords:[],
-			observe_element:null,
-			observer:null
+			PostRecords:[]
 		}
 	},
 	methods: {
-		resetAll(){
+		resetSearch(){
 			this.category = []
 			this.status = []
 			this.keyword = ""
+			this.startSearch()
 		},
 		startSearch(){
 			this.page = 0
 			this.PostRecords = []
-			this.observer.observe(this.observe_element)
-			document.getElementById("scroll").innerText = 'loading...'
+			document.getElementById("scroll").innerText = '追加で読み込む'
 			this.search()
 		},
 		search(){
@@ -36,17 +34,16 @@ var boyakiApp = {
 			.then(response => {
 				if(response.data.length == 0 && this.page == 0){
 					document.getElementById("scroll").innerText = '該当する投稿は見つかりませんでした'
-					this.observer.unobserve(this.observe_element)
-				} else if(response.data.length == 0 && this.page != 0){
+				}else if(response.data.length == 0 && this.page != 0){
 					document.getElementById("scroll").innerText = 'これ以上の投稿ははありません'
-					this.observer.unobserve(this.observe_element)
 				}
-				 else{
-					for(let i=0;i<response.data.length;i++){
+				for(let i=0;i<response.data.length;i++){
 					    this.PostRecords.push(response.data[i])
 					}
-				  this.page += 1
+				if(response.data.length <= 4 && this.page != 0){
+					document.getElementById("scroll").innerText = 'これ以上の投稿ははありません'
 				}
+				this.page += 1
 			})
 			.catch(error =>{
 				console.log(error)
@@ -55,14 +52,7 @@ var boyakiApp = {
 		}
 	},
 	mounted(){
-		this.observer = new IntersectionObserver((entries) => { //targetが画面に入るとcallback関数が実行される
-            const entry = entries[0];  //監視対象の要素が配列で入っている
-            if (entry && entry.isIntersecting) { //isIntersectingがtrue:ブラウザに入っている
               this.search()
-            }
-          });
-        this.observe_element = this.$refs.observe_element
-        this.observer.observe(this.observe_element)
 	}
 }
 Vue.createApp(boyakiApp).mount('#boyakiApp');

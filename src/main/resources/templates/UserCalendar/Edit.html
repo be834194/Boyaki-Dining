@@ -10,79 +10,81 @@
 </head>
 
 <body>
-<div th:replace="flagment/header :: user-header"></div><hr>
+<div th:replace="flagment/header :: user-header"></div>
 <h2>食事記録編集</h2>
 <div class="container">
 	<form class="row" id="category" enctype="multipart/form-data" th:action="@{/index/record/commit}" method="POST">
 	<p th:text="${message}"></p>
 	<div class="col-sm-6" th:object="${diaryRecordForm}">
-	    <div class="form-group">
-	        <label for="cateogryId">カテゴリ</label>
-	        <select class="form-control" id="categoryId" name="categoryId" v-model="vueId" v-on:click="doDisabled">
-	            <option th:each="list:${lists}" 
-	                    th:value="${list.categoryId}" th:text="${list.categoryName}"
-	                    th:selected="${list.categoryId} == *{categoryId}">
-	            </option>
-	        </select>
-	        <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" th:errorclass="err"></div>
-	    </div>
-	    <div class="form-group">
-	        <label for="diaryDay">日付</label> 
-	        <input class="form-control" type="date" id="diaryDay" name="diaryDay" th:field="*{diaryDay}" v-on:click="doDisabled">
-	        <div th:if="${#fields.hasErrors('diaryDay')}" th:errors="*{diaryDay}" th:errorclass="err"></div>
-	    </div><br>
-	    <div class="form-group">
-	        <label for="record1">
-	            <span v-if='vueId != 4'>主食</span>
-	            <span v-else>飲酒</span>
-	        </label> 
-	        <input class="form-control" type="text" id="record1" name="record1" th:field="*{record1}" v-on:click="doDisabled">
-	        <div th:if="${#fields.hasErrors('record1')}" th:errors="*{record1}" th:errorclass="err"></div>
-	    </div>
-	    <div class="form-group">
-	        <label for="record2">
-	            <span v-if='vueId != 4'>主菜</span>
-	            <span v-else>間食</span>
-	        </label> 
-	        <input class="form-control" type="text" id="record2" name="record2" th:field="*{record2}" v-on:click="doDisabled">
-	        <div th:if="${#fields.hasErrors('record2')}" th:errors="*{record2}" th:errorclass="err"></div>
-	    </div>
-	    <div class="form-group">
-	        <label for="record3">
-	            <span v-if='vueId != 4'>副菜</span>
-	            <span v-else>運動</span>
-	        </label> 
-	        <input class="form-control" type="text" id="record3" name="record3" th:field="*{record3}" v-on:click="doDisabled">
-	        <div th:if="${#fields.hasErrors('record3')}" th:errors="*{record3}" th:errorclass="err"></div>
-	    </div>
-	    <div class="form-group">
-	        <label for="memo">メモ</label> 
-	        <textarea class="form-control" id="memo" name="memo" th:field="*{memo}" v-on:click="doDisabled"></textarea>
-	    </div>
-	    <div>
-	        <input type="hidden" id="createAt" name="createAt" th:field="*{createAt}">
-	    </div>
-	    <div>
-	        <input type="hidden" id="imageName" name="imageName" th:field="*{imageName}">
-	    </div>
-	    <div th:object="${fileUploadForm}">
-            <input type="file" th:field="*{multipartFile}" v-on:change="uploads">
-            <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="err"></div>
-        </div>
-	    <button type="submit" id="update" name="update" value="update">保存</button>
-	    &nbsp;&nbsp;
-	    <button type="submit" id="delete" name="delete" value="delete"
-	            onClick="return check()" v-bind:disabled="disabled">削除</button>
+		<div class="row card forms">
+		    <div class="form-group">
+		        <label for="cateogryId">カテゴリ</label>
+		        <select class="form-control" id="categoryId" name="categoryId" v-model="vueId" v-on:click="doDisabled">
+		            <option th:each="list:${lists}" 
+		                    th:value="${list.categoryId}" th:text="${list.categoryName}"
+		                    th:selected="${list.categoryId} == *{categoryId}">
+		            </option>
+		        </select>
+		        <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" th:errorclass="err"></div>
+		    </div>
+		    <div class="form-group">
+		        <label for="diaryDay">日付</label> 
+		        <input class="form-control" type="date" id="diaryDay" name="diaryDay" th:field="*{diaryDay}" v-on:click="doDisabled">
+		        <div th:if="${#fields.hasErrors('diaryDay')}" th:errors="*{diaryDay}" th:errorclass="err"></div>
+		    </div><br>
+		    <div class="form-group">
+		        <label for="record1">
+		            <span v-if='vueId != 4'>主食</span>
+		            <span v-else>飲酒</span>
+		        </label> 
+		        <input class="form-control" type="text" id="record1" name="record1" th:field="*{record1}" v-on:click="doDisabled">
+		        <div th:if="${#fields.hasErrors('record1')}" th:errors="*{record1}" th:errorclass="err"></div>
+		    </div>
+		    <div class="form-group">
+		        <label for="record2">
+		            <span v-if='vueId != 4'>主菜</span>
+		            <span v-else>間食</span>
+		        </label> 
+		        <input class="form-control" type="text" id="record2" name="record2" th:field="*{record2}" v-on:click="doDisabled">
+		        <div th:if="${#fields.hasErrors('record2')}" th:errors="*{record2}" th:errorclass="err"></div>
+		    </div>
+		    <div class="form-group">
+		        <label for="record3">
+		            <span v-if='vueId != 4'>副菜</span>
+		            <span v-else>運動</span>
+		        </label> 
+		        <input class="form-control" type="text" id="record3" name="record3" th:field="*{record3}" v-on:click="doDisabled">
+		        <div th:if="${#fields.hasErrors('record3')}" th:errors="*{record3}" th:errorclass="err"></div>
+		    </div>
+		    <div class="form-group">
+		        <label for="memo">メモ</label> 
+		        <textarea class="form-control" id="memo" name="memo" th:field="*{memo}" v-on:click="doDisabled"></textarea>
+		    </div>
+		    <div>
+		        <input type="hidden" id="createAt" name="createAt" th:field="*{createAt}">
+		    </div>
+		    <div>
+		        <input type="hidden" id="imageName" name="imageName" th:field="*{imageName}">
+		    </div>
+		    <div th:object="${fileUploadForm}">
+	            <input type="file" th:field="*{multipartFile}" v-on:change="uploads">
+	            <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="err"></div>
+	        </div><br>
+	        <div class="between-blocks">
+			    <button type="submit" id="delete" name="delete" value="delete"
+			            onClick="return check()" v-bind:disabled="disabled">削除する</button>
+			    <button type="submit" id="update" name="update" value="update">更新する</button>
+	        </div>
+		</div>
 	</div>
-	<div class="col-sm-6" th:if="${exist}">
-	    <br>
-	    <img th:src="${image}" width="420" height="420" /><br>
+	<div class="col-sm-6" th:if="${exist}"><br>
+	    <img th:src="${image}" style="width: 100%; height:auto;" /><br>
 	</div>
 	</form>
+	<br><a th:href="@{/index}">カレンダーへ戻る</a>
 </div>
 
 <script th:src="@{/js/editDiaryRecord.js}">
 </script>
 </body>
-
 </html>

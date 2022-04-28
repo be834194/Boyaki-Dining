@@ -3,26 +3,39 @@ html{
 	}
 body{
 	line-height:1.7;
-	color:#432
+	color:#432;
+	background-color: #d7cebb;
 	}
 h2 {
     margin: 20px 0 20px 0;
     color: gray;
     }
+h4 {
+	margin: 20px 10px 0 0;
+}
 a {
 	text-decoration: none;
+	color: #1760a0;
 }
 textarea {
 	resize: none;
 }
-.blocks {
-	display:flex;
-	}
-.pageHeader {
+
+.pageHeader{
+	background-color: #d2d200;
 	display:flex;
 	justify-content:space-between;
+}
+.blocks{
+	display:flex;
 	}
-
+.between-blocks{
+	display:flex;
+	justify-content: space-between;
+}
+.form-button{
+	text-align: right;
+}
 .main-navi {
 	display: flex;
 	font-size: 1.25rem;
@@ -30,7 +43,7 @@ textarea {
 	list-style: none;
 	}
 .error-messages {
-    color: #b94a48;
+    color: red;
     display: block;
     padding-left: 5px;
     overflow-x: auto;
