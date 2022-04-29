@@ -4,7 +4,7 @@ html{
 body{
 	line-height:1.7;
 	color:#432;
-	background-color: #d7cebb;
+	background-color: #fff8cf;
 	}
 h2 {
     margin: 20px 0 20px 0;
@@ -26,7 +26,7 @@ textarea {
 }
 
 .pageHeader{
-	background-color: #d2d200;
+	background-color: #99cc65;
 	display:flex;
 	justify-content:space-between;
 }
@@ -44,7 +44,7 @@ textarea {
 	padding: 10px; 
 	margin-bottom: 10px; 
 	border: 1px solid #333333;
-	box-shadow:1px 1px rgba(255,255,255,1);
+	box-shadow:0.5px 0.5px rgba(1,1,1,1);
 }
 .error-messages {
     color: red;

@@ -34,11 +34,11 @@
 			</form>
 		</div>
 		<div class="form-button">
-		    <span style="cursor: pointer;font-size:20px;" v-on:click="likes">いいね</span>
-		    <span style="font-size:20px;" id="sumRate" th:fragment="rateFragment">
+		    <span style="color: #1760a0; cursor: pointer;font-size:22px;" v-on:click="likes">いいね</span>
+		    <span style="font-size:22px;" id="sumRate" th:fragment="rateFragment">
 			        &nbsp;<span th:text="${sumRate}"></span>
 			</span>
-		</div><hr>
+		</div><hr><br>
 		<div v-for="(value,key) in CommentRecords" class="blocklink">
 			<div style="font-size: 24px;">{{value.content}}</div>
 			<div class="between-blocks" style="font-size:14px">
@@ -46,7 +46,8 @@
 			    <span>{{value.createAt}}</span>
 			</div><hr>
 		</div>
-		<div class="form-button" id="scroll" v-on:click="search">コメントを読み込む</div>
+		<input type="button" class="col-sm-12" id="scroll" value="コメントを読み込む"
+		       v-on:click="search" v-bind:disabled="disabled" />
 	</article><br>
 	<div class="col-sm-8">
 		<form class="form-group" th:action="@{/index/boyaki/comment}" th:object=${commentForm} method="post">

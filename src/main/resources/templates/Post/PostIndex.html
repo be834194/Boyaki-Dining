@@ -32,7 +32,8 @@
 				    </div>
 			    </a><hr>
 		    </div>
-		    <div class="form-button" id="scroll" v-on:click="search">追加で読み込む</div>
+		    <input type="button" class="col-sm-12" id="scroll" value="追加で読み込む"
+		           v-on:click="search" v-bind:disabled="disabled" />
 	    </article>
 		<aside class="col-sm-3">
 			<div class="sub-area">
