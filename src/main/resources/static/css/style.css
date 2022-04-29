@@ -17,6 +17,10 @@ a {
 	text-decoration: none;
 	color: #1760a0;
 }
+hr {
+	border-bottom: 2px solid rgba(0,0,0,0.1);
+    box-shadow: 0 2px 0 rgba(255,255,255,1);
+}
 textarea {
 	resize: none;
 }
@@ -36,12 +40,12 @@ textarea {
 .form-button{
 	text-align: right;
 }
-.main-navi {
-	display: flex;
-	font-size: 1.25rem;
-	text-transform: uppercase;
-	list-style: none;
-	}
+.sub-area{
+	padding: 10px; 
+	margin-bottom: 10px; 
+	border: 1px solid #333333;
+	box-shadow:1px 1px rgba(255,255,255,1);
+}
 .error-messages {
     color: red;
     display: block;

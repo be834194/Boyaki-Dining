@@ -32,16 +32,18 @@ var boyakiApp = {
             
 			axios.post('/api/search',params,{timeout: 5000})
 			.then(response => {
+				console.log(response.data.length)
 				if(response.data.length == 0 && this.page == 0){
 					document.getElementById("scroll").innerText = '該当する投稿は見つかりませんでした'
 				}else if(response.data.length == 0 && this.page != 0){
-					document.getElementById("scroll").innerText = 'これ以上の投稿ははありません'
-				}
-				for(let i=0;i<response.data.length;i++){
-					    this.PostRecords.push(response.data[i])
+					document.getElementById("scroll").innerText = 'これ以上の投稿はありません'
+				}else {
+					for(let i=0;i<response.data.length;i++){
+						    this.PostRecords.push(response.data[i])
+						}
+					if(response.data.length <= 4){
+						document.getElementById("scroll").innerText = 'これ以上の投稿はありません'
 					}
-				if(response.data.length <= 4 && this.page != 0){
-					document.getElementById("scroll").innerText = 'これ以上の投稿ははありません'
 				}
 				this.page += 1
 			})

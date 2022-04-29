@@ -15,22 +15,24 @@
 <div class="container">
 	<form th:action="@{/index/boyaki/post/insert}" method="POST" th:object="${postForm}">
 	<div class="col-sm-6">
-	    <input type="hidden" id="userName" name="userName" th:field="*{userName}">
-	    <input type="hidden" id="nickName" name="nickName" th:field="*{nickName}">
-	    <div class="form-group">
-		    <label for="postCategory">投稿の分類</label>
-		    <select class="form-control" id="postCategory" name="postCategory">
-		            <option th:each="list:${postCategory}" 
-		                    th:value="${list.postId}" th:text="${list.postName}"></option>
-		    </select>
-	    </div>
-	    <div class="form-group">
-		    <label for="content">投稿内容</label>
-	        <textarea class="form-control" id="content" name="content"　th:field="*{content}"></textarea>
-	        <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" th:errorclass="err"></div>
-	    </div>
-	    <div><br>
-		    <input type="submit" value="投稿する" onClick="return check()">
+		<div class="row card forms">
+		    <input type="hidden" id="userName" name="userName" th:field="*{userName}">
+		    <input type="hidden" id="nickName" name="nickName" th:field="*{nickName}">
+		    <div class="form-group">
+			    <label for="postCategory">投稿の分類</label>
+			    <select class="form-control" id="postCategory" name="postCategory">
+			            <option th:each="list:${postCategory}" 
+			                    th:value="${list.postId}" th:text="${list.postName}"></option>
+			    </select>
+		    </div>
+		    <div class="form-group">
+			    <label for="content">投稿内容</label>
+		        <textarea class="form-control" id="content" name="content"　th:field="*{content}"></textarea>
+		        <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" th:errorclass="error-messages"></div>
+		    </div><br>
+		    <div class="form-button">
+			    <input type="submit" value="投稿する" onClick="return check()">
+			</div>
 		</div>
 	</div>
 	</form>
