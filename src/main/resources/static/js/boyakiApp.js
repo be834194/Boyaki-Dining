@@ -5,7 +5,8 @@ var boyakiApp = {
 			status:[],
 			keyword:"",
 			page:0,
-			PostRecords:[]
+			PostRecords:[],
+			disabled:false
 		}
 	},
 	methods: {
@@ -17,8 +18,9 @@ var boyakiApp = {
 		},
 		startSearch(){
 			this.page = 0
+			this.disabled = false
 			this.PostRecords = []
-			document.getElementById("scroll").innerText = '追加で読み込む'
+			document.getElementById("scroll").value = '追加で読み込む'
 			this.search()
 		},
 		search(){
@@ -34,15 +36,18 @@ var boyakiApp = {
 			.then(response => {
 				console.log(response.data.length)
 				if(response.data.length == 0 && this.page == 0){
-					document.getElementById("scroll").innerText = '該当する投稿は見つかりませんでした'
+					this.disabled = true
+					document.getElementById("scroll").value= '該当する投稿は見つかりませんでした'
 				}else if(response.data.length == 0 && this.page != 0){
-					document.getElementById("scroll").innerText = 'これ以上の投稿はありません'
+					this.disabled = true
+					document.getElementById("scroll").value = 'これ以上の投稿はありません'
 				}else {
 					for(let i=0;i<response.data.length;i++){
 						    this.PostRecords.push(response.data[i])
 						}
 					if(response.data.length <= 4){
-						document.getElementById("scroll").innerText = 'これ以上の投稿はありません'
+						this.disabled = true
+						document.getElementById("scroll").value = 'これ以上の投稿はありません'
 					}
 				}
 				this.page += 1

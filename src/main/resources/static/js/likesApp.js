@@ -10,8 +10,7 @@ var likesApp = {
 		return{
 			page:0,
 			CommentRecords:[],
-			observe_element:null,
-			observer:null
+			disabled:false
 		}
 	},
 	methods:{ 
@@ -26,18 +25,19 @@ var likesApp = {
 			axios.post('/api/comments',params,{timeout: 5000})
 			.then(response => {
 				if(response.data.length == 0 && this.page == 0){
-					document.getElementById("scroll").innerText = 'まだコメントはついていません'
-					//this.observer.unobserve(this.observe_element)
+					this.disabled = true
+					document.getElementById("scroll").value = 'まだコメントはついていません'
 				} else if(response.data.length == 0 && this.page != 0){
-					document.getElementById("scroll").innerText = 'これ以上のコメントはありません'
-					//this.observer.unobserve(this.observe_element)
+					this.disabled = true
+					document.getElementById("scroll").value = 'これ以上のコメントはありません'
 				}
 				 else{
 					for(let i=0;i<response.data.length;i++){
 					    this.CommentRecords.push(response.data[i])
 					}
 					if(response.data.length <= 4){
-						document.getElementById("scroll").innerText = 'これ以上のコメントはありません'
+						this.disabled = true
+						document.getElementById("scroll").value = 'これ以上のコメントはありません'
 					}
 				  this.page += 1
 				}
