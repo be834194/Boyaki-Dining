@@ -29,7 +29,7 @@ var category = {
 		      //errorsが存在する場合は内容をalert
 		      alert(errors)
 		      //valueを空にしてリセットする
-		      event.currentTarget.value = ''
+		      event.currentTarget.value = null
 		    }
          }
 	}

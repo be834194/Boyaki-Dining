@@ -12,7 +12,7 @@
 <h2>プロフィール編集</h2>
 <div class="container">
 	<form class="col-sm-6" th:action="@{/index/mypage/edit/update}" method="post" th:object="${AccountInfoForm}">
-	<p th:text="${message}"></p>
+	<div class="row card forms">
 	    <div>
 		    <input type="hidden" name="userName" id="userName" th:field="*{userName}">
 		</div>
@@ -59,19 +59,16 @@
 		        <option value="7">70代</option>
 		        <option value="8">80代以上</option>
 		    </select>
-		</div>
-		<div>
+		</div><br>
+		<div class="form-button">
 		    <button type="submit">更新する</button>
 		</div>
+	</div>
 	</form>
+	<br><a th:href="@{/index/mypage}">マイページへ戻る</a>
+	<br><a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
+	<br><a th:href="@{/index/mypage/confirm}">退会する</a>
 </div>
-
-<br>
-<a th:href="@{/index/mypage}">マイページへ戻る</a>
-<br>
-<a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
-<br>
-<a th:href="@{/index/mypage/confirm}">退会する</a>
 
 </body>
 </html>

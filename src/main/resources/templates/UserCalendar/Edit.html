@@ -8,7 +8,6 @@
 		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 </head>
-
 <body>
 <div th:replace="flagment/header :: user-header"></div>
 <h2>食事記録編集</h2>
@@ -25,12 +24,12 @@
 		                    th:selected="${list.categoryId} == *{categoryId}">
 		            </option>
 		        </select>
-		        <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" th:errorclass="err"></div>
+		        <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" th:errorclass="error-messages"></div>
 		    </div>
 		    <div class="form-group">
 		        <label for="diaryDay">日付</label> 
 		        <input class="form-control" type="date" id="diaryDay" name="diaryDay" th:field="*{diaryDay}" v-on:click="doDisabled">
-		        <div th:if="${#fields.hasErrors('diaryDay')}" th:errors="*{diaryDay}" th:errorclass="err"></div>
+		        <div th:if="${#fields.hasErrors('diaryDay')}" th:errors="*{diaryDay}" th:errorclass="error-messages"></div>
 		    </div><br>
 		    <div class="form-group">
 		        <label for="record1">
@@ -38,7 +37,7 @@
 		            <span v-else>飲酒</span>
 		        </label> 
 		        <input class="form-control" type="text" id="record1" name="record1" th:field="*{record1}" v-on:click="doDisabled">
-		        <div th:if="${#fields.hasErrors('record1')}" th:errors="*{record1}" th:errorclass="err"></div>
+		        <div th:if="${#fields.hasErrors('record1')}" th:errors="*{record1}" th:errorclass="error-messages"></div>
 		    </div>
 		    <div class="form-group">
 		        <label for="record2">
@@ -46,7 +45,7 @@
 		            <span v-else>間食</span>
 		        </label> 
 		        <input class="form-control" type="text" id="record2" name="record2" th:field="*{record2}" v-on:click="doDisabled">
-		        <div th:if="${#fields.hasErrors('record2')}" th:errors="*{record2}" th:errorclass="err"></div>
+		        <div th:if="${#fields.hasErrors('record2')}" th:errors="*{record2}" th:errorclass="error-messages"></div>
 		    </div>
 		    <div class="form-group">
 		        <label for="record3">
@@ -54,7 +53,7 @@
 		            <span v-else>運動</span>
 		        </label> 
 		        <input class="form-control" type="text" id="record3" name="record3" th:field="*{record3}" v-on:click="doDisabled">
-		        <div th:if="${#fields.hasErrors('record3')}" th:errors="*{record3}" th:errorclass="err"></div>
+		        <div th:if="${#fields.hasErrors('record3')}" th:errors="*{record3}" th:errorclass="error-messages"></div>
 		    </div>
 		    <div class="form-group">
 		        <label for="memo">メモ</label> 
@@ -68,7 +67,7 @@
 		    </div>
 		    <div th:object="${fileUploadForm}">
 	            <input type="file" th:field="*{multipartFile}" v-on:change="uploads">
-	            <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="err"></div>
+	            <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="error-messages"></div>
 	        </div><br>
 	        <div class="between-blocks">
 			    <button type="submit" id="delete" name="delete" value="delete"
@@ -77,7 +76,7 @@
 	        </div>
 		</div>
 	</div>
-	<div class="col-sm-6" th:if="${exist}"><br>
+	<div class="col-sm-6" th:if="${exist}">
 	    <img th:src="${image}" style="width: 100%; height:auto;" /><br>
 	</div>
 	</form>

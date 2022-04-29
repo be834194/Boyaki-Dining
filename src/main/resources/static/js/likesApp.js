@@ -26,15 +26,18 @@ var likesApp = {
 			axios.post('/api/comments',params,{timeout: 5000})
 			.then(response => {
 				if(response.data.length == 0 && this.page == 0){
-					document.getElementById("scroll").innerText = '該当するコメントは見つかりませんでした'
-					this.observer.unobserve(this.observe_element)
+					document.getElementById("scroll").innerText = 'まだコメントはついていません'
+					//this.observer.unobserve(this.observe_element)
 				} else if(response.data.length == 0 && this.page != 0){
 					document.getElementById("scroll").innerText = 'これ以上のコメントはありません'
-					this.observer.unobserve(this.observe_element)
+					//this.observer.unobserve(this.observe_element)
 				}
 				 else{
 					for(let i=0;i<response.data.length;i++){
 					    this.CommentRecords.push(response.data[i])
+					}
+					if(response.data.length <= 4){
+						document.getElementById("scroll").innerText = 'これ以上のコメントはありません'
 					}
 				  this.page += 1
 				}
@@ -63,14 +66,7 @@ var likesApp = {
 		}
 	},
 	mounted(){
-		this.observer = new IntersectionObserver((entries) => { //targetが画面に入るとcallback関数が実行される
-            const entry = entries[0];  //監視対象の要素が配列で入っている
-            if (entry && entry.isIntersecting) { //isIntersectingがtrue:ブラウザに入っている
-              this.search()
-            }
-          });
-        this.observe_element = this.$refs.observe_element
-        this.observer.observe(this.observe_element)
+		this.search()
 	}
 }
 Vue.createApp(likesApp).mount('#likesApp');

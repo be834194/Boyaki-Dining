@@ -10,27 +10,25 @@
 <body>
 <div th:replace="flagment/header :: user-header"></div>
 <h2>退会確認</h2>
-<span>退会すると、以下の情報が全て削除されます。</span>
-<ul>
-    <li>アカウント情報</li>
-    <li>食事記録</li>
-    <li>グチ・ぼやき等の投稿</li>
-</ul>
-<form th:action="@{/index/mypage/confirm/delete}" method="post" th:object="${ConfirmDelete}">
-    <div>
-        <input type="hidden" id="userName" name="userName" th:value="*{userName}">    
-　　　　</div>
-	<div>
-	    <button type="submit">退会する</button>
-	</div>
-</form>
-
-<br>
-<a th:href="@{/index/mypage}">マイページへ戻る</a>
-<br>
-<a th:href="@{/index/mypage/edit}">プロフィールを変更する</a>
-<br>
-<a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
+<div class="container">
+	<span>退会すると、以下の情報が全て削除されます。</span>
+	<ul>
+	    <li>アカウント情報</li>
+	    <li>食事記録</li>
+	    <li>グチ・ぼやき等の投稿</li>
+	</ul>
+	<form th:action="@{/index/mypage/confirm/delete}" method="post" th:object="${ConfirmDelete}">
+	    <div>
+		    <button type="submit">退会する</button>
+		</div>
+	    <div>
+	        <input type="hidden" id="userName" name="userName" th:value="*{userName}">    
+	　　　　</div>
+	</form>
+	<br><a th:href="@{/index/mypage}">マイページへ戻る</a>
+	<br><a th:href="@{/index/mypage/edit}">プロフィールを変更する</a>
+	<br><a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
+</div>
 
 </body>
 </html>

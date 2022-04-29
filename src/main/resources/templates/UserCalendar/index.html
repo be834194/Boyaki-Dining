@@ -28,7 +28,9 @@
 <div th:replace="flagment/header :: user-header"></div>
 <div class="between-blocks">
 	<h2>食事記録一覧</h2>
-	<h4><a th:href="@{/index/create}">記録をつける</a></h4>
+	<h4><a th:href="@{/index/create}">記録をつける
+	    <img th:src="@{/images/メモアイコン.png}"></a>
+	</h4>
 </div>
 <div id='calendar'></div>
 </body>
