@@ -67,22 +67,22 @@ public class RegisterFormTest {
 	}
 	
 	@ParameterizedTest
-	@CsvSource({"亜",
-		        "寿限無寿限無後光の擦り切れ回砂利"})
-	void 未入力や指定サイズ範囲外でフィールドエラー発生(String userName) throws Exception{
+	@CsvSource({"亜,passwor",
+		        "寿限無寿限無後光の擦り切れ回砂利,passwordpasswordp"})
+	void 未入力や指定サイズ範囲外でフィールドエラー発生(String userName,String password) throws Exception{
 		form.setUserName(userName);
 		form.setMail("");
-		form.setPassword("pass");
+		form.setPassword(password);
 		form.setConfirmPassword("");
 		
 		validator.validate(form, bindingResult);
 		assertEquals(4,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("userName")
-				                .toString().contains("ユーザ名は2字以上15字以内で作成してください"));
+				                .toString().contains("ユーザ名は2～15文字で作成してください"));
 		assertTrue(bindingResult.getFieldError("mail")
                                 .toString().contains("メールアドレスは必須項目です"));
 		assertTrue(bindingResult.getFieldError("password")
-                                .toString().contains("パスワードは8文字以上で入力してください"));
+                                .toString().contains("パスワードは8～16文字で入力してください"));
 		assertTrue(bindingResult.getFieldError("confirmPassword")
                                 .toString().contains("パスワードが一致していません"));
 	}

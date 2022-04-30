@@ -15,7 +15,7 @@ public class PasswordChangeForm implements Serializable{
 	
 	private String oldPassword;
 	
-	@Size(min=8,message="パスワードは8文字以上で入力してください")
+	@Size(min=8,max=16,message="パスワードは8～16文字で入力してください")
 	private String password;
 	
 	private String confirmPassword;
