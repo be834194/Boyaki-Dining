@@ -1,7 +1,6 @@
 package com.dining.boyaki.controller;
 
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -103,7 +102,7 @@ public class DiaryRecordController {
 	public String showUserEditContent(@AuthenticationPrincipal AccountUserDetails details,
 			                          @PathVariable("id")int id,
 			                          @PathVariable("diaryDay")String diaryDay,
-			                          Model model) throws ParseException{
+			                          Model model) throws Exception{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date parsedDate =  format.parse(diaryDay);
 

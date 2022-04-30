@@ -84,7 +84,10 @@ public class FileUploadService {
         } catch (ImageReadException e) {
             e.printStackTrace();
             throw e;
-        }  finally {
+        } catch (IOException e) {
+                e.printStackTrace();
+                throw e;
+        } finally {
         	uploadFile.delete();
         }
 	}
