@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,19 +98,20 @@ public class PasswordChangeFormTest {
 		assertEquals(0,bindingResult.getFieldErrorCount());
 	}
 	
-	@Test
-	@DatabaseSetup(value = "/form/setup/")
-	void 未入力や指定サイズ範囲外でフィールドエラー発生() throws Exception{
+	@ParameterizedTest
+	@CsvSource({"passwor",
+		        "passwordpasswordp"})
+	void 未入力や指定サイズ範囲外でフィールドエラー発生(String password) throws Exception{
 		form.setUserName("糸井");
 		form.setMail("");
 		form.setOldPassword("sigeSIGE");
-		form.setPassword("pass");
+		form.setPassword(password);
 		form.setConfirmPassword("");
 		
 		validator.validate(form, bindingResult);
 		assertEquals(2,bindingResult.getFieldErrorCount());;
 		assertTrue(bindingResult.getFieldError("password")
-                                .toString().contains("パスワードは8文字以上で入力してください"));
+                                .toString().contains("パスワードは8～16文字で入力してください"));
 		assertTrue(bindingResult.getFieldError("confirmPassword")
                                 .toString().contains("パスワードが一致していません"));
 		

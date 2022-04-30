@@ -11,14 +11,14 @@ public class RegisterForm implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	@Size(min=2,max=15,message="ユーザ名は2字以上15字以内で作成してください")
+	@Size(min=2,max=15,message="ユーザ名は2～15文字で作成してください")
 	private String userName;
 	
 	@Email(message="メールアドレスの形式で入力してください")
 	@NotEmpty(message="メールアドレスは必須項目です")
 	private String mail;
 	
-	@Size(min=8,message="パスワードは8文字以上で入力してください")
+	@Size(min=8,max=16,message="パスワードは8～16文字で入力してください")
 	private String password;
 	
 	private String confirmPassword;
