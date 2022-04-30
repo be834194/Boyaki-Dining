@@ -70,7 +70,6 @@ public class FileUploadService {
         	
         	//S3の格納先オブジェクト名,ファイル名,ファイル
         	s3Client.putObject(s3PathName, fileName, uploadFile);
-        	uploadFile.delete();
         	return fileName;
         } catch (AmazonServiceException e) {
         	e.printStackTrace();
@@ -84,6 +83,8 @@ public class FileUploadService {
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
+        } finally {
+        	uploadFile.delete();
         }
         
 	}

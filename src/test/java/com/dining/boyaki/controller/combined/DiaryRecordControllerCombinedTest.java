@@ -124,6 +124,8 @@ public class DiaryRecordControllerCombinedTest {
                                                    "グラノーラ",null,null,
                                                    null,null,null);
         FileUploadForm file = new FileUploadForm();
+        MultipartFile multipartFile = new MockMultipartFile("file","".getBytes());
+		file.setMultipartFile(multipartFile);
         datetime = LocalDateTime.of(2022, 2, 26, 14, 00, 31);
 		mock.when(LocalDateTime::now).thenReturn(datetime);
 		mockMvc.perform(post("/index/create/insert")
@@ -143,7 +145,7 @@ public class DiaryRecordControllerCombinedTest {
 		File upFile = new File("src/test/resources/image/3840_2160.jpg");
 		Path path = Paths.get(upFile.getCanonicalPath());
 		byte[] bytes = Files.readAllBytes(path);
-		MultipartFile multipartFile = new MockMultipartFile("file","3840_2160.jpg","multipart/form-data",bytes);
+		multipartFile = new MockMultipartFile("file","3840_2160.jpg","multipart/form-data",bytes);
 		file.setMultipartFile(multipartFile);
 		uuidName = UUID.fromString("f3241f8f-006e-4429-8438-f42adb1d1869");
 		uuid.when(UUID::randomUUID).thenReturn(uuidName);
@@ -289,6 +291,8 @@ public class DiaryRecordControllerCombinedTest {
 				                                   "ラーメン",null,null,
 				                                   null,"外食",LocalDateTime.parse("2022-02-02T10:22:01"));
 		FileUploadForm file = new FileUploadForm();
+		MultipartFile multipartFile = new MockMultipartFile("file","".getBytes());
+		file.setMultipartFile(multipartFile);
 		datetime = LocalDateTime.of(2022, 2, 02, 10, 23, 06);
 		mock.when(LocalDateTime::now).thenReturn(datetime);
 		
@@ -311,7 +315,7 @@ public class DiaryRecordControllerCombinedTest {
 		File upFile = new File("src/test/resources/image/3840_2160.jpg");
 		Path path = Paths.get(upFile.getCanonicalPath());
 		byte[] bytes = Files.readAllBytes(path);
-		MultipartFile multipartFile = new MockMultipartFile("file","3840_2160.jpg","multipart/form-data",bytes);
+		multipartFile = new MockMultipartFile("file","3840_2160.jpg","multipart/form-data",bytes);
 		file.setMultipartFile(multipartFile);
 		datetime = LocalDateTime.of(2022, 2, 02, 16, 23, 33);
 		mock.when(LocalDateTime::now).thenReturn(datetime);

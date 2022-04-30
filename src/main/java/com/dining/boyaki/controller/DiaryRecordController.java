@@ -3,7 +3,6 @@ package com.dining.boyaki.controller;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Objects;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -80,7 +79,7 @@ public class DiaryRecordController {
 		String imageName = null;
 		LocalDateTime dateTime = LocalDateTime.now();
 		//ファイルが空でない場合に、ファイルの中身をチェックする
-		if(!Objects.isNull(file.getMultipartFile())){
+		if(!file.getMultipartFile().isEmpty()){
 			if(fileUploadService.fileValid(file)) {
 				file.setCreateAt(dateTime);
 				imageName = fileUploadService.fileUpload(file, s3Path,null);	
@@ -146,7 +145,7 @@ public class DiaryRecordController {
 		String imageName = form.getImageName();
 		LocalDateTime dateTime = form.getCreateAt();
 		//ファイルが空でない場合に、ファイルの中身をチェックする
-		if(!Objects.isNull(file.getMultipartFile())){
+		if(!file.getMultipartFile().isEmpty()){
 			if(fileUploadService.fileValid(file)) {
 				file.setCreateAt(dateTime);
 				imageName = fileUploadService.fileUpload(file, s3Path, imageName);	

@@ -65,7 +65,7 @@
         INNER JOIN status_list as S_LIST
               ON   INFO.status = S_LIST.statusid
         WHERE
-            comment.postid = #{postId}
+            COMMENT.postid = #{postId}
         ORDER BY Comment.createat DESC
         LIMIT #{pageable.pageSize}
         OFFSET #{pageable.offset}
@@ -98,7 +98,7 @@
         INNER JOIN post_category as P_CATEGORY
               ON  POST.postcategory = P_CATEGORY.postid
         WHERE
-            post.postid = #{postid}
+            POST.postid = #{postid}
     </select>
     
     <select id = "findPostRecord" resultMap="PostRecordResultMap">
@@ -118,7 +118,7 @@
         INNER JOIN post_category as P_CATEGORY
               ON  POST.postcategory = P_CATEGORY.postid
         WHERE
-            post.nickname = #{nickName}
+            POST.nickname = #{nickName}
         ORDER BY POST.createat DESC
         LIMIT #{pageable.pageSize}
         OFFSET #{pageable.offset}

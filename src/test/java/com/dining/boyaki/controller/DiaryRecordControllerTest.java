@@ -114,6 +114,8 @@ public class DiaryRecordControllerTest {
 		@BeforeEach
         void setUp() throws Exception{
 			file = new FileUploadForm();
+			MultipartFile multipartFile = new MockMultipartFile("file","".getBytes());
+			file.setMultipartFile(multipartFile);
 			form = new DiaryRecordForm(null,4,Date.valueOf("2022-02-19"),
 					                   "ハイボール一缶",null,"スクワット20回",
 					                   null,null,null);
@@ -405,6 +407,8 @@ public class DiaryRecordControllerTest {
 		@BeforeEach
 		void setUp() throws Exception{
 			file = new FileUploadForm();
+			MultipartFile multipartFile = new MockMultipartFile("file","".getBytes());
+			file.setMultipartFile(multipartFile);
 			form = new DiaryRecordForm("糸井",1,Date.valueOf("2022-02-23"),
 					                   null,"グラノーラ",null,
 					                   null,"自販機でコーヒー買った",LocalDateTime.parse("2022-02-23T09:43:28"));
