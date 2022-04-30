@@ -350,6 +350,7 @@ public class DiaryRecordControllerTest {
 		void showUserEditContentで食事記録編集画面へ遷移する() throws Exception{
 			//画像無し
 			when(diaryRecordService.findOneDiaryRecord("糸井", 1, format.parse("2022-02-23"))).thenReturn(form);
+			when(fileUploadService.fileDownload(any(String.class), any(String.class))).thenReturn("hogehoge.jpg");
 			mockMvc.perform(get("/index/record/2022-02-23/1"))
 		           .andExpect(status().is2xxSuccessful())
 		           .andExpect(model().attribute("diaryRecordForm"
@@ -360,10 +361,10 @@ public class DiaryRecordControllerTest {
 		           .andExpect(model().attribute("exist", false))
 		           .andExpect(view().name("UserCalendar/Edit"));
 			verify(diaryRecordService,times(1)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
+			verify(fileUploadService,times(0)).fileDownload(any(String.class), any(String.class));
 			
 			//画像有り
 			form.setImageName("hogehoge.jpg");
-			String src = "https://boyaki-dining-image.s3.ap-northeast-1.amazonaws.com/DiaryRecord/hogehoge.jpg?hoge";
 			mockMvc.perform(get("/index/record/2022-02-23/1"))
 		           .andExpect(status().is2xxSuccessful())
 		           .andExpect(model().attribute("diaryRecordForm"
@@ -372,10 +373,10 @@ public class DiaryRecordControllerTest {
 		           .andExpect(model().attributeExists("fileUploadForm"))
 		           .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
 		           .andExpect(model().attribute("exist", true))
-		           .andExpect(model().attribute("image",src))
+		           .andExpect(model().attributeExists("image"))
 		           .andExpect(view().name("UserCalendar/Edit"));
 			verify(diaryRecordService,times(2)).findOneDiaryRecord("糸井", 1, Date.valueOf("2022-02-23"));
-			
+			verify(fileUploadService,times(1)).fileDownload(any(String.class), any(String.class));
 		}
 		
 		@Test

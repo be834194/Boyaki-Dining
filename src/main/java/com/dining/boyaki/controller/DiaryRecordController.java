@@ -1,6 +1,7 @@
 package com.dining.boyaki.controller;
 
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -102,7 +103,7 @@ public class DiaryRecordController {
 	public String showUserEditContent(@AuthenticationPrincipal AccountUserDetails details,
 			                          @PathVariable("id")int id,
 			                          @PathVariable("diaryDay")String diaryDay,
-			                          Model model) throws Exception{
+			                          Model model) throws ParseException{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date parsedDate =  format.parse(diaryDay);
 
@@ -112,9 +113,9 @@ public class DiaryRecordController {
 		}
 		
 		if(form.getImageName() != null) {
-			String src = "https://boyaki-dining-image.s3.ap-northeast-1.amazonaws.com/DiaryRecord/" + form.getImageName() +"?hoge";
+			String src = fileUploadService.fileDownload(s3Path, form.getImageName());
 			model.addAttribute("exist", true);
-			model.addAttribute("image", src);
+			model.addAttribute("image", "data:image/jpg;base64," + src);
 		} else {
 			model.addAttribute("exist", false);
 		}

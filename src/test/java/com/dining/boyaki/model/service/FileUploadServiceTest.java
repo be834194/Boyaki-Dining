@@ -1,7 +1,9 @@
 package com.dining.boyaki.model.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
@@ -12,6 +14,7 @@ import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.ImageReadException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -36,11 +39,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.util.IOUtils;
 import com.dining.boyaki.model.form.FileUploadForm;
 
 @RunWith(SpringRunner.class)
 @Transactional
 public class FileUploadServiceTest {
+	
+	private static MockedStatic<IOUtils> ioUtils;
 	
 	private static MockedStatic<UUID> uuid;
 	
@@ -67,11 +74,13 @@ public class FileUploadServiceTest {
 		
 		MockitoAnnotations.openMocks(this);
 		uuid = Mockito.mockStatic(UUID.class,Mockito.CALLS_REAL_METHODS);
+		ioUtils = Mockito.mockStatic(IOUtils.class, Mockito.CALLS_REAL_METHODS);
 	}
 	
 	@AfterEach //mockStaticのモック化の解除
     void tearDown() throws Exception {
 		uuid.close();
+		ioUtils.close();
 	}
 	
 	@Test
@@ -152,6 +161,29 @@ public class FileUploadServiceTest {
 		assertEquals(ImageReadException.class,e.getClass());
 		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
 		verify(s3Client,times(0)).putObject(any(), any(), any(File.class));
+	}
+	
+	@Test
+	void fileDownloadでファイルがダウンロードされる() throws Exception{
+		FileInputStream stream = new FileInputStream("src/test/resources/image/3840_2160.jpg");
+		S3Object s3Object = new S3Object();
+		s3Object.setObjectContent(stream);
+		when(s3Client.getObject(any(String.class), any(String.class))).thenReturn(s3Object);
+
+		String result = fileUploadService.fileDownload("spring-infra-wp-study/wp-content/uploads/", "test.png");
+		assertTrue(!result.isEmpty());
+	}
+	
+	@Test
+	void fileDownloadでIOExceptionが発生する() throws Exception{
+		FileInputStream stream = new FileInputStream("src/test/resources/image/3840_2160.jpg");
+		S3Object s3Object = new S3Object();
+		s3Object.setObjectContent(stream);
+		when(s3Client.getObject(any(String.class), any(String.class))).thenReturn(s3Object);
+		ioUtils.when(() -> IOUtils.toByteArray(stream)).thenThrow(new IOException());
+
+		String result = fileUploadService.fileDownload("spring-infra-wp-study/wp-content/uploads/", "test.png");
+		assertTrue(result.isEmpty());
 	}
 
 }
