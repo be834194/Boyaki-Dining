@@ -1,6 +1,7 @@
 package com.dining.boyaki.model.service.conbined;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -59,6 +60,12 @@ public class FileUploadServiceCombinedTest {
 		
 		fileName = fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads","hogehoge.jpg");
 		assertEquals("hogehoge.jpg",fileName);
+	}
+	
+	@Test
+	void fileDownloadでファイルがダウンロードされる() throws Exception{
+		String result = fileUploadService.fileDownload("spring-infra-wp-study/wp-content/uploads", "hogehoge.jpg");
+		assertTrue(!result.isEmpty());
 	}
 
 }

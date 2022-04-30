@@ -241,8 +241,6 @@ public class DiaryRecordControllerCombinedTest {
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
 	void showUserEditContentで食事記録編集画面へ遷移する() throws Exception{
-		String src = 
-		"https://boyaki-dining-image.s3.ap-northeast-1.amazonaws.com/DiaryRecord/2a7de85e-0234-423e-8aca-fc6dce1a753b 2022-02-24 20-13-59..jpg?hoge";
 		//画像有り
 		mockMvc.perform(get("/index/record/2022-01-31/3"))
 		       .andExpect(status().is2xxSuccessful())
@@ -251,7 +249,7 @@ public class DiaryRecordControllerCombinedTest {
 		 		          )
 		       .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
 	           .andExpect(model().attribute("exist", true))
-	           .andExpect(model().attribute("image",src))
+	           .andExpect(model().attributeExists("image"))
 		       .andExpect(view().name("UserCalendar/Edit"));
 		
 		//画像無し

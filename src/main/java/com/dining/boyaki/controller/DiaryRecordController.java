@@ -112,9 +112,9 @@ public class DiaryRecordController {
 		}
 		
 		if(form.getImageName() != null) {
-			String src = "https://boyaki-dining-image.s3.ap-northeast-1.amazonaws.com/DiaryRecord/" + form.getImageName() +"?hoge";
+			String src = fileUploadService.fileDownload(s3Path, form.getImageName());
 			model.addAttribute("exist", true);
-			model.addAttribute("image", src);
+			model.addAttribute("image", "data:image/jpg;base64," + src);
 		} else {
 			model.addAttribute("exist", false);
 		}
