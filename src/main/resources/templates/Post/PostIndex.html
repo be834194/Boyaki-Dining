@@ -26,11 +26,14 @@
 		    <div v-for="(value,key) in PostRecords">
 			    <a v-bind:href="`/index/boyaki/${value.postId}`">
 				    <div style="font-size: 24px;">{{value.content}}</div>
-				    <div class="between-blocks">
-					    <span>{{value.nickName}} さん</span>
-					    <span style="font-size: 12px;">{{value.createAt}}</span>
-				    </div>
-			    </a><hr>
+				</a>
+				<div class="between-blocks">
+				    <a v-bind:href="`/index/boyaki/profile/${value.nickName}`">
+				        <span>{{value.nickName}} さん</span>
+				    </a>
+					<span style="font-size: 12px;">{{value.createAt}}</span>
+				</div>
+			    <hr>
 		    </div>
 		    <input type="button" class="col-sm-12" id="scroll" value="追加で読み込む"
 		           v-on:click="search" v-bind:disabled="disabled" />

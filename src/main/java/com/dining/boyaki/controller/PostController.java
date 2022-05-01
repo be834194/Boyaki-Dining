@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.AccountUserDetails;
 import com.dining.boyaki.model.entity.PostCategory;
 import com.dining.boyaki.model.entity.PostRecord;
@@ -90,11 +91,16 @@ public class PostController {
 		return "Post/PostDetail :: rateFragment";
 	}
 	
-	@PostMapping("/index/boyaki/post/delete")
-	String deletePost(@AuthenticationPrincipal AccountUserDetails details,
-			          @RequestParam(value="postId")long postId) {
-		postService.deletePost(details.getUsername(),postId);
-		return "redirect:/index/boyaki";
+	@GetMapping("/index/boyaki/profile/{nickName}")
+	String showUserProfile(@AuthenticationPrincipal AccountUserDetails details,
+			               @PathVariable("nickName")String nickName,Model model) {
+		AccountInfo info = postService.findProfile(nickName);
+		if(info == null) {
+			return "error/404";
+		}
+		model.addAttribute("accountInfo", info);
+		model.addAttribute("statusList", StatusList.values());
+		return "Post/Profile";
 	}
 	
 	@GetMapping("/index/boyaki/post")
@@ -108,6 +114,13 @@ public class PostController {
 		model.addAttribute("postForm",form);
 		model.addAttribute("postCategory", PostCategory.values());
 		return "Post/PostCreate";
+	}
+	
+	@PostMapping("/index/boyaki/post/delete")
+	String deletePost(@AuthenticationPrincipal AccountUserDetails details,
+			          @RequestParam(value="postId")long postId) {
+		postService.deletePost(details.getUsername(),postId);
+		return "redirect:/index/boyaki";
 	}
 	
 	@PostMapping("/index/boyaki/post/insert")

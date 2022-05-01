@@ -8,11 +8,14 @@
 <body>
 <header class="pageHeader" th:fragment="user-header">
     <h1>Boyaki-Dining</h1>
-    <nav>
-        <span　class="main-navi"><br>
-            <a th:href="@{/index}">食事記録を確認する</a>
-            <a th:href="@{/index/boyaki}">グチをぼやく</a>
-            <a th:href="@{/index/mypage}">マイページへ</a>
+    <nav><br>
+        <span class="blocks">
+            <a th:href="@{/index}">食事記録を確認する</a>&nbsp;&nbsp;
+            <a th:href="@{/index/boyaki}">グチをぼやく</a>&nbsp;&nbsp;
+            <a th:href="@{/index/mypage}">マイページへ</a>&nbsp;&nbsp;
+            <form th:action="@{/logout}" name="logout" method="post">
+                <a href="javascript:logout.submit()">ログアウト</a>
+            </form>
         </span>
     </nav>
 </header>

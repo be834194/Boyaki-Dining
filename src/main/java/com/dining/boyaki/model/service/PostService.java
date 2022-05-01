@@ -51,7 +51,6 @@ public class PostService {
 		return postMapper.findOnePostRecord(postId);
 	}
 	
-	//
 	@Transactional(readOnly = false)
 	public void insertComment(CommentForm form) {
 		Comment comment = new Comment(form.getPostId(),form.getUserName(),form.getNickName(),form.getContent(),
@@ -59,7 +58,6 @@ public class PostService {
 		postMapper.insertComment(comment);
 	}
 	
-	//
 	@Transactional(readOnly = true)
 	public List<CommentRecord> findCommentList(long postId, int page){
 		return postMapper.findCommentRecord(postId, PageRequest.of(page, 5));

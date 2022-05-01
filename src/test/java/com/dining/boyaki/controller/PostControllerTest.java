@@ -35,6 +35,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
+import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.PostCategory;
 import com.dining.boyaki.model.entity.PostRecord;
 import com.dining.boyaki.model.entity.StatusList;
@@ -77,6 +78,31 @@ public class PostControllerTest {
 		       .andExpect(model().attribute("postCategory", PostCategory.values()))
 		       .andExpect(model().attribute("statusList", StatusList.values()))
 		       .andExpect(view().name("Post/PostIndex"));
+	}
+	
+	@Test
+	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
+	void showUserProfileでユーザ一人のプロフィールが表示される() throws Exception{
+		AccountInfo info = new AccountInfo("糸井","sigeno","こんにちわ",0,0,0);
+		when(postService.findProfile("sigeno")).thenReturn(info);
+		mockMvc.perform(get("/index/boyaki/profile/sigeno"))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("accountInfo", 
+                                             hasProperty("nickName",is("sigeno"))))
+		       .andExpect(model().attribute("statusList", StatusList.values()))
+		       .andExpect(view().name("Post/Profile"));
+		verify(postService,times(1)).findProfile("sigeno");
+	}
+	
+	@Test
+	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
+	void showUserProfileでユーザ一が見つからない場合は404ページを返す() throws Exception{
+		when(postService.findProfile("sigeno")).thenReturn(null);
+		mockMvc.perform(get("/index/boyaki/profile/sigeno"))
+			   .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().hasNoErrors())
+		       .andExpect(view().name("error/404"));
+		verify(postService,times(1)).findProfile("sigeno");
 	}
 	
 	@Nested
