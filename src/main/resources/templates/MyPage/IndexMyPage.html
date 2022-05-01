@@ -8,8 +8,8 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
     <style>
     table, td{
-		font-size: 24px;
-	    border: 1px solid black;
+		font-size: 20px;
+	    border: 0.5px solid gray;
 	    background-color:white;
 	}
     </style>
@@ -18,8 +18,8 @@
 <div th:replace="flagment/header :: user-header"></div>
 <h2>プロフィール</h2>
 <div class="container" th:each="obj:${AccountInfoForm}">
-	<table class="col-sm-4">
-		<tr id="test">
+	<table class="col-sm-4" cellpadding="6">
+		<tr>
 	        <td>ニックネーム</td>
 	        <td th:text="${obj.nickName}"></td>
 	    </tr>
@@ -50,6 +50,7 @@
 			    <td th:case="*" th:inline="text">[[${obj.age}]]0代</td>
 		    </div>
 		</tr>
+	<a th:href="@{/index/boyaki/profile/{nickName}(nickName=${obj.nickName})}">自身の投稿を見る</a>
 	</table>
 </div>
 <br>

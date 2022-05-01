@@ -1,102 +1,63 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://thymeleaf.org">
 <head>
-  <title>プロフィール</title>
-  <meta charset="UTF-8">
-  <script src="https://unpkg.com/vue@next"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>プロフィール</title>
+	<meta charset="UTF-8">
+	<script src="https://unpkg.com/vue@next"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 </head>
 
 <body>
-<div id="boyakiApp">
-	<table th:each="obj:${accountInfo}">
-	<tr>
-	    <td>ニックネーム</td>
-	    <td th:text="${obj.nickName}" id="nickName"></td>
-	</tr>
-	<tr>
-	    <td>プロフィール</td>
-	    <td th:text="${obj.profile}"></td>
-	</tr>    
-	<tr>
-	    <td>健康状態</td>
-	      <span th:each="status:${statusList}">
-	    <td th:if="*{status.statusId} == ${obj.status}"
-	        th:text="*{status.statusName}"></td>
-	    </span>
-	</tr>
-	<tr>
-	    <td>性別</td>
-	    <td th:if="0 == ${obj.gender}">未設定</td>
-	    <td th:if="1 == ${obj.gender}">男性</td>
-	    <td th:if="2 == ${obj.gender}">女性</td>
-	    <td th:if="3 == ${obj.gender}">なし</td>
-	</tr>
-	<tr>
-	    <td>年齢</td>
-	    <div th:switch="${obj.age}">
-		        <td th:case="0">未設定</td>
-			    <td th:case="1" th:inline="text">[[${obj.age}]]0代以下</td>
-			    <td th:case="8"　th:inline="text">[[${obj.age}]]0代以上</td>
-			    <td th:case="*" th:inline="text">[[${obj.age}]]0代</td>
-		</div>
-	</tr>
-	</table>
-	<div v-for="(value,key) in PostRecords">
-	    <p>{{value.content}} <h6> {{value.createAt}}</h6></p>
-	</div>
-	<div ref="observe_element">loading</div>
+<div th:replace="flagment/header :: user-header"></div>
+<div class="between-blocks">
+	<h2>投稿一覧</h2>
+	<h4><a th:href="@{/index/boyaki/post}">投稿する
+	    <img th:src="@{/images/吹き出しアイコン.png}"></a>
+	</h4>
 </div>
-
-<script>
-var boyakiApp = {
-	data(){
-		return{
-			page:0,
-			PostRecords:[],
-			observe_element:null,
-			observer:null
-		}
-	},
-	methods: {
-		find(){
-			var nickName = document.getElementById('nickName')
-			axios.get('/api/find',{params:{
-				                             nickName: nickName.textContent,
-				                             page: this.page
-									        }
-									 })
-			.then(response => {
-				if(response.data.length == 0){
-					this.observer.unobserve(this.observe_element)
-					console.log('停止したよ')
-				} else{
-					for(let i=0;i<response.data.length;i++){
-					    this.PostRecords.push(response.data[i])
-					}
-				}
-			})
-			.catch(error =>{
-				console.log(error)
-			})
-			this.page += 1
-			console.log(this.page)
-		}
-	},
-	mounted(){
-		this.observer = new IntersectionObserver((entries) => {
-            const entry = entries[0];  //監視対象の要素が配列で入っている
-            if (entry && entry.isIntersecting) { //isIntersectingがtrue:ブラウザに入っている
-              console.log('画面に入ったよ')
-              this.find()
-            }
-          });
-        this.observe_element = this.$refs.observe_element
-        this.observer.observe(this.observe_element)
-	}
-}
-Vue.createApp(boyakiApp).mount('#boyakiApp');
+<div id="profileApp" class="container">
+    <div class="row" th:each="obj:${accountInfo}">
+	    <article class="col-sm-9">
+		    <div v-for="(value,key) in PostRecords">
+			    <a v-bind:href="`/index/boyaki/${value.postId}`">
+				    <div style="font-size: 24px;">{{value.content}}</div>
+				</a>
+				<div style="text-align: right">
+					<span style="font-size: 12px;">{{value.createAt}}</span>
+				</div>
+			    <hr>
+		    </div>
+		    <input type="button" class="col-sm-12" id="scroll" value="追加で読み込む"
+		           v-on:click="find" v-bind:disabled="disabled" />
+	    </article>
+		<aside class="col-sm-3">
+		    <div style="font-size: 24px;" id="nickName" th:text="${obj.nickName}"></div>
+		    <span th:each="status:${statusList}">
+			    <span style="font-size: 12px;" th:if="*{status.statusId} == ${obj.status}"
+					  th:text="*{status.statusName}">
+			    </span>
+		    </span>&nbsp;
+			<span style="font-size: 12px;">
+			    <span th:if="0 == ${obj.gender}">未設定</span>
+				<span th:if="1 == ${obj.gender}">男性</span>
+				<span th:if="2 == ${obj.gender}">女性</span>
+				<span th:if="3 == ${obj.gender}">なし</span>
+				&nbsp;
+				<span th:switch="${obj.age}">
+				    <span th:case="0">未設定</span>
+					<span th:case="1" th:inline="text">[[${obj.age}]]0代以下</span>
+					<span th:case="8"　th:inline="text">[[${obj.age}]]0代以上</span>
+					<span th:case="*" th:inline="text">[[${obj.age}]]0代</span>
+				</span>
+			</span><br><br>
+			<div style="font-size: 20px;" th:text="${obj.profile}"></div>
+		</aside>
+    </div>
+</div>
+<script th:src="@{/js/profileApp.js}">
 </script>
-
 </body>
 </html>

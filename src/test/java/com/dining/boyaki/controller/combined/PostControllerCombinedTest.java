@@ -91,6 +91,18 @@ public class PostControllerCombinedTest {
 	}
 	
 	@Test
+	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
+	@DatabaseSetup(value="/controller/Post/setup/")
+	void showUserProfileでユーザ一人のプロフィールが表示される() throws Exception{
+		mockMvc.perform(get("/index/boyaki/profile/sigeno"))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("accountInfo", 
+	                                      hasProperty("nickName",is("sigeno"))))
+		       .andExpect(model().attribute("statusList", StatusList.values()))
+		       .andExpect(view().name("Post/Profile"));
+	}
+	
+	@Test
 	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
 	void showPostDetailで投稿詳細画面が表示され削除ボタンは表示されない() throws Exception{
