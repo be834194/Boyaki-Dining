@@ -94,6 +94,17 @@ public class PostControllerTest {
 		verify(postService,times(1)).findProfile("sigeno");
 	}
 	
+	@Test
+	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
+	void showUserProfileでユーザ一が見つからない場合は404ページを返す() throws Exception{
+		when(postService.findProfile("sigeno")).thenReturn(null);
+		mockMvc.perform(get("/index/boyaki/profile/sigeno"))
+			   .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().hasNoErrors())
+		       .andExpect(view().name("error/404"));
+		verify(postService,times(1)).findProfile("sigeno");
+	}
+	
 	@Nested
 	class showPostDetail {
 		PostRecord record;

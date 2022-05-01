@@ -91,11 +91,13 @@ public class PostController {
 		return "Post/PostDetail :: rateFragment";
 	}
 	
-	//
 	@GetMapping("/index/boyaki/profile/{nickName}")
 	String showUserProfile(@AuthenticationPrincipal AccountUserDetails details,
 			               @PathVariable("nickName")String nickName,Model model) {
 		AccountInfo info = postService.findProfile(nickName);
+		if(info == null) {
+			return "error/404";
+		}
 		model.addAttribute("accountInfo", info);
 		model.addAttribute("statusList", StatusList.values());
 		return "Post/Profile";
