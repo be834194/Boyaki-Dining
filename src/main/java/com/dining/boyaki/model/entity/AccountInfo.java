@@ -16,9 +16,9 @@ public class AccountInfo {
 	
 	private int age;
 	
-	private int height;
+	private float height;
 	
-	private int weight;
+	private float weight;
 	
 	private LocalDateTime createAt;
 	
@@ -29,7 +29,7 @@ public class AccountInfo {
 	}
 
 	public AccountInfo(String userName, String nickName, String profile, int status, int gender, int age,
-			           int height, int weight, LocalDateTime createAt, LocalDateTime updateAt) {
+			           float height, float weight, LocalDateTime createAt, LocalDateTime updateAt) {
 		this.userName = userName;
 		this.nickName = nickName;
 		this.profile = profile;
@@ -90,19 +90,19 @@ public class AccountInfo {
 		this.age = age;
 	}
 
-	public int getHeight() {
+	public float getHeight() {
 		return height;
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(float height) {
 		this.height = height;
 	}
 
-	public int getWeight() {
+	public float getWeight() {
 		return weight;
 	}
 
-	public void setWeight(int weight) {
+	public void setWeight(float weight) {
 		this.weight = weight;
 	}
 

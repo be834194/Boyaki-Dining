@@ -81,11 +81,14 @@ public class AccountInfoControllerTest {
 		form.setStatus(0);
 		form.setGender(2);
 		form.setAge(2);
+		form.setHeight(161);
+		form.setWeight(47);
 		when(accountInfoService.findAccountInfo("miho")).thenReturn(form);
 		
 		mockMvc.perform(get("/index/mypage"))
 				       .andExpect(status().is2xxSuccessful())
 				       .andExpect(model().attribute("statusList",StatusList.values()))
+				       .andExpect(model().attributeExists("bmi"))
 				       .andExpect(view().name("MyPage/IndexMyPage"));
 		verify(accountInfoService,times(1)).findAccountInfo("miho");
 	}
@@ -114,16 +117,12 @@ public class AccountInfoControllerTest {
 	@Nested
 	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
     class updateContent {
-		AccountInfoForm form = new AccountInfoForm();
+		AccountInfoForm form;
 		
 		@BeforeEach
 		void setup() {
-			form.setUserName("加藤健");
-			form.setNickName("kenken");
-			form.setProfile("間食が止まらない");
-			form.setStatus(3);
-			form.setGender(1);
-			form.setAge(3);
+			form = new AccountInfoForm("加藤健","kenken","間食が止まらない",
+					                   3,1,3,165,60);
 		}
 		
 		@Test

@@ -1,6 +1,8 @@
 package com.dining.boyaki.model.form;
 
 import java.io.Serializable;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 
 public class AccountInfoForm implements Serializable{
@@ -21,16 +23,20 @@ public class AccountInfoForm implements Serializable{
 	
 	private int age;
 	
-	private int height;
+	@Max(value=300,message="正しい値を入力してください")
+	@Min(value=1,message="正しい値を入力してください")
+	private float height;
 	
-	private int weight;
+	@Max(value=300,message="正しい値を入力してください")
+	@Min(value=1,message="正しい値を入力してください")
+	private float weight;
 	
 	public AccountInfoForm() {
 		
 	}
 
 	public AccountInfoForm(String userName,String nickName, String profile, int status, int gender, int age,
-			               int height, int weight) {
+			               float height, float weight) {
 		this.userName = userName;
 		this.nickName = nickName;
 		this.profile = profile;
@@ -89,19 +95,19 @@ public class AccountInfoForm implements Serializable{
 		this.age = age;
 	}
 
-	public int getHeight() {
+	public float getHeight() {
 		return height;
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(float height) {
 		this.height = height;
 	}
 
-	public int getWeight() {
+	public float getWeight() {
 		return weight;
 	}
 
-	public void setWeight(int weight) {
+	public void setWeight(float weight) {
 		this.weight = weight;
 	}
 	

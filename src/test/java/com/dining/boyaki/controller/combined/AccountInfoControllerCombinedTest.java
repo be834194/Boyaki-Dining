@@ -90,6 +90,7 @@ public class AccountInfoControllerCombinedTest {
 		mockMvc.perform(get("/index/mypage"))
 		       .andExpect(status().is2xxSuccessful())
 		       .andExpect(model().attribute("statusList",StatusList.values()))
+		       .andExpect(model().attributeExists("bmi"))
 		       .andExpect(view().name("MyPage/IndexMyPage"));
 	}
 	
