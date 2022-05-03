@@ -24,14 +24,19 @@
     
     <insert id = "insertAccountInfo" parameterType="com.dining.boyaki.model.entity.AccountInfo">
         INSERT INTO
-            account_info(username, nickname, profile, status, gender, age)
+            account_info(username, nickname, profile, status, gender, age,
+                         height, weight, createAt, updateAt)
         VALUES(
                #{userName},
                #{nickName},
                #{profile},
                #{status},
                #{gender},
-               #{age})
+               #{age},
+               #{height},
+               #{weight},
+               #{createAt},
+               #{updateAt})
     </insert>
     
 </mapper>

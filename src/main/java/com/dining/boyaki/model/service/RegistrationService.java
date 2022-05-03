@@ -35,7 +35,8 @@ public class RegistrationService {
 		PasswordHistory history = new PasswordHistory(form.getUserName(),form.getPassword(),LocalDateTime.now());
 		registrationMapper.insertPasswordHistory(history);
 		
-		AccountInfo info = new AccountInfo(form.getUserName(),form.getUserName(),null,0,0,0);
+		AccountInfo info = new AccountInfo(form.getUserName(),form.getUserName(),null,0,0,0,
+				                           165,60,LocalDateTime.now(),LocalDateTime.now());
 		registrationMapper.insertAccountInfo(info);
 	}
 

@@ -74,6 +74,10 @@ public class RegistrationMapperTest {
 		info.setStatus(3);
 		info.setGender(1);
 		info.setAge(3);
+		info.setHeight(165);
+		info.setWeight(60);
+		info.setCreateAt(LocalDateTime.parse("2022-02-01T12:19:33"));
+		info.setUpdateAt(LocalDateTime.parse("2022-02-01T12:19:33"));
 		registrationMapper.insertAccountInfo(info);
 	}
 	
