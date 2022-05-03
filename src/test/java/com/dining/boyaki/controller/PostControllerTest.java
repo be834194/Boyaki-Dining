@@ -83,7 +83,7 @@ public class PostControllerTest {
 	@Test
 	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
 	void showUserProfileでユーザ一人のプロフィールが表示される() throws Exception{
-		AccountInfo info = new AccountInfo("糸井","sigeno","こんにちわ",0,0,0);
+		AccountInfo info = new AccountInfo("糸井","sigeno","こんにちわ",0,0,0,165,70,null,null);
 		when(postService.findProfile("sigeno")).thenReturn(info);
 		mockMvc.perform(get("/index/boyaki/profile/sigeno"))
 		       .andExpect(status().is2xxSuccessful())

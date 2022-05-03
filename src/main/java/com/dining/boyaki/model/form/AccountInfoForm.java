@@ -21,17 +21,24 @@ public class AccountInfoForm implements Serializable{
 	
 	private int age;
 	
+	private int height;
+	
+	private int weight;
+	
 	public AccountInfoForm() {
 		
 	}
 
-	public AccountInfoForm(String userName,String nickName, String profile, int status, int gender, int age) {
+	public AccountInfoForm(String userName,String nickName, String profile, int status, int gender, int age,
+			               int height, int weight) {
 		this.userName = userName;
 		this.nickName = nickName;
 		this.profile = profile;
 		this.status = status;
 		this.gender = gender;
 		this.age = age;
+		this.height = height;
+		this.weight = weight;
 	}
 
 	public String getUserName() {
@@ -80,6 +87,22 @@ public class AccountInfoForm implements Serializable{
 
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
 	}
 	
 }
