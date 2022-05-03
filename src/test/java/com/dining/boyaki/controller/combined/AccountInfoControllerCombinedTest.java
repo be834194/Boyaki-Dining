@@ -15,7 +15,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -59,8 +65,23 @@ includeFilters = @ComponentScan.Filter
 @Transactional
 public class AccountInfoControllerCombinedTest {
 	
+	private static final LocalDateTime datetime = LocalDateTime.of(2022, 2, 10, 20, 35, 12);
+	
+	private static MockedStatic<LocalDateTime> mock;
+	
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@BeforeEach
+	void setUp() {
+		mock = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS);
+		mock.when(LocalDateTime::now).thenReturn(datetime);
+	}
+	
+	@AfterEach
+    void tearDown() throws Exception {
+        mock.close();
+	}
 	
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
@@ -69,6 +90,7 @@ public class AccountInfoControllerCombinedTest {
 		mockMvc.perform(get("/index/mypage"))
 		       .andExpect(status().is2xxSuccessful())
 		       .andExpect(model().attribute("statusList",StatusList.values()))
+		       .andExpect(model().attributeExists("bmi"))
 		       .andExpect(view().name("MyPage/IndexMyPage"));
 	}
 	
@@ -96,6 +118,8 @@ public class AccountInfoControllerCombinedTest {
 		form.setStatus(3);
 		form.setGender(1);
 		form.setAge(3);
+		form.setHeight(167);
+		form.setWeight(64);
 		
 		mockMvc.perform(post("/index/mypage/edit/update")
 				       .flashAttr("AccountInfoForm", form)

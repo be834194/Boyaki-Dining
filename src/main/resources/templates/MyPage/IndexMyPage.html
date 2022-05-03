@@ -50,6 +50,18 @@
 			    <td th:case="*" th:inline="text">[[${obj.age}]]0代</td>
 		    </div>
 		</tr>
+		<tr>
+		    <td>身長</td>
+		    <td th:text="${obj.height} + ' cm'"></td>
+		</tr> 
+		<tr>
+		    <td>体重</td>
+		    <td th:text="${obj.weight} + ' kg'"></td>
+		</tr> 
+		<tr>
+		    <td>BMI</td>
+		    <td th:text="${bmi}"></td>
+		</tr> 
 	<a th:href="@{/index/boyaki/profile/{nickName}(nickName=${obj.nickName})}">自身の投稿を見る</a>
 	</table>
 </div>

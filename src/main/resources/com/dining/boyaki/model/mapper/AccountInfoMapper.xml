@@ -5,7 +5,7 @@
 
     <select id = "findAccountInfo" resultType="com.dining.boyaki.model.entity.AccountInfo">
         SELECT
-            username,nickname,profile,status,gender,age
+            username,nickname,profile,status,gender,age,height,weight
         FROM
             account_info
         WHERE
@@ -20,7 +20,10 @@
             profile = #{profile},
             status = #{status},
             gender = #{gender},
-            age = #{age}
+            age = #{age},
+            height = #{height},
+            weight = #{weight},
+            updateat = #{updateAt}
         WHERE 
             username = #{userName}
     </update>

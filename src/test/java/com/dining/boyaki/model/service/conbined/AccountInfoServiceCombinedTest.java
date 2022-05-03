@@ -34,7 +34,7 @@ import com.dining.boyaki.util.CsvDataSetLoader;
 @Transactional
 public class AccountInfoServiceCombinedTest {
 	
-	private static final LocalDateTime datetime = LocalDateTime.of(2022, 2, 10, 20, 39, 45);
+	private static LocalDateTime datetime;
 	
 	private static MockedStatic<LocalDateTime> mock;
 	
@@ -44,7 +44,6 @@ public class AccountInfoServiceCombinedTest {
 	@BeforeEach
 	void setUp() {
 		mock = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS);
-		mock.when(LocalDateTime::now).thenReturn(datetime);
 	}
 	
 	@AfterEach
@@ -71,6 +70,9 @@ public class AccountInfoServiceCombinedTest {
 	@DatabaseSetup(value = "/service/AccountInfo/setup/")
 	@ExpectedDatabase(value = "/service/AccountInfo/update/account_info/")
 	void updateAccountInfoでユーザ情報レコードを更新する() {
+		datetime = LocalDateTime.of(2022, 2, 10, 20, 35, 12);
+		mock.when(LocalDateTime::now).thenReturn(datetime);
+		
 		AccountInfoForm info = new AccountInfoForm();
 		info.setUserName("加藤健");
 		info.setNickName("kenken");
@@ -78,6 +80,8 @@ public class AccountInfoServiceCombinedTest {
 		info.setStatus(3);
 		info.setGender(1);
 		info.setAge(3);
+		info.setHeight(167);
+		info.setWeight(64);
 		accountInfoService.updateAccountInfo(info);
 	}
 	
@@ -85,6 +89,9 @@ public class AccountInfoServiceCombinedTest {
 	@DatabaseSetup(value = "/service/AccountInfo/setup/")
 	@ExpectedDatabase(value = "/service/AccountInfo/update/account/",assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void updatePasswordでパスワードを更新する() {
+		datetime = LocalDateTime.of(2022, 2, 10, 20, 39, 45);
+		mock.when(LocalDateTime::now).thenReturn(datetime);
+		
 		PasswordChangeForm form = new PasswordChangeForm();
 		form.setUserName("miho");
 		form.setMail("miho@gmail.com");

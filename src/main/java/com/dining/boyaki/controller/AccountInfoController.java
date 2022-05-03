@@ -1,5 +1,7 @@
 package com.dining.boyaki.controller;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +44,9 @@ public class AccountInfoController {
 		AccountInfoForm form = accountInfoService.findAccountInfo(details.getUsername());
 		model.addAttribute("AccountInfoForm", form);
 		model.addAttribute("statusList", StatusList.values());
+		BigDecimal bmi = new BigDecimal(form.getWeight() / (form.getHeight() * 0.01) / (form.getHeight() * 0.01));
+		bmi = bmi.setScale(2, RoundingMode.HALF_UP);
+		model.addAttribute("bmi", bmi);
 		return "MyPage/IndexMyPage";
 	}
 	

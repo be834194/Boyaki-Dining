@@ -67,6 +67,9 @@ public class AccountInfoMapperTest {
 		info.setStatus(3);
 		info.setGender(1);
 		info.setAge(3);
+		info.setHeight(167);
+		info.setWeight(64);
+		info.setUpdateAt(LocalDateTime.parse("2022-02-10T20:35:12"));
 		accountInfoMapper.updateAccountInfo(info);
 	}
 	

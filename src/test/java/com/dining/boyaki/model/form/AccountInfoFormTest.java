@@ -49,6 +49,8 @@ public class AccountInfoFormTest {
 		form.setStatus(0);
 		form.setGender(2);
 		form.setAge(2);
+		form.setHeight(160);
+		form.setWeight(65);
 		
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
@@ -65,6 +67,8 @@ public class AccountInfoFormTest {
 		form.setStatus(0);
 		form.setGender(1);
 		form.setAge(3);
+		form.setHeight(160);
+		form.setWeight(65);
 		
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
@@ -73,25 +77,31 @@ public class AccountInfoFormTest {
 	}
 	
 	@ParameterizedTest
-	@CsvSource({"亜",
-		        "寿限無寿限無後光の擦り切れ回砂利"})
+	@CsvSource({"亜,0,0",
+		        "寿限無寿限無後光の擦り切れ回砂利,301,301"})
 	@DatabaseSetup(value = "/form/setup/")
-	void 指定サイズ範囲外でエラー発生(String nickName) throws Exception{
+	void 指定サイズ範囲外でエラー発生(String nickName,float height,float weight) throws Exception{
 		form.setUserName("糸井");
 		form.setNickName(nickName);
 		form.setProfile("123456789012345678901234567890123456789012345678901");
 		form.setStatus(3);
 		form.setGender(3);
 		form.setAge(2);
+		form.setHeight(height);
+		form.setWeight(weight);
 		
 		validator.validate(form, bindingResult);
-		assertEquals(2,bindingResult.getFieldErrorCount());
+		assertEquals(4,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("nickName")
 				                .toString().contains("ニックネームは2字以上15字以内で作成してください"));
 		assertTrue(bindingResult.getFieldError("profile")
 				                .toString().contains("50文字以内で入力してください"));
+		assertTrue(bindingResult.getFieldError("height")
+                                .toString().contains("正しい値を入力してください"));
+		assertTrue(bindingResult.getFieldError("weight")
+                                .toString().contains("正しい値を入力してください"));
 		uniqueNickNameValidator.validate(form, bindingResult);
-		assertEquals(2,bindingResult.getFieldErrorCount());
+		assertEquals(4,bindingResult.getFieldErrorCount());
 	}
 	
 	@Test
@@ -103,6 +113,8 @@ public class AccountInfoFormTest {
 		form.setStatus(5);
 		form.setGender(1);
 		form.setAge(3);
+		form.setHeight(160);
+		form.setWeight(65);
 		
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());

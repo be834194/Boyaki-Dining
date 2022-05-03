@@ -35,7 +35,8 @@ public class AccountInfoService {
     	}
 		AccountInfoForm form = new AccountInfoForm(info.getUserName(),info.getNickName(),
 				                                   info.getProfile(),info.getStatus(),
-				                                   info.getGender(),info.getAge());
+				                                   info.getGender(),info.getAge(),
+				                                   info.getHeight(),info.getWeight());
     	return form;
 	}
 	
@@ -43,7 +44,9 @@ public class AccountInfoService {
 	public void updateAccountInfo(AccountInfoForm form) {
 		AccountInfo info = new AccountInfo(form.getUserName(),form.getNickName(),
 				                           form.getProfile(),form.getStatus(),
-				                           form.getGender(),form.getAge());
+				                           form.getGender(),form.getAge(),
+				                           form.getHeight(),form.getWeight(),
+				                           null,LocalDateTime.now());
 		accountInfoMapper.updateAccountInfo(info);
 	}
 	

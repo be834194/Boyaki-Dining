@@ -40,6 +40,10 @@ create table IF NOT EXISTS diary_record(
  status   int          ,
  gender   int          ,
  age      int          ,
+ height   float        ,
+ weight   float        ,
+ createat     datetime ,
+ updateat     datetime ,
  primary key(username),
  CONSTRAINT unique_username_accountinfo 
             foreign key(username) references account(username) on delete cascade
