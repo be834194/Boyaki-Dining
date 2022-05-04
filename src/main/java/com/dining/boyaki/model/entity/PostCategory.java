@@ -10,7 +10,8 @@ public enum PostCategory {
 	MUSCLE(5,"運動・筋トレ"),
 	LIPIDS(6,"中性脂肪・コレステロール"),
 	URICACID(7,"尿酸値"),
-	BLOOD(8,"血圧");
+	BLOOD(8,"血圧"),
+	OTHER(9,"その他");
 	
 	private int postId;
 	private String postName;
