@@ -40,7 +40,7 @@ Boyaki-diningを作成いたしました。
     + h2database 1.4.200
 + mybatis 2.2.2
 + passay 1.6.1
-+ junit 5.8.2?
++ junit 5.8.2
 + dbunit 2.6.0
 + mockito 4.0.0
 
@@ -71,8 +71,10 @@ Boyaki-diningを作成いたしました。
 　検索機能に加え、投稿にカテゴリを設け、より細かく絞り込んで情報を探せるようにしました。
 
 # データベース構成図
+![boyaki-dining jpg](https://user-images.githubusercontent.com/93772790/167281996-1da1fda2-35e7-42e8-adc1-28792129e8f9.png)
 
 # インフラ構成図
+![sample](https://user-images.githubusercontent.com/93772790/167281969-96dd815f-4c79-4db1-9a58-1dcd2585d59f.jpg)
 
 # ポートフォリオ作成を経て、身についたもの
 アプリケーションの設計能力(画面設計、DB設計)  
