@@ -1,8 +1,10 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://thymeleaf.org">
 <head>
-	<title>ぼやき一覧</title>
+	<title>投稿一覧 -Boyaki-Dining</title>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="icon" type="image/jpg" th:href="@{/images/favicon.jpg}">
 	<meta name="_csrf" th:content="${_csrf.token}"/>
 	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 	<script src="https://unpkg.com/vue@next"></script>
@@ -25,41 +27,41 @@
 	    <article class="col-sm-9">
 		    <div v-for="(value,key) in PostRecords">
 			    <a v-bind:href="`/index/boyaki/${value.postId}`">
-				    <div style="font-size: 24px;">{{value.content}}</div>
+				    <p>{{value.content}}</p>
 				</a>
 				<div class="between-blocks">
 				    <a v-bind:href="`/index/boyaki/profile/${value.nickName}`">
-				        <span>{{value.nickName}} さん</span>
+				        <div>{{value.nickName}} さん</div>
 				    </a>
-					<span style="font-size: 12px;">{{value.createAt}}</span>
-				</div>
-			    <hr>
+					<span>{{value.createAt}}</span>
+				</div><hr>
 		    </div>
 		    <input type="button" class="col-sm-12" id="scroll" value="追加で読み込む"
 		           v-on:click="search" v-bind:disabled="disabled" />
 	    </article>
 		<aside class="col-sm-3">
-			<div class="sub-area">
+			<div class="area">
 			    <div class="form-group">
 				    <div>投稿内容</div>
-				    <input type="search" style="font-size: 12px;" class="form-control" id="textkeyword" name="textkeyword" v-model="keyword"/>
+				    <input type="search" class="form-control" id="textkeyword" name="textkeyword" v-model="keyword"/>
 				</div>
 			    <div>
-				    <button type="submit" v-on:click="startSearch">検索</button>&nbsp;&nbsp;
-				    <button type="reset" v-on:click="resetSearch">検索値の初期化</button>
+				    <button class="btn btn-green" type="submit" v-on:click="startSearch">検索</button>&nbsp;&nbsp;
+				    <button class="btn btn-red" type="reset" v-on:click="resetSearch">検索値の初期化</button>
 				    <br><br>
 			    </div>
 				<div class="form-group">
+				<div>フィルタ</div>
 				    <div>投稿種別</div>
 				    <select class="form-control" id="postCategory" name="postCategory" multiple v-model="category">
-			            <option style="font-size: 12px;" th:each="category:${postCategory}" 
+			            <option th:each="category:${postCategory}" 
 			                    th:value="${category.postId}" th:text="${category.postName}"></option>
 			        </select>
-				</div>&nbsp;&nbsp;
+				</div>&nbsp;
 				<div class="form-group">
 			        <div>ユーザの健康状態</div>
 			        <select class="form-control" id="statusList" name="statusList" multiple v-model="status">
-				        <option style="font-size: 12px;" th:each="status:${statusList}" 
+				        <option th:each="status:${statusList}" 
 				                th:value="${status.statusId}" th:text="${status.statusName}"></option>
 				    </select>
 				</div>

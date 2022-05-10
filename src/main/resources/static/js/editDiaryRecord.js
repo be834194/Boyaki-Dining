@@ -1,11 +1,4 @@
 var getId = document.getElementById('categoryId').value;
-function check(){
-    if (confirm("削除してもよろしいですか？")) {
-        return true;
-    } else {
-        return false;
-    }
-}
 var category = {
 	data(){
 		return{

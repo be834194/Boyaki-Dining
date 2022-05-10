@@ -3,46 +3,42 @@
 <head>
     <title>マイページ</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+	<link rel="icon" type="image/jpg" th:href="@{/images/favicon.jpg}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
 		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
-    <style>
-    table, td{
-		font-size: 20px;
-	    border: 0.5px solid gray;
-	    background-color:white;
-	}
-    </style>
 </head>
 <body>
 <div th:replace="flagment/header :: user-header"></div>
 <h2>プロフィール</h2>
-<div class="container" th:each="obj:${AccountInfoForm}">
-	<table class="col-sm-4" cellpadding="6">
+<div class="container mypage-profile" th:each="obj:${AccountInfoForm}">
+    <a th:href="@{/index/boyaki/profile/{nickName}(nickName=${obj.nickName})}">自身の投稿を見る</a>
+	<table cellpadding="6">
 		<tr>
-	        <td>ニックネーム</td>
+	        <th>ニックネーム</th>
 	        <td th:text="${obj.nickName}"></td>
 	    </tr>
 		<tr>
-		    <td>プロフィール</td>
-		    <td th:text="${obj.profile}"></td>
+		    <th>プロフィール</th>
+		    <td><pre th:text="${obj.profile}"></pre></td>
 		</tr> 
 		<tr>
-		    <td>健康状態</td>
+		    <th>健康状態</th>
 		      <span th:each="status:${statusList}">
 		    <td th:if="*{status.statusId} == ${obj.status}"
 		        th:text="*{status.statusName}"></td>
 		    </span>
 		</tr>
 		<tr>
-		    <td>性別</td> 
+		    <th>性別</th> 
 		    <td th:if="0 == ${obj.gender}">未設定</td>
 		    <td th:if="1 == ${obj.gender}">男性</td>
 		    <td th:if="2 == ${obj.gender}">女性</td>
 		    <td th:if="3 == ${obj.gender}">なし</td>
 		</tr>
 		<tr>
-		    <td>年齢</td>
+		    <th>年齢</th>
 		    <div th:switch="${obj.age}">
 		        <td th:case="0">未設定</td>
 			    <td th:case="1" th:inline="text">[[${obj.age}]]0代以下</td>
@@ -51,26 +47,22 @@
 		    </div>
 		</tr>
 		<tr>
-		    <td>身長</td>
+		    <th>身長</th>
 		    <td th:text="${obj.height} + ' cm'"></td>
 		</tr> 
 		<tr>
-		    <td>体重</td>
+		    <th>体重</th>
 		    <td th:text="${obj.weight} + ' kg'"></td>
 		</tr> 
 		<tr>
-		    <td>BMI</td>
+		    <th>BMI</th>
 		    <td th:text="${bmi}"></td>
-		</tr> 
-	<a th:href="@{/index/boyaki/profile/{nickName}(nickName=${obj.nickName})}">自身の投稿を見る</a>
+		</tr>
 	</table>
+	<br><a th:href="@{/index/mypage/edit}">プロフィールを変更する</a>
+	<br><a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
+	<br><a th:href="@{/index/mypage/confirm}">退会する</a>
 </div>
-<br>
-<a th:href="@{/index/mypage/edit}">プロフィールを変更する</a>
-<br>
-<a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
-<br>
-<a th:href="@{/index/mypage/confirm}">退会する</a>
 
 </body>
 </html>
