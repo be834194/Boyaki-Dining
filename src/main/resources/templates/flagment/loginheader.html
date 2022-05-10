@@ -7,7 +7,15 @@
 
 <body>
 <header class="pageHeader" th:fragment="login-header">
-    <h1>Boyaki-Dining</h1>
+    <a href="/" style="text-decoration: none;color: black;">
+        <h1>Boyaki-Dining</h1>
+    </a>
+    <nav><br>
+        <span class="blocks">
+            <a th:href="@{/login}">ログイン</a>&nbsp;&nbsp;
+            <a th:href="@{/registration}">新規登録</a>&nbsp;&nbsp;
+        </span>
+    </nav>
 </header>
 </body>
 
