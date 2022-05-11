@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,6 +24,7 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -103,17 +105,28 @@ public class DiaryRecordControllerCombinedTest {
 		       .andExpect(view().name("UserCalendar/index"));
 	}
 	
-	@Test
-	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
-	void showCreateContentで食事投稿記録画面が表示される() throws Exception{
-		mockMvc.perform(get("/index/create"))
-		       .andExpect(status().is2xxSuccessful())
-		       .andExpect(model().attributeExists("diaryRecordForm"))
-		       .andExpect(model().attributeExists("fileUploadForm"))
-		       .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
-	           .andExpect(view().name("UserCalendar/Create"));
+	@Nested
+	class showCreateContent {
+		@Test
+		@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
+		void showCreateContentで食事投稿記録画面が表示される() throws Exception{
+			mockMvc.perform(get("/index/create"))
+			       .andExpect(status().is2xxSuccessful())
+			       .andExpect(model().attributeExists("diaryRecordForm"))
+			       .andExpect(model().attributeExists("fileUploadForm"))
+			       .andExpect(model().attribute("lists", DiaryRecordCategory.values()))
+		           .andExpect(view().name("UserCalendar/Create"));
+		}
+		
+		@Test
+		@WithMockCustomUser(userName="guestuser",password="gesugesudegesu",role="ROLE_USER")
+		void showCreateContentで食事投稿記録画面が表示されない() throws Exception{
+			mockMvc.perform(get("/index/create"))
+			       .andExpect(status().isForbidden())
+		           .andExpect(forwardedUrl("/accessdenied"));
+		}
 	}
-			
+	
 	@Test
 	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
@@ -238,6 +251,20 @@ public class DiaryRecordControllerCombinedTest {
 		}
 	
 	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void createContentで食事記録が登録されない() throws Exception{
+		DiaryRecordForm form = new DiaryRecordForm();
+		FileUploadForm file = new FileUploadForm();
+		mockMvc.perform(post("/index/create/insert")
+			           .flashAttr("diaryRecordForm", form)
+			           .flashAttr("fileUploadForm", file)
+			           .contentType(MediaType.MULTIPART_FORM_DATA)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
+	}
+	
+	@Test
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
 	void showUserEditContentで食事記録編集画面へ遷移する() throws Exception{
@@ -277,6 +304,14 @@ public class DiaryRecordControllerCombinedTest {
 		mockMvc.perform(get("/index/record/2022-02-23/Number"))
  		   	   .andExpect(status().is2xxSuccessful())
  		   	   .andExpect(view().name("error/404"));
+	}
+	
+	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void showUserEditContentで食事記録編集画面へ遷移しない() throws Exception{
+		mockMvc.perform(get("/index/record/2022-02-27/1"))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
 	}
 	
 	@Test
@@ -407,19 +442,28 @@ public class DiaryRecordControllerCombinedTest {
 	}
 	
 	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void updateContentで食事記録が更新されない() throws Exception{
+		DiaryRecordForm form = new DiaryRecordForm();
+		FileUploadForm file = new FileUploadForm();
+		mockMvc.perform(post("/index/record/commit")
+	                   .flashAttr("diaryRecordForm", form)
+	                   .flashAttr("fileUploadForm", file)
+	                   .param("update", "update")
+	                   .contentType(MediaType.MULTIPART_FORM_DATA)
+	                   .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
+	}
+	
+	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/DiaryRecord/setup/")
 	@ExpectedDatabase(value="/controller/DiaryRecord/delete/",table="diary_record")
 	void deleteContentで食事記録を削除する() throws Exception{
-		DiaryRecordForm form = new DiaryRecordForm();
-		form.setCategoryId(3);
-		form.setDiaryDay(Date.valueOf("2022-01-26"));
-		form.setRecord1(null);
-		form.setRecord2("チキンステーキ");
-		form.setRecord3("余りもの野菜炒め");
-		form.setMemo(null);
-		form.setCreateAt(LocalDateTime.parse("2022-01-26T18:42:15"));
-		
+		DiaryRecordForm form = new DiaryRecordForm("miho",3,Date.valueOf("2022-01-26"),
+				                                    null,"チキンステーキ","余りもの野菜炒め",
+				                                    null,null,LocalDateTime.parse("2022-01-26T18:42:15"));
 		mockMvc.perform(post("/index/record/commit")
 		               .flashAttr("diaryRecordForm", form)
 		               .param("delete", "delete")
@@ -427,5 +471,18 @@ public class DiaryRecordControllerCombinedTest {
 		               .with(SecurityMockMvcRequestPostProcessors.csrf()))
         	   .andExpect(status().is3xxRedirection())
                .andExpect(redirectedUrl("/index"));
+	}
+	
+	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void deleteContentで食事記録が削除されない() throws Exception{
+		DiaryRecordForm form = new DiaryRecordForm();
+		mockMvc.perform(post("/index/record/commit")
+                       .flashAttr("diaryRecordForm", form)
+	                    .param("delete", "delete")
+	                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+	                    .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
 	}
 }
