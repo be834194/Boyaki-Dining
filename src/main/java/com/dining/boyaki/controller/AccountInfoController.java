@@ -2,6 +2,8 @@ package com.dining.boyaki.controller;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,6 +53,7 @@ public class AccountInfoController {
 	}
 	
 	@GetMapping("/index/mypage/edit")
+	@PreAuthorize("principal.username != 'guestuser'")
 	public String showEditMyPage(@AuthenticationPrincipal AccountUserDetails details,
 			                     Model model) {
 		AccountInfoForm form = accountInfoService.findAccountInfo(details.getUsername());
@@ -60,6 +63,7 @@ public class AccountInfoController {
 	}
 	
 	@PostMapping("/index/mypage/edit/update")
+	@PreAuthorize("principal.username != 'guestuser'")
 	public String updateMyPage(@ModelAttribute("AccountInfoForm") @Validated AccountInfoForm form,
 			                   BindingResult result,Model model) {
 		if(result.hasErrors()) {
@@ -71,6 +75,7 @@ public class AccountInfoController {
 	}
 	
 	@GetMapping("/index/mypage/confirm")
+	@PreAuthorize("principal.username != 'guestuser'")
 	public String showConfirmPage(@AuthenticationPrincipal AccountUserDetails details,
 			                      Model model) {
 		AccountInfoForm form = new AccountInfoForm();
@@ -80,6 +85,7 @@ public class AccountInfoController {
 	}
 	
 	@PostMapping("/index/mypage/confirm/delete")
+	@PreAuthorize("principal.username != 'guestuser'")
 	public String deleteAccount(@ModelAttribute("AccountInfoForm") AccountInfoForm form,
 			                    RedirectAttributes model){
 		accountInfoService.deleteAccount(form.getUserName());
