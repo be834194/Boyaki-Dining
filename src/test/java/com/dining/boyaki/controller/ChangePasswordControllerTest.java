@@ -11,6 +11,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,6 +29,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -85,17 +87,22 @@ public class ChangePasswordControllerTest {
 		       .andExpect(view().name("MyPage/ChangePassword"));
 	}
 	
+	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void showChangePasswordPageでパスワード変更画面が表示されない() throws Exception{
+		mockMvc.perform(get("/index/mypage/changepassword"))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
+	}
+	
 	@Nested
 	class ChangePassword{
-		PasswordChangeForm form = new PasswordChangeForm();
+		PasswordChangeForm form;
 		
 		@BeforeEach
 		void setUp() {
-			form.setUserName("加藤健");
-			form.setMail("example@ezweb.ne.jp");
-			form.setOldPassword("pinballs");
-			form.setPassword("wonderSong");
-			form.setConfirmPassword("wonderSong");
+			form = new PasswordChangeForm("加藤健","example@ezweb.ne.jp",
+					                      "pinballs","wonderSong","wonderSong");
 		}
 		
 		@Test
@@ -133,6 +140,17 @@ public class ChangePasswordControllerTest {
 			    	   , "password","confirmPassword"))
 			       .andExpect(view().name("MyPage/ChangePassword"));
 		    verify(accountInfoService,times(0)).updatePassword(form);
+		}
+		
+		@Test
+		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+		void changePasswordでパスワードが更新されない() throws Exception{	
+			mockMvc.perform(post("/index/mypage/changepassword/update")
+					       .flashAttr("PasswordChangeForm", form)
+					       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					       .with(SecurityMockMvcRequestPostProcessors.csrf()))
+				   .andExpect(status().isForbidden())
+				   .andExpect(forwardedUrl("/accessdenied"));
 		}
 	}
 

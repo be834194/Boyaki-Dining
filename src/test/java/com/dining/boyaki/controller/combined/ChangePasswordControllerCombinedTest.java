@@ -5,6 +5,7 @@ import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,6 +25,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.TestExecutionListeners;
@@ -96,16 +98,20 @@ public class ChangePasswordControllerCombinedTest {
 	}
 	
 	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void showChangePasswordPageでパスワード変更画面が表示されない() throws Exception{
+		mockMvc.perform(get("/index/mypage/changepassword"))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
+	}
+	
+	@Test
 	@WithMockCustomUser(userName="miho",password="ocean-Nu",role="ROLE_USER")
 	@DatabaseSetup(value = "/controller/ChangePassword/setup/")
 	@ExpectedDatabase(value = "/controller/ChangePassword/update/",assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void changePasswordでパスワードが更新される() throws Exception{
-		PasswordChangeForm form = new PasswordChangeForm();
-		form.setUserName("miho");
-		form.setMail("miho@gmail.com");
-		form.setOldPassword("ocean-Nu");
-		form.setPassword("script-Java");
-		form.setConfirmPassword("script-Java");
+		PasswordChangeForm form = new PasswordChangeForm("miho","miho@gmail.com",
+				                                         "ocean-Nu","script-Java","script-Java");
 		mockMvc.perform(post("/index/mypage/changepassword/update")
 				       .flashAttr("PasswordChangeForm", form)
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -120,12 +126,8 @@ public class ChangePasswordControllerCombinedTest {
 	@WithMockCustomUser(userName="miho",password="ocean-Nu",role="ROLE_USER")
 	@DatabaseSetup(value = "/controller/ChangePassword/setup/")
 	void changePasswordでバリデーションエラーが発生する() throws Exception{
-		PasswordChangeForm form = new PasswordChangeForm();
-		form.setUserName("miho");
-		form.setMail("hogehoge");
-		form.setOldPassword("pinballs");
-		form.setPassword("");
-		form.setConfirmPassword("wonder");
+		PasswordChangeForm form = new PasswordChangeForm("miho","hogehoge",
+                                                         "pinballs","","wonder");
 		mockMvc.perform(post("/index/mypage/changepassword/update")
 				       .flashAttr("PasswordChangeForm", form)
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -135,6 +137,18 @@ public class ChangePasswordControllerCombinedTest {
 		       .andExpect(model().attributeHasFieldErrors("PasswordChangeForm"
 		    	   , "mail","oldPassword","password","confirmPassword"))
 		       .andExpect(view().name("MyPage/ChangePassword"));
+	}
+	
+	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void changePasswordでパスワードが更新されない() throws Exception{
+		PasswordChangeForm form = new PasswordChangeForm();
+		mockMvc.perform(post("/index/mypage/changepassword/update")
+				       .flashAttr("PasswordChangeForm", form)
+				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				       .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
 	}
 
 }
