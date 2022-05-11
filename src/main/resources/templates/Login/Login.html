@@ -38,7 +38,16 @@
 			</div>
 	    </div>
 	</form>
-	<br><a th:href="@{/registration}">新規登録はこちら</a>
+	<div class="form-button col-sm-6">
+		<form class="row form-button" th:action="@{/authenticate}" method="post">
+			<input type="hidden" id="gestuser" name="username" value="guestuser">
+			<input type="hidden" id="gestpass" name="password" value="gesugesudegesu">
+			<div>
+				<button class="btn btn-green" type="submit">ゲストログイン</button>
+			</div>
+		</form>
+	</div>
+	    <a th:href="@{/registration}">新規登録はこちら</a>
 	<br><a th:href="@{/resetpassword}">パスワードを忘れた方はこちら</a>
 	<br><br><a th:href="@{/}">戻る</a>
 </div>

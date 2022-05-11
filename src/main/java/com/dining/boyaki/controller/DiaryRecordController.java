@@ -47,12 +47,12 @@ public class DiaryRecordController {
     }
 	
 	@GetMapping("/index")
-	@PreAuthorize("hasRole('ROLE_USER')")
 	public String showUserCalendar(Model model) {
 		return "UserCalendar/index";
 	}
 	
 	@GetMapping("/index/create")
+	@PreAuthorize("principal.username != 'guestuser'")
 	public String showCreateContent(@ModelAttribute("diaryRecordForm") DiaryRecordForm form,
 			                        @ModelAttribute("fileUploadForm") FileUploadForm file,Model model) {
 		model.addAttribute("lists", DiaryRecordCategory.values());
@@ -60,6 +60,7 @@ public class DiaryRecordController {
 	}
 	
 	@PostMapping("/index/create/insert")
+	@PreAuthorize("principal.username != 'guestuser'")
 	public String createContent(@AuthenticationPrincipal AccountUserDetails details,
 			                    @ModelAttribute("diaryRecordForm") @Validated DiaryRecordForm form,BindingResult resultForm,
 			                    @ModelAttribute("fileUploadForm")  @Validated FileUploadForm file,BindingResult resultFile,
@@ -99,6 +100,7 @@ public class DiaryRecordController {
 	}
 	
 	@GetMapping("/index/record/{diaryDay}/{id}")
+	@PreAuthorize("principal.username != 'guestuser'")
 	public String showUserEditContent(@AuthenticationPrincipal AccountUserDetails details,
 			                          @PathVariable("id")int id,
 			                          @PathVariable("diaryDay")String diaryDay,
@@ -126,6 +128,7 @@ public class DiaryRecordController {
 	}
 	
 	@RequestMapping(value="/index/record/commit",method=RequestMethod.POST,params="update")
+	@PreAuthorize("principal.username != 'guestuser'")
 	public String updateContent(@AuthenticationPrincipal AccountUserDetails details,
 			                    @ModelAttribute("diaryRecordForm") @Validated DiaryRecordForm form,BindingResult resultForm,
 			                    @ModelAttribute("fileUploadForm")  @Validated FileUploadForm file,BindingResult resultFile,
@@ -163,6 +166,7 @@ public class DiaryRecordController {
 	}
 	
 	@RequestMapping(value="/index/record/commit",method=RequestMethod.POST,params="delete")
+	@PreAuthorize("principal.username != 'guestuser'")
 	public String deleteContent(@AuthenticationPrincipal AccountUserDetails details,
 			                    @ModelAttribute("diaryRecordForm") DiaryRecordForm form) {
 		form.setUserName(details.getUsername());

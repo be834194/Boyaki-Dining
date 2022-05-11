@@ -12,6 +12,7 @@
 <body>
 <div th:replace="flagment/header :: user-header"></div>
 <h2>アクセスが拒否されました</h2>
+<p>ゲストログインしている場合は、一部サービスのご利用に制限がございます。</p>
 <div sec:authorize="hasRole('ROLE_ADMIN')">
     <a th:href="@{/admin}">管理ページへ戻る</a>
 </div>
