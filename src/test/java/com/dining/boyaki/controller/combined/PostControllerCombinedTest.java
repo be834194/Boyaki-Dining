@@ -5,6 +5,7 @@ import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -113,6 +114,14 @@ public class PostControllerCombinedTest {
 	}
 	
 	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void showUserProfileでユーザ一人のプロフィールが表示されない() throws Exception{
+		mockMvc.perform(get("/index/boyaki/profile/sigeno"))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
+	}
+	
+	@Test
 	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
 	void showPostDetailで投稿詳細画面が表示され削除ボタンは表示されない() throws Exception{
@@ -155,6 +164,14 @@ public class PostControllerCombinedTest {
 	}
 	
 	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void showPostDetailで投稿詳細画面が表示されない() throws Exception{
+		mockMvc.perform(get("/index/boyaki/7"))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
+	}
+	
+	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
 	@ExpectedDatabase(value = "/controller/Post/insert/comment/",table="comment"
@@ -187,6 +204,18 @@ public class PostControllerCombinedTest {
 	}
 	
 	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void insertCommentで投稿に対してコメントが追加されない() throws Exception{
+		CommentForm form = new CommentForm();
+		mockMvc.perform(post("/index/boyaki/comment")
+	               .flashAttr("commentForm", form)
+		           .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+		           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
+	}
+	
+	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
 	@ExpectedDatabase(value = "/controller/Post/likes/",table="likes")
@@ -210,6 +239,17 @@ public class PostControllerCombinedTest {
 			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		       .andExpect(status().is2xxSuccessful())
 		       .andExpect(model().attribute("sumRate", 1));
+	}
+	
+	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void updateRateでいいねが更新されない() throws Exception{
+		mockMvc.perform(post("/index/boyaki/rate")
+				       .param("postId", "7")
+				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
 	}
 	
 	@Test
@@ -238,6 +278,14 @@ public class PostControllerCombinedTest {
 			        .andExpect(model().attribute("postForm",
 		                                         hasProperty("nickName",is("匿名"))))
 			        .andExpect(view().name("Post/PostCreate"));
+	}
+	
+	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void showPostCreateでぼやき投稿画面が表示されない() throws Exception{
+		mockMvc.perform(get("/index/boyaki/post"))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
 	}
 	
 	@Test
@@ -277,6 +325,18 @@ public class PostControllerCombinedTest {
 		            .andExpect(status().is2xxSuccessful())
 		            .andExpect(model().attributeHasFieldErrorCode("postForm", "content", "Size"))
 					.andExpect(view().name("Post/PostCreate"));
+	}
+	
+	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void insertPostでぼやき投稿が1件追加されない() throws Exception{
+		PostForm form = new PostForm();
+		mockMvc.perform(post("/index/boyaki/post/insert")
+		               .flashAttr("postForm", form)
+			           .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
 	}
 
 }

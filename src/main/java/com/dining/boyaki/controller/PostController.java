@@ -1,6 +1,8 @@
 package com.dining.boyaki.controller;
 
 import java.net.URI;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +42,7 @@ public class PostController {
 	}
 	
 	@GetMapping("/index/boyaki/{postId}")
+	@PreAuthorize("principal.username != 'guestuser'")
 	String showPostDetail(@AuthenticationPrincipal AccountUserDetails details,
 			              @PathVariable("postId")long postId,Model model) {
 		PostRecord record = postService.findOnePostRecord(postId);
@@ -68,6 +71,7 @@ public class PostController {
 	}
 	
 	@PostMapping("/index/boyaki/comment")
+	@PreAuthorize("principal.username != 'guestuser'")
 	String insertComment(@ModelAttribute("commentForm")@Validated CommentForm form,
 	                     BindingResult result,UriComponentsBuilder builder,
 	                     RedirectAttributes model) {
@@ -82,6 +86,7 @@ public class PostController {
 	}
 	
 	@PostMapping("/index/boyaki/rate")
+	@PreAuthorize("principal.username != 'guestuser'")
 	String updateRate(@AuthenticationPrincipal AccountUserDetails details,
 			          @RequestParam(value="postId")long postId,Model model) {
 		postService.updateRate(postId, details.getUsername());
@@ -92,6 +97,7 @@ public class PostController {
 	}
 	
 	@GetMapping("/index/boyaki/profile/{nickName}")
+	@PreAuthorize("principal.username != 'guestuser'")
 	String showUserProfile(@AuthenticationPrincipal AccountUserDetails details,
 			               @PathVariable("nickName")String nickName,Model model) {
 		AccountInfo info = postService.findProfile(nickName);
@@ -104,6 +110,7 @@ public class PostController {
 	}
 	
 	@GetMapping("/index/boyaki/post")
+	@PreAuthorize("principal.username != 'guestuser'")
 	String showPostCreate(@AuthenticationPrincipal AccountUserDetails details,
 			              Model model) {
 		PostForm form = new PostForm();
@@ -124,6 +131,7 @@ public class PostController {
 	}
 	
 	@PostMapping("/index/boyaki/post/insert")
+	@PreAuthorize("principal.username != 'guestuser'")
 	String insertPost(@ModelAttribute("postForm") @Validated PostForm form,
 			          BindingResult result,Model model) {
 		if(result.hasErrors()) {
