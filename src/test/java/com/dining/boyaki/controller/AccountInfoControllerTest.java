@@ -11,6 +11,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -28,6 +29,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -74,15 +76,8 @@ public class AccountInfoControllerTest {
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 	void showIndexMyPageでマイページ画面が表示される() throws Exception{
-		AccountInfoForm form = new AccountInfoForm();
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setProfile("5000兆円欲しい！！！");
-		form.setStatus(0);
-		form.setGender(2);
-		form.setAge(2);
-		form.setHeight(161);
-		form.setWeight(47);
+		AccountInfoForm form = new AccountInfoForm("miho","匿名","5000兆円欲しい！！！",
+				                                   0,2,2,161,47);
 		when(accountInfoService.findAccountInfo("miho")).thenReturn(form);
 		
 		mockMvc.perform(get("/index/mypage"))
@@ -93,25 +88,31 @@ public class AccountInfoControllerTest {
 		verify(accountInfoService,times(1)).findAccountInfo("miho");
 	}
 	
-	@Test
-	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
-	void showEditMyPageでプロフィール編集画面が表示される() throws Exception{
-		AccountInfoForm form = new AccountInfoForm();
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setProfile("5000兆円欲しい！！！");
-		form.setStatus(0);
-		form.setGender(2);
-		form.setAge(2);
-		when(accountInfoService.findAccountInfo("miho")).thenReturn(form);
+	@Nested
+	class showEditMyPage{
+		@Test
+		@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+		void showEditMyPageでプロフィール編集画面が表示される() throws Exception{
+			AccountInfoForm form = new AccountInfoForm("miho","匿名","5000兆円欲しい！！！",
+	                                                   0,2,2,161,47);
+			when(accountInfoService.findAccountInfo("miho")).thenReturn(form);
+			
+			mockMvc.perform(get("/index/mypage/edit"))
+					       .andExpect(status().is2xxSuccessful())
+					       .andExpect(model().attribute("AccountInfoForm",
+					    		                        hasProperty("userName",is("miho"))))
+					       .andExpect(model().attribute("statusList",StatusList.values()))
+					       .andExpect(view().name("MyPage/EditMyPage"));
+			verify(accountInfoService,times(1)).findAccountInfo("miho");
+		}
 		
-		mockMvc.perform(get("/index/mypage/edit"))
-				       .andExpect(status().is2xxSuccessful())
-				       .andExpect(model().attribute("AccountInfoForm",
-				    		                        hasProperty("userName",is("miho"))))
-				       .andExpect(model().attribute("statusList",StatusList.values()))
-				       .andExpect(view().name("MyPage/EditMyPage"));
-		verify(accountInfoService,times(1)).findAccountInfo("miho");
+		@Test
+		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+		void showEditMyPageでプロフィール編集画面が表示されない() throws Exception{
+			mockMvc.perform(get("/index/mypage/edit"))
+				   .andExpect(status().isForbidden())
+				   .andExpect(forwardedUrl("/accessdenied"));
+		}
 	}
 	
 	@Nested
@@ -155,32 +156,69 @@ public class AccountInfoControllerTest {
 			       .andExpect(view().name("MyPage/EditMyPage"));
 			verify(accountInfoService,times(0)).updateAccountInfo(form);
 		}
+		
+		@Test
+		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+		void updateMyPageでユーザ情報が更新されない() throws Exception{
+			mockMvc.perform(post("/index/mypage/edit/update")
+					       .flashAttr("AccountInfoForm", form)
+					       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					       .with(SecurityMockMvcRequestPostProcessors.csrf()))
+				   .andExpect(status().isForbidden())
+				   .andExpect(forwardedUrl("/accessdenied"));
+		}
 	}
 	
-	@Test
-	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
-	void showConfirmPageでアカウント削除確認ページが表示される() throws Exception{
-		mockMvc.perform(get("/index/mypage/confirm"))
-		       .andExpect(status().is2xxSuccessful())
-		       .andExpect(model().attribute("ConfirmDelete",
-		    		                        hasProperty("userName",is("糸井"))))
-		       .andExpect(view().name("MyPage/ConfirmDelete"));
+	@Nested
+	class showConfirmPage{
+		@Test
+		@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
+		void showConfirmPageでアカウント削除確認ページが表示される() throws Exception{
+			mockMvc.perform(get("/index/mypage/confirm"))
+			       .andExpect(status().is2xxSuccessful())
+			       .andExpect(model().attribute("ConfirmDelete",
+			    		                        hasProperty("userName",is("糸井"))))
+			       .andExpect(view().name("MyPage/ConfirmDelete"));
+		}
+		
+		@Test
+		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+		void showConfirmPageでアカウント削除確認ページが表示されない() throws Exception{
+			mockMvc.perform(get("/index/mypage/confirm"))
+				   .andExpect(status().isForbidden())
+				   .andExpect(forwardedUrl("/accessdenied"));
+		}
 	}
 	
-	@Test
-	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
-	void deleteAccountでアカウント削除後にログインページへ遷移する() throws Exception{
-		AccountInfoForm form = new AccountInfoForm();
-		form.setUserName("加藤健");
-		doNothing().when(accountInfoService).deleteAccount("加藤健");
-		mockMvc.perform(post("/index/mypage/confirm/delete")
-				       .flashAttr("AccountInfoForm", form)
-				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-				       .with(SecurityMockMvcRequestPostProcessors.csrf()))
-		       .andExpect(status().is3xxRedirection())
-		       .andExpect(flash().attribute("register", "退会処理が完了しました"))
-		       .andExpect(redirectedUrl("/login"));
-		verify(accountInfoService,times(1)).deleteAccount("加藤健");
+	@Nested
+	class deleteAccount{
+		@Test
+		@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
+		void deleteAccountでアカウント削除後にログインページへ遷移する() throws Exception{
+			AccountInfoForm form = new AccountInfoForm();
+			form.setUserName("加藤健");
+			doNothing().when(accountInfoService).deleteAccount("加藤健");
+			mockMvc.perform(post("/index/mypage/confirm/delete")
+					       .flashAttr("AccountInfoForm", form)
+					       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					       .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			       .andExpect(status().is3xxRedirection())
+			       .andExpect(flash().attribute("register", "退会処理が完了しました"))
+			       .andExpect(redirectedUrl("/login"));
+			verify(accountInfoService,times(1)).deleteAccount("加藤健");
+		}
+		
+		@Test
+		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+		void showConfirmPageでアカウント削除されない() throws Exception{
+			AccountInfoForm form = new AccountInfoForm();
+			mockMvc.perform(post("/index/mypage/confirm/delete")
+					       .flashAttr("AccountInfoForm", form)
+					       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					       .with(SecurityMockMvcRequestPostProcessors.csrf()))
+				   .andExpect(status().isForbidden())
+				   .andExpect(forwardedUrl("/accessdenied"));
+		}
 	}
 
 }

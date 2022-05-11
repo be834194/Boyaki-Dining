@@ -1,5 +1,6 @@
 package com.dining.boyaki.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +42,7 @@ public class ChangePasswordController {
 	}
 	
 	@GetMapping("/index/mypage/changepassword")
+	@PreAuthorize("principal.username != 'guestuser'")
 	public String showChangePasswordPage(@AuthenticationPrincipal AccountUserDetails details,
 			                             Model model) {
 		PasswordChangeForm form = new PasswordChangeForm();
@@ -50,6 +52,7 @@ public class ChangePasswordController {
 	}
 	
 	@PostMapping("/index/mypage/changepassword/update")
+	@PreAuthorize("principal.username != 'guestuser'")
 	String changePassword(@ModelAttribute("PasswordChangeForm") @Validated PasswordChangeForm form,
 			              BindingResult result, RedirectAttributes model) {
 		if(result.hasErrors()) {

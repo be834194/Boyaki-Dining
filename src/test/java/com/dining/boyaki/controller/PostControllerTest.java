@@ -10,6 +10,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,29 +81,40 @@ public class PostControllerTest {
 		       .andExpect(view().name("Post/PostIndex"));
 	}
 	
-	@Test
-	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
-	void showUserProfileでユーザ一人のプロフィールが表示される() throws Exception{
-		AccountInfo info = new AccountInfo("糸井","sigeno","こんにちわ",0,0,0,165,70,null,null);
-		when(postService.findProfile("sigeno")).thenReturn(info);
-		mockMvc.perform(get("/index/boyaki/profile/sigeno"))
-		       .andExpect(status().is2xxSuccessful())
-		       .andExpect(model().attribute("accountInfo", 
-                                             hasProperty("nickName",is("sigeno"))))
-		       .andExpect(model().attribute("statusList", StatusList.values()))
-		       .andExpect(view().name("Post/Profile"));
-		verify(postService,times(1)).findProfile("sigeno");
-	}
-	
-	@Test
-	@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
-	void showUserProfileでユーザ一が見つからない場合は404ページを返す() throws Exception{
-		when(postService.findProfile("sigeno")).thenReturn(null);
-		mockMvc.perform(get("/index/boyaki/profile/sigeno"))
-			   .andExpect(status().is2xxSuccessful())
-		       .andExpect(model().hasNoErrors())
-		       .andExpect(view().name("error/404"));
-		verify(postService,times(1)).findProfile("sigeno");
+	@Nested
+	class showUserProfile{
+		@Test
+		@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
+		void showUserProfileでユーザ一人のプロフィールが表示される() throws Exception{
+			AccountInfo info = new AccountInfo("糸井","sigeno","こんにちわ",0,0,0,165,70,null,null);
+			when(postService.findProfile("sigeno")).thenReturn(info);
+			mockMvc.perform(get("/index/boyaki/profile/sigeno"))
+			       .andExpect(status().is2xxSuccessful())
+			       .andExpect(model().attribute("accountInfo", 
+	                                             hasProperty("nickName",is("sigeno"))))
+			       .andExpect(model().attribute("statusList", StatusList.values()))
+			       .andExpect(view().name("Post/Profile"));
+			verify(postService,times(1)).findProfile("sigeno");
+		}
+		
+		@Test
+		@WithMockUser(username="マクベイ",authorities= {"ROLE_USER"})
+		void showUserProfileでユーザ一が見つからない場合は404ページを返す() throws Exception{
+			when(postService.findProfile("sigeno")).thenReturn(null);
+			mockMvc.perform(get("/index/boyaki/profile/sigeno"))
+				   .andExpect(status().is2xxSuccessful())
+			       .andExpect(model().hasNoErrors())
+			       .andExpect(view().name("error/404"));
+			verify(postService,times(1)).findProfile("sigeno");
+		}
+		
+		@Test
+		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+		void showUserProfileでユーザ一人のプロフィールが表示されない() throws Exception{
+			mockMvc.perform(get("/index/boyaki/profile/sigeno"))
+				   .andExpect(status().isForbidden())
+				   .andExpect(forwardedUrl("/accessdenied"));
+		}
 	}
 	
 	@Nested
@@ -165,12 +177,19 @@ public class PostControllerTest {
 			       .andExpect(view().name("error/404"));
 			verify(postService,times(1)).findOnePostRecord(333);
 		}
+		
+		@Test
+		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+		void showPostDetailで投稿詳細画面が表示されない() throws Exception{
+			mockMvc.perform(get("/index/boyaki/7"))
+				   .andExpect(status().isForbidden())
+				   .andExpect(forwardedUrl("/accessdenied"));
+		}
 	}
 	
 	@Nested
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
     class createComment {
-		
 		CommentForm form;
 		
 		@BeforeEach
@@ -203,23 +222,48 @@ public class PostControllerTest {
 				   .andExpect(redirectedUrl("http://localhost/index/boyaki/5"));
 			verify(postService,times(0)).insertComment(form);
 		}
+		
+		@Test
+		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+		void insertCommentで投稿に対してコメントが追加されない() throws Exception{
+			mockMvc.perform(post("/index/boyaki/comment")
+		               .flashAttr("commentForm", form)
+			           .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+				   .andExpect(status().isForbidden())
+				   .andExpect(forwardedUrl("/accessdenied"));
+		}
 	}
 	
-	@Test
-	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
-	void updateRateでいいねが更新される() throws Exception{
-		doNothing().when(postService).updateRate(7,"miho");
-		when(postService.sumRate(7)).thenReturn(5);
+	@Nested
+    class updateRate {
+		@Test
+		@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+		void updateRateでいいねが更新される() throws Exception{
+			doNothing().when(postService).updateRate(7,"miho");
+			when(postService.sumRate(7)).thenReturn(5);
+			
+			mockMvc.perform(post("/index/boyaki/rate")
+					       .param("postId", "7")
+					       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			       .andExpect(status().is2xxSuccessful())
+			       .andExpect(model().attribute("sumRate", 5))
+			       .andExpect(view().name("Post/PostDetail :: rateFragment"));
+			verify(postService,times(1)).updateRate(7, "miho");
+			verify(postService,times(1)).sumRate(7);
+		}
 		
-		mockMvc.perform(post("/index/boyaki/rate")
-				       .param("postId", "7")
-				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
-		       .andExpect(status().is2xxSuccessful())
-		       .andExpect(model().attribute("sumRate", 5))
-		       .andExpect(view().name("Post/PostDetail :: rateFragment"));
-		verify(postService,times(1)).updateRate(7, "miho");
-		verify(postService,times(1)).sumRate(7);
+		@Test
+		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+		void updateRateでいいねが更新されない() throws Exception{
+			mockMvc.perform(post("/index/boyaki/rate")
+					       .param("postId", "7")
+					       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+				   .andExpect(status().isForbidden())
+				   .andExpect(forwardedUrl("/accessdenied"));
+		}
 	}
 	
 	@Test
@@ -236,19 +280,30 @@ public class PostControllerTest {
 		verify(postService,times(1)).deletePost("miho", 7);
 	}
 	
-	@Test
-	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
-	void showPostCreateでぼやき投稿画面が表示される() throws Exception{
-		when(postService.findNickName("miho")).thenReturn("匿名");
-		mockMvc.perform(get("/index/boyaki/post"))
-		       .andExpect(status().is2xxSuccessful())
-		       .andExpect(model().attribute("postCategory", PostCategory.values()))
-		       .andExpect(model().attribute("postForm",
-		    		                        hasProperty("userName",is("miho"))))
-		       .andExpect(model().attribute("postForm",
-                                            hasProperty("nickName",is("匿名"))))
-		       .andExpect(view().name("Post/PostCreate"));
-		verify(postService,times(1)).findNickName("miho");
+	@Nested
+	class showPostCreate{
+		@Test
+		@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+		void showPostCreateでぼやき投稿画面が表示される() throws Exception{
+			when(postService.findNickName("miho")).thenReturn("匿名");
+			mockMvc.perform(get("/index/boyaki/post"))
+			       .andExpect(status().is2xxSuccessful())
+			       .andExpect(model().attribute("postCategory", PostCategory.values()))
+			       .andExpect(model().attribute("postForm",
+			    		                        hasProperty("userName",is("miho"))))
+			       .andExpect(model().attribute("postForm",
+	                                            hasProperty("nickName",is("匿名"))))
+			       .andExpect(view().name("Post/PostCreate"));
+			verify(postService,times(1)).findNickName("miho");
+		}
+		
+		@Test
+		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+		void showPostCreateでぼやき投稿画面が表示されない() throws Exception{
+			mockMvc.perform(get("/index/boyaki/post"))
+				   .andExpect(status().isForbidden())
+				   .andExpect(forwardedUrl("/accessdenied"));
+		}
 	}
 	
 	@Nested
@@ -291,6 +346,17 @@ public class PostControllerTest {
 				   .andExpect(model().attributeHasFieldErrorCode("postForm", "content", "Size"))
 				   .andExpect(view().name("Post/PostCreate"));
 			verify(postService,times(0)).insertPost(form);
+		}
+		
+		@Test
+		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+		void insertPostでぼやき投稿が1件追加されない() throws Exception{
+			mockMvc.perform(post("/index/boyaki/post/insert")
+			               .flashAttr("postForm", form)
+				           .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				           .with(SecurityMockMvcRequestPostProcessors.csrf()))
+				   .andExpect(status().isForbidden())
+				   .andExpect(forwardedUrl("/accessdenied"));
 		}
 	}
 

@@ -10,6 +10,7 @@ import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,6 +30,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.TestExecutionListeners;
@@ -97,6 +99,17 @@ public class AccountInfoControllerCombinedTest {
 	@Test
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/AccountInfo/setup/")
+	void showIndexMyPageでマイページ画面が表示されない() throws Exception{
+		mockMvc.perform(get("/index/mypage"))
+		       .andExpect(status().is2xxSuccessful())
+		       .andExpect(model().attribute("statusList",StatusList.values()))
+		       .andExpect(model().attributeExists("bmi"))
+		       .andExpect(view().name("MyPage/IndexMyPage"));
+	}
+	
+	@Test
+	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
+	@DatabaseSetup(value="/controller/AccountInfo/setup/")
 	void showEditMyPageでプロフィール編集画面が表示される() throws Exception{
 		mockMvc.perform(get("/index/mypage/edit"))
 		       .andExpect(status().is2xxSuccessful())
@@ -107,19 +120,20 @@ public class AccountInfoControllerCombinedTest {
 	}
 	
 	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void showEditMyPageでプロフィール編集画面が表示されない() throws Exception{
+		mockMvc.perform(get("/index/mypage/edit"))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
+	}
+	
+	@Test
 	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/AccountInfo/setup/")
 	@ExpectedDatabase(value="/controller/AccountInfo/update/")
 	void updateMyPageでユーザ情報が更新される() throws Exception{
-		AccountInfoForm form = new AccountInfoForm();
-		form.setUserName("加藤健");
-		form.setNickName("kenken");
-		form.setProfile("間食が止まらない");
-		form.setStatus(3);
-		form.setGender(1);
-		form.setAge(3);
-		form.setHeight(167);
-		form.setWeight(64);
+		AccountInfoForm form = new AccountInfoForm("加藤健","kenken","間食が止まらない",
+				                                   3,1,3,167,64);
 		
 		mockMvc.perform(post("/index/mypage/edit/update")
 				       .flashAttr("AccountInfoForm", form)
@@ -134,13 +148,9 @@ public class AccountInfoControllerCombinedTest {
 	@WithMockCustomUser(userName="加藤健",password="pinballs",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/AccountInfo/setup/")
 	void updateMyPageでバリデーションエラーが発生する() throws Exception{
-		AccountInfoForm form = new AccountInfoForm();
-		form.setUserName("加藤健");
-		form.setNickName("匿名");
+		AccountInfoForm form = new AccountInfoForm("加藤健","匿名",null,
+				                                   3,1,3,167,64);
 		form.setProfile("123456789012345678901234567890123456789012345678901");
-		form.setStatus(3);
-		form.setGender(1);
-		form.setAge(3);
 		
 		mockMvc.perform(post("/index/mypage/edit/update")
 				       .flashAttr("AccountInfoForm", form)
@@ -155,6 +165,18 @@ public class AccountInfoControllerCombinedTest {
 	}
 	
 	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void updateMyPageでユーザ情報が更新されない() throws Exception{
+		AccountInfoForm form = new AccountInfoForm();
+		mockMvc.perform(post("/index/mypage/edit/update")
+				       .flashAttr("AccountInfoForm", form)
+				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				       .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
+	}
+	
+	@Test
 	@WithMockCustomUser(userName="糸井",password="sigeSIGE",role="ROLE_USER")
 	void showConfirmPageでアカウント削除確認ページが表示される() throws Exception{
 		mockMvc.perform(get("/index/mypage/confirm"))
@@ -162,6 +184,14 @@ public class AccountInfoControllerCombinedTest {
 		       .andExpect(model().attribute("ConfirmDelete",
 		    		                        hasProperty("userName",is("糸井"))))
 		       .andExpect(view().name("MyPage/ConfirmDelete"));
+	}
+	
+	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void showConfirmPageでアカウント削除確認ページが表示されない() throws Exception{
+		mockMvc.perform(get("/index/mypage/confirm"))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
 	}
 	
 	@Test
@@ -179,6 +209,18 @@ public class AccountInfoControllerCombinedTest {
 		       .andExpect(model().hasNoErrors())
 		       .andExpect(flash().attribute("register", "退会処理が完了しました"))
 		       .andExpect(redirectedUrl("/login"));
+	}
+	
+	@Test
+	@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
+	void showConfirmPageでアカウント削除されない() throws Exception{
+		AccountInfoForm form = new AccountInfoForm();
+		mockMvc.perform(post("/index/mypage/confirm/delete")
+				       .flashAttr("AccountInfoForm", form)
+				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				       .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			   .andExpect(status().isForbidden())
+			   .andExpect(forwardedUrl("/accessdenied"));
 	}
 	
 }
