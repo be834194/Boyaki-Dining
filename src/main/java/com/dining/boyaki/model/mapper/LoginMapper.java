@@ -6,6 +6,6 @@ import com.dining.boyaki.model.entity.Account;
 @Mapper
 public interface LoginMapper {
 	
-	Account findAccount(String userName);
+	Account findAccount(String mail);
 
 }

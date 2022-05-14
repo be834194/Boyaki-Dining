@@ -17,10 +17,10 @@
 	    <div class="col-sm-6">
 		    <div class="row card forms">
 				<div class="form-group">
-					<label for="username">ユーザ名</label>
+					<label for="username">メールアドレス</label>
 					<div>
-					    <input type="text" id="username" name="username" class="form-control" 
-					           placeholder="ユーザ名を入力してください">
+					    <input type="email" id="mail" name="mail" class="form-control" 
+					           placeholder="メールアドレスを入力してください">
 					</div>
 				</div><br>
 				<div class="form-group">
@@ -40,7 +40,7 @@
 	</form>
 	<div class="form-button col-sm-6">
 		<form class="row form-button" th:action="@{/authenticate}" method="post">
-			<input type="hidden" id="gestuser" name="username" value="guestuser">
+			<input type="hidden" id="gestuser" name="mail" value="guest@gmail.com">
 			<input type="hidden" id="gestpass" name="password" value="gesugesudegesu">
 			<div>
 				<button class="btn btn-green" type="submit">ゲストログイン</button>
