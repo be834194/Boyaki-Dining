@@ -24,8 +24,8 @@ public class AccountUserDetailsService implements UserDetailsService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Account account = Optional.ofNullable(loginMapper.findAccount(username))
+	public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
+		Account account = Optional.ofNullable(loginMapper.findAccount(mail))
 				                  .orElseThrow(() -> new UsernameNotFoundException("User not found."));
 		                                    //オーソリティをGrantedAuthorityオブジェクトのリストに変換
 		return new AccountUserDetails(account,AuthorityUtils.createAuthorityList(account.getRole()));

@@ -12,7 +12,7 @@
         from
             account
         where
-           username = #{userName}
+           mail = #{mail}
     </select>
     
 </mapper>

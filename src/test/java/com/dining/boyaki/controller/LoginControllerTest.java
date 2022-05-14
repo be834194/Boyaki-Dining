@@ -88,7 +88,7 @@ public class LoginControllerTest {
     @DatabaseSetup(value="/controller/Login/setup/")
 	void ROLE_USERがログインに成功するとUSER用のトップ画面が表示される() throws Exception{
     	this.mockMvc.perform(formLogin("/authenticate")
-	                        .user("username", "加藤健")
+	                        .user("mail", "example@ezweb.ne.jp")
 	                        .password("password","pinballs")
                              )
     	            .andExpect(authenticated())
@@ -100,7 +100,7 @@ public class LoginControllerTest {
     @DatabaseSetup(value="/controller/Login/setup/")
 	void ROLE_ADMINがログインに成功するとADMIN用のトップ画面が表示される() throws Exception{
     	this.mockMvc.perform(formLogin("/authenticate")
-	                        .user("username", "admin")
+	                        .user("mail", "admin@softbank")
 	                        .password("password","select*fromUser")
                              )
     	            .andExpect(authenticated())
@@ -109,12 +109,12 @@ public class LoginControllerTest {
     }
     
     @ParameterizedTest
-	@CsvSource({"admin,select*fromuser",
-		        "鈴木純也,zyunnzyunn"})
+	@CsvSource({"admin@softbank,select*fromuser",
+		        "hogehoge@gmail.com,zyunnzyunn"})
     @DatabaseSetup(value="/controller/Login/setup/")
-	void PWを間違えたりDBに登録されていないユーザはログインできない(String username,String password) throws Exception{
+	void PWを間違えたりDBに登録されていないユーザはログインできない(String mail,String password) throws Exception{
     	this.mockMvc.perform(formLogin("/authenticate")
-	                        .user("username", username)
+	                        .user("mail", mail)
 	                        .password("password",password)
                             )
     	            .andExpect(unauthenticated())

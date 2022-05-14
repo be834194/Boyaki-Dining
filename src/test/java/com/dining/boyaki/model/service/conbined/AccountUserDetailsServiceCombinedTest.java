@@ -33,7 +33,7 @@ public class AccountUserDetailsServiceCombinedTest {
 	@Test
 	@DatabaseSetup(value="/service/AccountUserDetails/setup/")
     void loadUserByUsernameでユーザが一人見つかる() throws Exception{
-		AccountUserDetails details = (AccountUserDetails)accountUserDetailsService.loadUserByUsername("加藤健");
+		AccountUserDetails details = (AccountUserDetails)accountUserDetailsService.loadUserByUsername("example@ezweb.ne.jp");
 		assertEquals(true,details instanceof AccountUserDetails);
 		assertNotNull(details.getAccount());
 		assertEquals("加藤健",details.getUsername());
@@ -45,7 +45,7 @@ public class AccountUserDetailsServiceCombinedTest {
 	@DatabaseSetup(value="/service/AccountUserDetails/setup/")
     void loadUserByUsernameでユーザが見つからない場合に例外を投げる() throws Exception{
 		try{
-			accountUserDetailsService.loadUserByUsername("佐藤健");
+			accountUserDetailsService.loadUserByUsername("hogehoge@gmail.com");
 		} catch(UsernameNotFoundException e) {
 			assertEquals(e.getMessage(),"User not found.");
 		}

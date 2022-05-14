@@ -35,29 +35,29 @@ public class AccountUserDetailsServiceTest {
     	account.setUserName("加藤健");
     	account.setPassword("pinballs");
     	account.setRole("ROLE_USER");
-    	when(loginmapper.findAccount("加藤健")).thenReturn(account);
-    	when(loginmapper.findAccount("佐藤健")).thenReturn(null);
+    	when(loginmapper.findAccount("example@ezweb.ne.jp")).thenReturn(account);
+    	when(loginmapper.findAccount("hogehoge@gmail.com")).thenReturn(null);
     }
 	
 	@Test
     void loadUserByUsernameでユーザが一人見つかる() throws Exception{
-		AccountUserDetails details = (AccountUserDetails)accountUserDetailsService.loadUserByUsername("加藤健");
+		AccountUserDetails details = (AccountUserDetails)accountUserDetailsService.loadUserByUsername("example@ezweb.ne.jp");
 		assertEquals(true,details instanceof AccountUserDetails);
 		assertNotNull(details.getAccount());
 		assertEquals(details.getUsername(),"加藤健");
 		assertEquals(details.getPassword(),"pinballs");
 		assertEquals(details.getAuthorities().toString(),"[ROLE_USER]");
-		verify(loginmapper,times(1)).findAccount("加藤健");
+		verify(loginmapper,times(1)).findAccount("example@ezweb.ne.jp");
 	}
 	
 	@Test
     void loadUserByUsernameでユーザが見つからない場合に例外を投げる() throws Exception{
 		try{
-			accountUserDetailsService.loadUserByUsername("佐藤健");
+			accountUserDetailsService.loadUserByUsername("hogehoge@gmail.com");
 		} catch(UsernameNotFoundException e) {
 			assertEquals(e.getMessage(),"User not found.");
 		}
-		verify(loginmapper,times(1)).findAccount("佐藤健");
+		verify(loginmapper,times(1)).findAccount("hogehoge@gmail.com");
 	}
 
 }
