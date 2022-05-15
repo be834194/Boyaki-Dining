@@ -37,7 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
-import com.dining.boyaki.model.entity.StatusList;
+import com.dining.boyaki.model.enums.StatusList;
 import com.dining.boyaki.model.form.AccountInfoForm;
 import com.dining.boyaki.model.form.validation.UniqueNickNameValidator;
 import com.dining.boyaki.model.service.AccountInfoService;

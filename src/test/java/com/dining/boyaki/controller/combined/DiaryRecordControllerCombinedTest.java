@@ -51,7 +51,7 @@ import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
 import com.dining.boyaki.config.S3Config;
 import com.dining.boyaki.controller.DiaryRecordController;
-import com.dining.boyaki.model.entity.DiaryRecordCategory;
+import com.dining.boyaki.model.enums.DiaryRecordCategory;
 import com.dining.boyaki.model.form.DiaryRecordForm;
 import com.dining.boyaki.model.form.FileUploadForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
