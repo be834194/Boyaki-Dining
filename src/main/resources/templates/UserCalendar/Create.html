@@ -58,7 +58,9 @@
 			</div>
 			<div class="form-group">
 			    <label for="price">メモ</label> 
-			    <textarea class="form-control" id="memo" name="memo" th:field="*{memo}"></textarea>
+			    <textarea class="form-control" id="memo" name="memo" th:field="*{memo}" 
+			              placeholder="1~100文字以内でメモを記入してください"></textarea>
+			    <div th:if="${#fields.hasErrors('memo')}" th:errors="*{memo}" th:errorclass="error-messages"></div>
 			</div>
 			<div>
 			    <input type="hidden" id="createAt" name="createAt" th:field="*{createAt}">

@@ -25,6 +25,27 @@ public class DiaryRecordFormTest {
 	
 	@Test
 	void バリデーション問題あり() throws Exception{
+		form.setCategoryId(1);
+		form.setDiaryDay(Date.valueOf("2022-02-19"));
+		form.setRecord1("123456789012345678901234567890123456789012345678901");
+		form.setRecord2("123456789012345678901234567890123456789012345678902");
+		form.setRecord3("123456789012345678901234567890123456789012345678903");
+		form.setMemo("12345678901234567890123456789012345678901234567890"
+				   + "123456789012345678901234567890123456789012345678904");
+		validator.validate(form, bindingResult);
+		assertEquals(4,bindingResult.getFieldErrorCount());
+		assertTrue(bindingResult.getFieldError("record1")
+                .toString().contains("50文字以内で入力してください"));
+		assertTrue(bindingResult.getFieldError("record2")
+                .toString().contains("50文字以内で入力してください"));
+		assertTrue(bindingResult.getFieldError("record3")
+                .toString().contains("50文字以内で入力してください"));
+		assertTrue(bindingResult.getFieldError("memo")
+                .toString().contains("100文字以内で入力してください"));
+	}
+	
+	@Test
+	void 未入力でエラー発生() throws Exception{
 		form.setCategoryId(0);
 		form.setDiaryDay(null);
 		form.setRecord1(null);

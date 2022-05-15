@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import com.dining.boyaki.model.form.validation.ConfirmDiaryRecord;
 
@@ -22,14 +24,18 @@ public class DiaryRecordForm implements Serializable{
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date diaryDay;
 	
+	@Size(max=50,message="50文字以内で入力してください")
 	private String record1;
 	
+	@Size(max=50,message="50文字以内で入力してください")
 	private String record2;
 	
+	@Size(max=50,message="50文字以内で入力してください")
 	private String record3;
 	
 	private String imageName;
 	
+	@Size(max=100,message="100文字以内で入力してください")
 	private String memo;
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
