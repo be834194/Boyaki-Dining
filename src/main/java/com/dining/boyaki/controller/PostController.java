@@ -18,9 +18,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.dining.boyaki.model.entity.AccountInfo;
 import com.dining.boyaki.model.entity.AccountUserDetails;
-import com.dining.boyaki.model.entity.PostCategory;
 import com.dining.boyaki.model.entity.PostRecord;
-import com.dining.boyaki.model.entity.StatusList;
+import com.dining.boyaki.model.enums.PostCategory;
+import com.dining.boyaki.model.enums.StatusList;
 import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.service.PostService;

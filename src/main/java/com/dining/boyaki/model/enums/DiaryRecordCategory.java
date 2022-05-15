@@ -1,4 +1,4 @@
-package com.dining.boyaki.model.entity;
+package com.dining.boyaki.model.enums;
 
 public enum DiaryRecordCategory {
 	MORNIBG(1,"朝食"),

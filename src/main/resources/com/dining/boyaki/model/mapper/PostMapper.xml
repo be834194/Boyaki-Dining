@@ -66,7 +66,7 @@
               ON   INFO.status = S_LIST.statusid
         WHERE
             COMMENT.postid = #{postId}
-        ORDER BY Comment.createat DESC
+        ORDER BY COMMENT.createat DESC
         LIMIT #{pageable.pageSize}
         OFFSET #{pageable.offset}
     </select>

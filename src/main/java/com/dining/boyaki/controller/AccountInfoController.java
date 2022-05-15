@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dining.boyaki.model.service.AccountInfoService;
 import com.dining.boyaki.model.entity.AccountUserDetails;
-import com.dining.boyaki.model.entity.StatusList;
+import com.dining.boyaki.model.enums.StatusList;
 import com.dining.boyaki.model.form.AccountInfoForm;
 import com.dining.boyaki.model.form.validation.UniqueNickNameValidator;
 

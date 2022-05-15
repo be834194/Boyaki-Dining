@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.InitBinder;
 
 import com.dining.boyaki.model.entity.AccountUserDetails;
-import com.dining.boyaki.model.entity.DiaryRecordCategory;
+import com.dining.boyaki.model.enums.DiaryRecordCategory;
 import com.dining.boyaki.model.form.DiaryRecordForm;
 import com.dining.boyaki.model.form.FileUploadForm;
 import com.dining.boyaki.model.service.DiaryRecordService;
