@@ -37,7 +37,7 @@ var likesApp = {
 			})
 			.catch(error =>{
 				console.log(error)
-				document.head.querySelector("scroll").textContent = 'サーバとの通信でエラーが発生しました'
+				document.head.querySelector("scroll").value = 'サーバとの通信でエラーが発生しました'
 			})
 		},
 		likes(){
