@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dining.boyaki.model.mapper.PostMapper">
+    <select id = "findNickName" resultType="String">
+        SELECT
+            nickname
+        FROM
+            account_info
+        WHERE
+            username = #{userName}
+    </select>
+    
+    <select id = "findProfile" parameterType="String"
+                               resultType="com.dining.boyaki.model.entity.AccountInfo">
+        SELECT
+            nickname,profile,status,gender,age
+        FROM
+            account_info
+        WHERE
+            nickname = #{nickName}
+    </select>
+    
+    <insert id = "insertPost" parameterType="com.dining.boyaki.model.entity.Post">
+        INSERT INTO
+            post(username,nickname,content,postcategory,createat)
+        VALUES(
+               #{userName},
+               #{nickName},
+               #{content},
+               #{postCategory},
+               #{createAt}
+               )
+    </insert>
+    
+    <delete id = "deletePost">
+        DELETE FROM post
+        WHERE
+              username = #{userName}
+        and   postid = #{postId}
+    </delete>
+    
+    <insert id = "insertComment" parameterType="com.dining.boyaki.model.entity.Comment">
+        INSERT INTO
+            comment(postid,username,nickname,content,createat)
+        VALUES(
+               #{postId},
+               #{userName},
+               #{nickName},
+               #{content},
+               #{createAt}
+               )
+    </insert>
+    
+    <select id = "findCommentRecord" resultMap="CommentRecordResultMap">
+        SELECT
+            COMMENT.nickname,
+            S_LIST.statusname,
+            COMMENT.content,
+            CAST(COMMENT.createat as CHAR) as createat
+        FROM
+            comment as COMMENT
+        INNER JOIN account_info as INFO
+              ON   COMMENT.nickname = INFO.nickname
+        INNER JOIN status_list as S_LIST
+              ON   INFO.status = S_LIST.statusid
+        WHERE
+            COMMENT.postid = #{postId}
+        ORDER BY COMMENT.createat DESC
+        LIMIT #{pageable.pageSize}
+        OFFSET #{pageable.offset}
+    </select>
+    
+    <resultMap id="CommentRecordResultMap" type="com.dining.boyaki.model.entity.CommentRecord">
+      <result property="nickName" column="nickname"></result>
+      <result property="status" column="statusname"></result>
+      <result property="content" column="content"></result>
+      <result property="createAt" column="createat"></result>
+    </resultMap>
+
+
+    
+    <select id = "findOnePostRecord" resultMap="PostRecordResultMap">
+        SELECT
+            POST.postid,
+            POST.username,
+            POST.nickname,
+            S_LIST.statusname,
+            P_CATEGORY.postname,
+            POST.content,
+            CAST(POST.createat as CHAR) as createat
+        FROM
+            post as POST
+        INNER JOIN account_info as INFO
+              ON   POST.nickname = INFO.nickname
+        INNER JOIN status_list as S_LIST
+              ON   INFO.status = S_LIST.statusid
+        INNER JOIN post_category as P_CATEGORY
+              ON  POST.postcategory = P_CATEGORY.postid
+        WHERE
+            POST.postid = #{postid}
+    </select>
+    
+    <select id = "findPostRecord" resultMap="PostRecordResultMap">
+        SELECT
+            POST.postid,
+            POST.nickname,
+            S_LIST.statusname,
+            P_CATEGORY.postname,
+            POST.content,
+            CAST(POST.createat as CHAR) as createat
+        FROM
+            post as POST
+        INNER JOIN account_info as INFO
+              ON   POST.nickname = INFO.nickname
+        INNER JOIN status_list as S_LIST
+              ON   INFO.status = S_LIST.statusid
+        INNER JOIN post_category as P_CATEGORY
+              ON  POST.postcategory = P_CATEGORY.postid
+        WHERE
+            POST.nickname = #{nickName}
+        ORDER BY POST.createat DESC
+        LIMIT #{pageable.pageSize}
+        OFFSET #{pageable.offset}
+    </select>
+
+    <select id = "searchPostRecord" resultMap="PostRecordResultMap">
+        SELECT
+            POST.postid,
+            POST.nickname,
+            S_LIST.statusname,
+            P_CATEGORY.postname,
+            POST.content,
+            CAST(POST.createat as CHAR) as createat
+        FROM
+            post as POST
+        INNER JOIN account_info as INFO
+              ON   POST.nickname = INFO.nickname
+        INNER JOIN status_list as S_LIST
+              ON   INFO.status = S_LIST.statusid
+        INNER JOIN post_category as P_CATEGORY
+              ON  POST.postcategory = P_CATEGORY.postid
+        <where>
+            <if test="category != null">
+                <foreach item="categoryId" index="i" collection="category"
+                         open="POST.postcategory IN (" separator="," close=")">
+                         #{categoryId}
+                </foreach>
+            </if>
+            <if test="status!= null">
+                AND <foreach item="statusId" index="j" collection="status"
+                         open="INFO.status IN (" separator="," close=")">
+                         #{statusId}
+                </foreach>
+            </if>
+            <if test="content!= null">
+                AND <foreach item="text" index="k" collection="content"
+                         open="(" separator=" and " close=")">
+                         POST.content LIKE '%${text}%'
+                </foreach>
+            </if>
+        </where>
+        ORDER BY POST.createat DESC
+        LIMIT #{pageable.pageSize}
+        OFFSET #{pageable.offset}
+    </select>
+    
+    <resultMap id="PostRecordResultMap" type="com.dining.boyaki.model.entity.PostRecord">
+      <result property="postId" column="postid"></result>
+      <result property="userName" column="username"></result>
+      <result property="nickName" column="nickname"></result>
+      <result property="status" column="statusname"></result>
+      <result property="postCategory" column="postname"></result>
+      <result property="content" column="content"></result>
+      <result property="createAt" column="createat"></result>
+    </resultMap>
+    
+    <select id = "currentRate" resultType="int">
+        SELECT
+            rate
+        FROM
+            likes
+        WHERE
+            postid = #{postId}
+        AND username = #{userName}
+    </select>
+    
+    <select id = "sumRate" resultType="int">
+        SELECT
+            sum(rate)
+        FROM
+            likes
+        WHERE
+            postid = #{postId}
+        GROUP BY postid
+    </select>
+    
+    <insert id = "insertRate">
+        INSERT INTO
+            likes(postid,username,rate)
+        VALUES(
+               #{postId},
+               #{userName},
+               #{rate}
+               )
+    </insert>
+    
+    <update id = "updateRate">
+        UPDATE
+            likes
+        SET rate = #{rate}
+        WHERE postid = #{postId}
+        and   username = #{userName}
+    </update>
+    
+</mapper>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Boyaki-Dining</title>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="icon" type="image/jpg" th:href="@{/images/favicon.jpg}">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div th:replace="flagment/loginheader :: login-header"></div>
+<div id="home" class="big-bg">
+　　　　<div class="home-content">
+		<p>日々の食事や運動をシンプルに記録できるアプリです。</p>
+		<p>ユーザ同士で健康の悩みを相談したり、グチを聞いてもらうことも出来ます。</p>
+		<br>
+		<p>誰かに話を聞いてもらって、少しでも気持ちを軽くしてみませんか？</p>
+		<br>
+		<div class="home-blocks">
+			<a class="btn btn-orange" th:href="@{/login}">ログインする<br>(ゲストログインはこちら)</a>
+			<a class="btn btn-orange" th:href="@{/registration}">新規登録はこちら</a>
+		</div>
+　　　　</div>
+</div>
+</body>
+</html>

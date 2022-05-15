@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+  <title>ヘッダー</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+<header class="pageHeader" th:fragment="user-header">
+	<a href="/index" style="text-decoration: none;color: black;">
+    	<h1>Boyaki-Dining</h1>
+	</a>
+    <nav><br>
+        <span class="blocks">
+            <a th:href="@{/index}">食事記録を確認する</a>&nbsp;&nbsp;
+            <a th:href="@{/index/boyaki}">グチをぼやく</a>&nbsp;&nbsp;
+            <a th:href="@{/index/mypage}">マイページへ</a>&nbsp;&nbsp;
+            <form th:action="@{/logout}" name="logout" method="post">
+                <a href="javascript:logout.submit()">ログアウト</a>
+            </form>
+        </span>
+    </nav>
+</header>
+</body>
+
+</html>

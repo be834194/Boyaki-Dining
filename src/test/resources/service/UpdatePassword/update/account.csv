@@ -1,0 +1,5 @@
+username,mail,role
+"admin", "admin@softbank",     "ROLE_ADMIN"
+"miho",  "miho@gmail.com",     "ROLE_USER"
+"加藤健","example@ezweb.ne.jp","ROLE_USER"
+"糸井",  "mother@yahoo.co.jp", "ROLE_USER"

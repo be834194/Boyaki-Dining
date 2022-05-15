@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dining.boyaki.model.mapper.RegistrationMapper">
+    
+    <insert id = "insertAccount" parameterType="com.dining.boyaki.model.entity.Account">
+        INSERT INTO
+            account(username, password, mail, role)
+        VALUES(
+               #{userName},
+               #{password},
+               #{mail},
+               #{role})
+    </insert>
+    
+    <insert id = "insertPasswordHistory" parameterType="com.dining.boyaki.model.entity.Account">
+        INSERT INTO
+            password_history(username, password, useday)
+        VALUES(
+               #{userName},
+               #{password},
+               #{useDay})
+    </insert>
+    
+    <insert id = "insertAccountInfo" parameterType="com.dining.boyaki.model.entity.AccountInfo">
+        INSERT INTO
+            account_info(username, nickname, profile, status, gender, age,
+                         height, weight, createAt, updateAt)
+        VALUES(
+               #{userName},
+               #{nickName},
+               #{profile},
+               #{status},
+               #{gender},
+               #{age},
+               #{height},
+               #{weight},
+               #{createAt},
+               #{updateAt})
+    </insert>
+    
+</mapper>

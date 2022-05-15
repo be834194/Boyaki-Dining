@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>食事記録登録 - Boyaki-Dining</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+	<link rel="icon" type="image/jpg" th:href="@{/images/favicon.jpg}">
+    <script src="https://unpkg.com/vue@next"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+</head>
+<body>
+<div th:replace="flagment/header :: user-header"></div>
+<h2>食事記録登録</h2>
+<div class="container">
+    <form class="form-height" id="category" th:action="@{/index/create/insert}" method="post" enctype="multipart/form-data">
+    <p th:text="${message}"></p>
+    <div class="col-sm-6" th:object="${diaryRecordForm}">
+	    <div class="row card forms">
+	        <div class="form-group">
+	        	<label for="cateogryId">カテゴリ</label> 
+			    <select class="form-control" id="categoryId" name="categoryId" v-model="vueId">
+			    	<option th:each="list:${lists}" 
+			                th:value="${list.categoryId}" th:text="${list.categoryName}"></option>
+			    </select>
+			    <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" th:errorclass="err"></div>
+			</div>
+			<div class="form-group">
+			    <label for="diaryDay">日付</label> 
+			    <input class="form-control" type="date" id="diaryDay" name="diaryDay" 
+			           th:value="${#dates.format(new java.util.Date(),'yyyy-MM-dd')}">
+			    <div th:if="${#fields.hasErrors('diaryDay')}" th:errors="*{diaryDay}" th:errorclass="err"></div>
+			</div>
+			<div class="form-group">
+			    <label for="record1">
+			        <span v-if='vueId != 4'>主食</span>
+			        <span v-else>飲酒</span>
+			    </label> 
+			    <input class="form-control" type="text" id="record1" name="record1" th:field="*{record1}">
+			    <div th:if="${#fields.hasErrors('record1')}" th:errors="*{record1}" th:errorclass="error-messages"></div>
+			</div>
+			<div class="form-group">
+			    <label for="record2">
+			        <span v-if='vueId != 4'>主菜</span>
+			        <span v-else>間食</span>
+			    </label> 
+			    <input class="form-control" type="text" id="record2" name="record2" th:field="*{record2}">
+			    <div th:if="${#fields.hasErrors('record2')}" th:errors="*{record2}" th:errorclass="error-messages"></div>
+			</div>
+			<div class="form-group">
+			    <label for="record3">
+			        <span v-if='vueId != 4'>副菜</span>
+			        <span v-else>運動</span>
+			    </label> 
+			    <input class="form-control" type="text" id="record3" name="record3" th:field="*{record3}">
+			    <div th:if="${#fields.hasErrors('record3')}" th:errors="*{record3}" th:errorclass="error-messages"></div>
+			</div>
+			<div class="form-group">
+			    <label for="price">メモ</label> 
+			    <textarea class="form-control" id="memo" name="memo" th:field="*{memo}" 
+			              placeholder="1~100文字以内でメモを記入してください"></textarea>
+			    <div th:if="${#fields.hasErrors('memo')}" th:errors="*{memo}" th:errorclass="error-messages"></div>
+			</div>
+			<div>
+			    <input type="hidden" id="createAt" name="createAt" th:field="*{createAt}">
+			</div>
+			<div th:object="${fileUploadForm}">
+		        <input type="file" th:field="*{multipartFile}" v-on:change="uploads">
+		        <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="err"></div>
+		    </div>
+			<div class="form-button">
+			    <button class="btn btn-green" type="submit">登録する</button>
+			</div>
+	    </div>
+    </div>
+	</form>
+	<a th:href="@{/index}">カレンダーへ戻る</a>
+</div>
+
+<script th:src="@{/js/editDiaryRecord.js}">
+</script>
+</body>
+</html>

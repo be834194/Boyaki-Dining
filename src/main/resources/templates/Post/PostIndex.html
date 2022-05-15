@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+	<title>投稿一覧 -Boyaki-Dining</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="icon" type="image/jpg" th:href="@{/images/favicon.jpg}">
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+	<script src="https://unpkg.com/vue@next"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+</head>
+
+<body>
+<div th:replace="flagment/header :: user-header"></div>
+<div class="between-blocks">
+	<h2>投稿一覧</h2>
+	<h4><a th:href="@{/index/boyaki/post}">投稿する
+	    <img th:src="@{/images/吹き出しアイコン.png}"></a>
+	</h4>
+</div>
+<div id="boyakiApp" class="container">
+	<div class="row">
+	    <article class="col-sm-9">
+		    <div v-for="(value,key) in PostRecords">
+			    <a v-bind:href="`/index/boyaki/${value.postId}`">
+				    <p>{{value.content}}</p>
+				</a>
+				<div class="between-blocks">
+				    <a v-bind:href="`/index/boyaki/profile/${value.nickName}`">
+				        <div>{{value.nickName}} さん</div>
+				    </a>
+					<span>{{value.createAt}}</span>
+				</div><hr>
+		    </div>
+		    <input type="button" class="col-sm-12" id="scroll" value="追加で読み込む"
+		           v-on:click="search" v-bind:disabled="disabled" />
+	    </article>
+		<aside class="col-sm-3">
+			<div class="area">
+			    <div class="form-group">
+				    <div>投稿内容</div>
+				    <input type="search" class="form-control" id="textkeyword" name="textkeyword" v-model="keyword"/>
+				</div>
+			    <div>
+				    <button class="btn btn-green" type="submit" v-on:click="startSearch">検索</button>&nbsp;&nbsp;
+				    <button class="btn btn-red" type="reset" v-on:click="resetSearch">検索値の初期化</button>
+				    <br><br>
+			    </div>
+				<div class="form-group">
+				<div>フィルタ</div>
+				    <div>投稿種別</div>
+				    <select class="form-control" id="postCategory" name="postCategory" multiple v-model="category">
+			            <option th:each="category:${postCategory}" 
+			                    th:value="${category.postId}" th:text="${category.postName}"></option>
+			        </select>
+				</div>&nbsp;
+				<div class="form-group">
+			        <div>ユーザの健康状態</div>
+			        <select class="form-control" id="statusList" name="statusList" multiple v-model="status">
+				        <option th:each="status:${statusList}" 
+				                th:value="${status.statusId}" th:text="${status.statusName}"></option>
+				    </select>
+				</div>
+			</div>
+		</aside>
+    </div>
+</div>
+
+<script th:src="@{/js/boyakiApp.js}">
+</script>
+</body>
+
+</html>

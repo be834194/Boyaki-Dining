@@ -1,0 +1,130 @@
+html{font-size:100%}
+body{
+	line-height:1.7;
+	color:#432;
+	background-color: #f6efdb;
+	}
+h2 {
+    margin: 20px 0 20px 0;
+    color: gray;
+    }
+h4 {
+	margin: 20px 10px 0 0;
+}
+a {
+	text-decoration: none;
+	color: #1760a0;
+}
+hr {
+	border-bottom: 2px solid rgba(0,0,0,0.1);
+    box-shadow: 0 2px 0 rgba(255,255,255,1);
+}
+textarea {
+	height: 100px;
+	resize: none;
+}
+article span {
+	font-size:14px
+}
+article p { /*PostIndexの投稿見出し*/
+	font-size:28px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+article pre { /*PostDetailの投稿内容*/
+	font-size:24px;
+	white-space:pre-wrap;
+}
+
+aside p { /*ProfileのnickName*/
+	font-size:16px;
+}
+aside span { /*Profileのステータス*/
+	font-size:14px;
+}
+aside pre { /*Profileのプロフィール*/
+	font-size:18px;
+	white-space:pre-wrap;
+}
+
+#home { /*ホーム画面の背景画像*/
+	background-image:url(../images/background.jpg);
+	min-height: 100vh;
+}
+.big-bg { /*ホーム画面の背景設定*/
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+.home-content {
+	text-align: center;
+}
+.home-content p {
+	font-size:1.25rem;
+	margin:10px 0 20px;
+}
+.home-blocks {
+	display:flex;
+	justify-content: space-around;
+}
+
+a.btn-red,button.btn-red,input.btn-red {
+  color: #fff;
+  background-color: #ed1c24;
+}
+a.btn-green,button.btn-green,input.btn-green {
+  color: #fff;
+  background-color: #a6ce39;
+}
+a.btn-orange,button.btn-orange,input.btn-orange {
+  color: #fff;
+  background-color: #eb6100;
+}
+
+.pageHeader{
+	background-color: #99cc65;
+	display:flex;
+	justify-content:space-between;
+}
+.blocks{
+	display:flex;
+	}
+.between-blocks{
+	display:flex;
+	justify-content: space-between;
+}
+.form-button { /*フォームボタンの位置*/
+	text-align: right;
+}
+.form-height { /*フォーム内の行間*/
+	line-height:40px;	
+}
+.area{
+	background-color: white;
+	padding: 10px; 
+	margin-bottom: 10px; 
+	border: 1px solid #333333;
+	box-shadow:0.5px 0.5px rgba(1,1,1,1);
+}
+.mypage-profile table,.mypage-profile th{
+	font-size: 20px;
+	border: 0.5px solid gray;
+	background-color:white;
+}
+.mypage-profile td {
+	font-size: 20px;
+	width:600px;
+	border: 0.5px solid #728742;
+	background-color:white;
+}
+.danger{
+	font-size: 32px;
+	color:red;
+}
+.error-messages {
+    color: red;
+    display: block;
+    padding-left: 5px;
+    overflow-x: auto;
+}
