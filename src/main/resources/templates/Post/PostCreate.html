@@ -28,7 +28,8 @@
 		    </div>
 		    <div class="form-group">
 			    <label for="content">投稿内容</label>
-		        <textarea class="form-control" id="content" name="content"　th:field="*{content}"></textarea>
+			    <textarea class="form-control" id="content" name="content" th:field="*{content}"
+			              placeholder="1~100文字以内で記入してください"></textarea>
 		        <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" th:errorclass="error-messages"></div>
 		    </div><br>
 		    <div class="form-button">

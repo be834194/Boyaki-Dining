@@ -54,6 +54,7 @@ var boyakiApp = {
 			})
 			.catch(error =>{
 				console.log(error)
+				this.disabled = true
 				document.head.querySelector("scroll").textContent = 'サーバとの通信でエラーが発生しました'
 			})
 		}

@@ -20,6 +20,7 @@ hr {
     box-shadow: 0 2px 0 rgba(255,255,255,1);
 }
 textarea {
+	height: 100px;
 	resize: none;
 }
 article span {
