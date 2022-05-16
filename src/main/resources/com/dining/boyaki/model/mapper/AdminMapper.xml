@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dining.boyaki.model.mapper.AdminMapper">
+    
+    <select id ="findPost" resultType="com.dining.boyaki.model.entity.Post">
+        SELECT 
+               username,nickname,content
+        FROM
+            post
+        WHERE
+            postid=#{postId}
+    </select>
+
+    <delete id = "deletePost">
+        DELETE FROM post
+        WHERE
+              postid = #{postId}
+    </delete>
+    
+    <select id ="findComment" resultType="com.dining.boyaki.model.entity.Comment">
+        SELECT 
+               username,nickname,content
+        FROM
+            comment
+        WHERE
+            commentid = #{commentId}
+    </select>
+
+    <delete id = "deleteComment">
+        DELETE FROM comment
+        WHERE
+              commentid = #{commentId}
+    </delete>
+    
+</mapper>
