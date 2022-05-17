@@ -1,12 +1,10 @@
-package com.dining.boyaki.model.mapper;
+package com.dining.boyaki.model.service.conbined;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.ibatis.session.SqlSession;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
@@ -14,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dining.boyaki.model.entity.Comment;
 import com.dining.boyaki.model.entity.Post;
+import com.dining.boyaki.model.service.AdminService;
 import com.dining.boyaki.util.CsvDataSetLoader;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -22,53 +21,45 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 
 @DbUnitConfiguration(dataSetLoader = CsvDataSetLoader.class)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
-                         TransactionalTestExecutionListener.class,
-                         DbUnitTestExecutionListener.class})
-@MybatisTest
+	                     TransactionalTestExecutionListener.class,
+	                     DbUnitTestExecutionListener.class})
+@SpringBootTest
 @Transactional
-public class AdminMapperTest {
+public class AdminServiceCombinedTest {
 	
 	@Autowired
-	AdminMapper adminMapper;
-	
-	@Autowired
-	SqlSession session;
-	
-	@AfterEach
-	void tearDown() {
-		session.flushStatements();
-	}
+	AdminService adminService;
 	
 	@Test
-	@DatabaseSetup(value = "/mapper/Admin/setup/")
+	@DatabaseSetup(value = "/service/Admin/setup/")
 	void findPostで投稿を1件取得する() throws Exception{
-		Post result = adminMapper.findPost(3);
+		Post result = adminService.findPost(3);
 		assertEquals("糸井",result.getUserName());
 		assertEquals("sigeno",result.getNickName());
 		assertEquals("ドーナツは穴が開いてるからゼロカロリーって本当？",result.getContent());
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/mapper/Admin/setup/")
-	@ExpectedDatabase(value = "/mapper/Admin/delete/post/",table="post")
+	@DatabaseSetup(value = "/service/Admin/setup/")
+	@ExpectedDatabase(value = "/service/Admin/delete/post/",table="post")
 	void deletePostで投稿が1件削除される() throws Exception{
-		adminMapper.deletePost(3);
+		adminService.deletePost(3);
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/mapper/Admin/setup/")
+	@DatabaseSetup(value = "/service/Admin/setup/")
 	void findCommentでコメントを1件取得する() throws Exception{
-		Comment result = adminMapper.findComment(4);
+		Comment result = adminService.findComment(4);
 		assertEquals("加藤健",result.getUserName());
 		assertEquals("加藤健",result.getNickName());
 		assertEquals("応援してます",result.getContent());
 	}
 	
 	@Test
-	@DatabaseSetup(value = "/mapper/Admin/setup/")
-	@ExpectedDatabase(value = "/mapper/Admin/delete/comment/",table="comment")
+	@DatabaseSetup(value = "/service/Admin/setup/")
+	@ExpectedDatabase(value = "/service/Admin/delete/comment/",table="comment")
 	void deleteCommentでコメントが1件削除される() throws Exception{
-		adminMapper.deleteComment(4);
+		adminService.deleteComment(4);
 	}
 
 }
