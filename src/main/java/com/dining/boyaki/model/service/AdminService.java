@@ -12,7 +12,6 @@ public class AdminService {
 	private final AdminMapper adminMapper;
 
 	public AdminService(AdminMapper adminMapper) {
-		super();
 		this.adminMapper = adminMapper;
 	}
 	
