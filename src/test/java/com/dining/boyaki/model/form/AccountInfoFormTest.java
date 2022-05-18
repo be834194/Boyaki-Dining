@@ -37,23 +37,18 @@ public class AccountInfoFormTest {
 	UniqueNickNameValidator uniqueNickNameValidator;
 	
 	AccountInfoForm form = new AccountInfoForm();
-                                                  //ターゲット,ターゲットオブジェクトの名前
+                                                //ターゲット,ターゲットオブジェクトの名前
 	BindingResult bindingResult = new BindException(form,"AccountInfoForm");
 	
 	@Test
 	@DatabaseSetup(value = "/form/setup/")
 	void バリデーション問題なし() throws Exception{
-		form.setUserName("miho");
-		form.setNickName("axios");
-		form.setProfile("しがない会社員");
-		form.setStatus(0);
-		form.setGender(2);
-		form.setAge(2);
-		form.setHeight(160);
-		form.setWeight(65);
+		form = new AccountInfoForm("miho","axios","しがない会社員",
+				                   0,2,2,160,65);
 		
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
+		
 		uniqueNickNameValidator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
 	}
@@ -61,17 +56,12 @@ public class AccountInfoFormTest {
 	@Test
 	@DatabaseSetup(value = "/form/setup/")
 	void ニックネームが重複してユーザ名が一緒ならエラーが発生しない() throws Exception{
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setProfile("しがない会社員");
-		form.setStatus(0);
-		form.setGender(1);
-		form.setAge(3);
-		form.setHeight(160);
-		form.setWeight(65);
+		form = new AccountInfoForm("miho","匿名","しがない会社員",
+                                   0,1,3,160,65);
 		
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
+		
 		uniqueNickNameValidator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
 	}
@@ -81,14 +71,9 @@ public class AccountInfoFormTest {
 		        "寿限無寿限無後光の擦り切れ回砂利,301,301"})
 	@DatabaseSetup(value = "/form/setup/")
 	void 指定サイズ範囲外でエラー発生(String nickName,float height,float weight) throws Exception{
-		form.setUserName("糸井");
-		form.setNickName(nickName);
+		form = new AccountInfoForm("糸井",nickName,null,
+                                   3,3,2,height,weight);
 		form.setProfile("123456789012345678901234567890123456789012345678901");
-		form.setStatus(3);
-		form.setGender(3);
-		form.setAge(2);
-		form.setHeight(height);
-		form.setWeight(weight);
 		
 		validator.validate(form, bindingResult);
 		assertEquals(4,bindingResult.getFieldErrorCount());
@@ -100,6 +85,7 @@ public class AccountInfoFormTest {
                                 .toString().contains("正しい値を入力してください"));
 		assertTrue(bindingResult.getFieldError("weight")
                                 .toString().contains("正しい値を入力してください"));
+		
 		uniqueNickNameValidator.validate(form, bindingResult);
 		assertEquals(4,bindingResult.getFieldErrorCount());
 	}
@@ -107,17 +93,12 @@ public class AccountInfoFormTest {
 	@Test
 	@DatabaseSetup(value = "/form/setup/")
 	void ニックネームが重複してユーザ名が一致しないならエラーが発生する() throws Exception{
-		form.setUserName("加藤健");
-		form.setNickName("sigeno");
-		form.setProfile("つい最近嫁に小遣いを削られました");
-		form.setStatus(5);
-		form.setGender(1);
-		form.setAge(3);
-		form.setHeight(160);
-		form.setWeight(65);
+		form = new AccountInfoForm("加藤健","sigeno","つい最近嫁に小遣いを削られました",
+                                   5,1,3,160,65);
 		
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
+		
 		uniqueNickNameValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("nickName")

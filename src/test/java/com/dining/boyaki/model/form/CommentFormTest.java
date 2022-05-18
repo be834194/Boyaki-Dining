@@ -23,12 +23,19 @@ public class CommentFormTest {
     BindingResult bindingResult = new BindException(form,"CommentForm");
     
     @Test
-    void バリデーション問題あり() throws Exception{
-       	form.setPostId(3);
-    	form.setUserName("糸井");
-    	form.setNickName("sigeno");
+    void バリデーション問題なし() throws Exception{
+    	form = new CommentForm(3,"糸井","sigeno","応援してます");
+    	
+    	validator.validate(form, bindingResult);
+		assertEquals(0,bindingResult.getFieldErrorCount());
+    }
+    
+    @Test
+    void 指定サイズ範囲外でエラー発生() throws Exception{
+    	form = new CommentForm(3,"糸井","sigeno",null);
     	form.setContent("12345678901234567890123456789012345678901234567890"
     			      + "123456789012345678901234567890123456789012345678901");
+    	
     	validator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("content")
@@ -38,6 +45,7 @@ public class CommentFormTest {
     @Test
     void 空文字でバリデーションエラー発生() throws Exception{
     	form = new CommentForm(3,"糸井","sigeno","");
+    	
     	validator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("content")
@@ -47,17 +55,11 @@ public class CommentFormTest {
     @Test
     void Nullでバリデーションエラー発生() throws Exception{
     	form = new CommentForm(3,"糸井","sigeno",null);
+    	
     	validator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("content")
                                 .toString().contains("投稿内容は必須項目です"));
-    }
-    
-    @Test
-    void バリデーション問題なし() throws Exception{
-    	form = new CommentForm(3,"糸井","sigeno","応援してます");
-    	validator.validate(form, bindingResult);
-		assertEquals(0,bindingResult.getFieldErrorCount());
     }
 
 }

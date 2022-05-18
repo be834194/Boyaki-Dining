@@ -24,14 +24,24 @@ public class DiaryRecordFormTest {
 	BindingResult bindingResult = new BindException(form,"DiaryRecordForm");
 	
 	@Test
-	void バリデーション問題あり() throws Exception{
-		form.setCategoryId(1);
-		form.setDiaryDay(Date.valueOf("2022-02-19"));
+	void バリデーション問題なし() throws Exception{
+		form = new DiaryRecordForm("加藤健",1,Date.valueOf("2022-02-19"),
+                                   null,null,"サラダ",null,null,null);
+		
+		validator.validate(form, bindingResult);
+		assertEquals(0,bindingResult.getFieldErrorCount());
+	}
+	
+	@Test
+	void 指定サイズ範囲外でエラー発生() throws Exception{
+		form = new DiaryRecordForm("加藤健",1,Date.valueOf("2022-02-19"),
+				                   null,null,null,null,null,null);
 		form.setRecord1("123456789012345678901234567890123456789012345678901");
 		form.setRecord2("123456789012345678901234567890123456789012345678902");
 		form.setRecord3("123456789012345678901234567890123456789012345678903");
 		form.setMemo("12345678901234567890123456789012345678901234567890"
 				   + "123456789012345678901234567890123456789012345678904");
+		
 		validator.validate(form, bindingResult);
 		assertEquals(4,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("record1")
@@ -46,11 +56,9 @@ public class DiaryRecordFormTest {
 	
 	@Test
 	void 未入力でエラー発生() throws Exception{
-		form.setCategoryId(0);
-		form.setDiaryDay(null);
-		form.setRecord1(null);
-		form.setRecord2(null);
-		form.setRecord3(null);
+		form = new DiaryRecordForm("加藤健",0,null,
+                                   null,null,null,null,"memo",null);
+		
 		validator.validate(form, bindingResult);
 		assertEquals(5,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("categoryId")
@@ -63,17 +71,6 @@ public class DiaryRecordFormTest {
                 .toString().contains("いずれかの入力が必須です"));
 		assertTrue(bindingResult.getFieldError("record3")
                 .toString().contains("いずれかの入力が必須です"));
-	}
-	
-	@Test
-	void バリデーション問題なし() throws Exception{
-		form.setCategoryId(1);
-		form.setDiaryDay(Date.valueOf("2022-02-19"));
-		form.setRecord1(null);
-		form.setRecord2(null);
-		form.setRecord3("サラダ");
-		validator.validate(form, bindingResult);
-		assertEquals(0,bindingResult.getFieldErrorCount());
 	}
 
 }
