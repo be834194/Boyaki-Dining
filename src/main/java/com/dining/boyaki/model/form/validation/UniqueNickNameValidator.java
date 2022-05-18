@@ -31,15 +31,15 @@ public class UniqueNickNameValidator implements Validator {
 		
 		AccountInfo existNames = findDataSharedService.findNickName(form.getNickName());
 		if(existNames != null) {
-			if(existNames.getNickName().equals(form.getNickName()) &&
-			   !existNames.getUserName().equals(form.getUserName())) {
+			if(existNames.getNickName().equals(form.getNickName()) && //取得したニックネームとフォームのニックネームが一致
+			  !existNames.getUserName().equals(form.getUserName())) { //取得したユーザ名とフォームのユーザ名が不一致
 				errors.rejectValue("nickName",
 				                   "AccountInfoForm.nickName",
 				                   "入力されたニックネームは既に使われています");
 			} else {
 				return;
 			}
-		} else {
+		} else { //findNickNameでデータが取れない場合は問題なし
 			return;
 		}
 	}

@@ -59,11 +59,9 @@ public class NotReusedPasswordValidatorCombinedTest {
 	@Test
 	@DatabaseSetup(value = "/validation/setup/")
 	void validateで新パスワードが重複せずエラーが発生しない() throws Exception{
-		form.setUserName("加藤健");
-		form.setMail("example@ezweb.ne.jp");
-		form.setOldPassword("pinballs");
+		form = new PasswordChangeForm("加藤健","example@ezweb.ne.jp","pinballs",
+				                      null,"wonderSong");
 		form.setPassword("wonderSong"); //31日前のパスワード
-		form.setConfirmPassword("wonderSong");
 		
 		notReusedPasswordValidator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
@@ -72,11 +70,8 @@ public class NotReusedPasswordValidatorCombinedTest {
 	@Test
 	@DatabaseSetup(value = "/validation/setup/")
 	void validateで30日以内のパスワード変更履歴がない場合はエラーが発生しない() throws Exception{
-		form.setUserName("糸井");
-		form.setMail("mother@yahoo.co.jp");
-		form.setOldPassword("sigeSIGE");
-		form.setPassword("star-Man");
-		form.setConfirmPassword("star-Man");
+		form = new PasswordChangeForm("糸井","mother@yahoo.co.jp","sigeSIGE",
+                                      "star-Man","star-Man");
 		
 		notReusedPasswordValidator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
@@ -85,11 +80,8 @@ public class NotReusedPasswordValidatorCombinedTest {
 	@Test
 	@DatabaseSetup(value = "/validation/setup/")
 	void validateでメールアドレスの誤りでエラーが発生する() throws Exception{
-		form.setUserName("加藤健");
-		form.setMail("hogehoge@ezweb.ne.jp");
-		form.setOldPassword("pinballs");
-		form.setPassword("wonderSong");
-		form.setConfirmPassword("wonderSong");
+		form = new PasswordChangeForm("加藤健","hogehoge@ezweb.ne.jp","pinballs",
+                                      "wonderSong","wonderSong");
 		
 		notReusedPasswordValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
@@ -100,11 +92,8 @@ public class NotReusedPasswordValidatorCombinedTest {
 	@Test
 	@DatabaseSetup(value = "/validation/setup/")
 	void validateで旧パスワードと一致してエラーが発生する() throws Exception{
-		form.setUserName("加藤健");
-		form.setMail("example@ezweb.ne.jp");
-		form.setOldPassword("pinballs");
-		form.setPassword("pinballs");
-		form.setConfirmPassword("pinballs");
+		form = new PasswordChangeForm("加藤健","example@ezweb.ne.jp","pinballs",
+                                      "pinballs","pinballs");
 		
 		notReusedPasswordValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
@@ -115,11 +104,9 @@ public class NotReusedPasswordValidatorCombinedTest {
 	@Test
 	@DatabaseSetup(value = "/validation/setup/")
 	void validateで新パスワードが過去30日以内のパスワードと一致してエラーが発生する() throws Exception{
-		form.setUserName("加藤健");
-		form.setMail("example@ezweb.ne.jp");
-		form.setOldPassword("pinballs");
+		form = new PasswordChangeForm("加藤健","example@ezweb.ne.jp","pinballs",
+                                      null,"ten_bear");
 		form.setPassword("ten_bear"); // //30日前のパスワード
-		form.setConfirmPassword("ten_bear");
 		
 		notReusedPasswordValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());

@@ -74,7 +74,7 @@ public class UniqueNickNameValidatorTest {
 		uniqueNickNameValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("nickName")
-				.toString().contains("入力されたニックネームは既に使われています"));
+				                .toString().contains("入力されたニックネームは既に使われています"));
 		verify(findDataSharedService,times(1)).findNickName("匿名ちゃん");
 	}
 
