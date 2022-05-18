@@ -42,7 +42,7 @@ public class OldPasswordValidator implements Validator {
 	                               "PasswordChangeForm.oldPassword",
 	                               "メールアドレスに誤りがあるか、ログイン中のパスワードと異なります");
 	    	}
-		} else {
+		} else { //passwordHistoryServiceでメールが取得できない場合
 			errors.rejectValue("oldPassword",
                                "PasswordChangeForm.oldPassword",
                                "メールアドレスに誤りがあるか、ログイン中のパスワードと異なります");

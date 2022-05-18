@@ -51,11 +51,8 @@ public class RegisterFormTest {
 	@Test
 	@DatabaseSetup(value = "/form/setup/")
 	void バリデーション問題なし() throws Exception{
-		form.setUserName("竹内");
-		form.setPassword("hogetaro");
-		form.setConfirmPassword("hogetaro");
-		form.setMail("disney@gmail.com");
-		
+		form = new RegisterForm("竹内","disney@gmail.com","hogetaro","hogetaro");
+
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
 		
@@ -70,10 +67,7 @@ public class RegisterFormTest {
 	@CsvSource({"亜,passwor",
 		        "寿限無寿限無後光の擦り切れ回砂利,passwordpasswordp"})
 	void 未入力や指定サイズ範囲外でフィールドエラー発生(String userName,String password) throws Exception{
-		form.setUserName(userName);
-		form.setMail("");
-		form.setPassword(password);
-		form.setConfirmPassword("");
+		form = new RegisterForm(userName,"",password,"");
 		
 		validator.validate(form, bindingResult);
 		assertEquals(4,bindingResult.getFieldErrorCount());
@@ -92,10 +86,7 @@ public class RegisterFormTest {
 		        "sigeno"})
 	@DatabaseSetup(value = "/form/setup/")
 	void ユーザ名やニックネームの重複でエラー発生(String userName) throws Exception{
-		form.setUserName(userName);
-		form.setPassword("hogehoge");
-		form.setConfirmPassword("hogehoge");
-		form.setMail("example@ezweb.ne.jp");
+		form = new RegisterForm(userName,"example@ezweb.ne.jp","hogehoge","hogehoge");
 		
 		uniqueUsernameValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
@@ -105,10 +96,7 @@ public class RegisterFormTest {
 	
 	@Test
 	void メール形式でフィールドエラー発生() throws Exception{
-		form.setUserName("竹内");
-		form.setPassword("hogetaro");
-		form.setConfirmPassword("hogetaro");
-		form.setMail("メールアドレス");
+		form = new RegisterForm("竹内","メールアドレス","hogetaro","hogetaro");
 		
 		validator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
@@ -118,10 +106,7 @@ public class RegisterFormTest {
 	
 	@Test
 	void パスワード不一致でフィールドエラー発生() throws Exception{
-		form.setUserName("加藤健");
-		form.setPassword("pinballs");
-		form.setConfirmPassword("hogehoge");
-		form.setMail("example@ezweb.ne.jp");
+		form = new RegisterForm("加藤健","example@ezweb.ne.jp","pinballs","hogehoge");
 		
 		validator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
@@ -132,10 +117,7 @@ public class RegisterFormTest {
 	@Test
 	@DatabaseSetup(value = "/form/setup/")
 	void メールアドレスの重複でフィールドエラー発生() throws Exception{
-		form.setUserName("加藤健");
-		form.setPassword("pinballs");
-		form.setConfirmPassword("pinballs");
-		form.setMail("example@ezweb.ne.jp");
+		form = new RegisterForm("加藤健","example@ezweb.ne.jp","pinballs","pinballs");
 		
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
@@ -149,10 +131,7 @@ public class RegisterFormTest {
 	@Test
 	@DatabaseSetup(value = "/form/setup/")
 	void メールアドレスが存在しないとフィールドエラー発生() throws Exception{
-		form.setUserName("加藤健");
-		form.setPassword("pinballs");
-		form.setConfirmPassword("pinballs");
-		form.setMail("sakura.spring@gmail.com");
+		form = new RegisterForm("加藤健","sakura.spring@gmail.com","pinballs","pinballs");
 		
 		validator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());

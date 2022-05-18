@@ -83,17 +83,9 @@ public class DiaryRecordMapperTest {
 	@DatabaseSetup(value = "/mapper/DiaryRecord/setup/")
 	@ExpectedDatabase(value = "/mapper/DiaryRecord/insert/",table="diary_record")
 	void insertDiaryRecordsで一つの投稿が追加される() throws Exception{
-		DiaryRecord record = new DiaryRecord();
-		record.setUserName("加藤健");
-		record.setCategoryId(2);
-		record.setDiaryDay(Date.valueOf("2022-02-26"));
-		record.setRecord1("白米");
-		record.setRecord2("生姜焼き");
-		record.setRecord3("きのこのマリネ");
-		record.setImageName("FLeLXKVUUAAgeF0.jpeg");
-		record.setMemo(null);
-		record.setCreateAt(LocalDateTime.parse("2022-02-26T14:01:25"));
-		record.setUpdateAt(LocalDateTime.parse("2022-02-26T14:01:25"));
+		DiaryRecord record = new DiaryRecord("加藤健",2,Date.valueOf("2022-02-26"),
+				             "白米","生姜焼き","きのこのマリネ","FLeLXKVUUAAgeF0.jpeg",
+				             null,LocalDateTime.parse("2022-02-26T14:01:25"),LocalDateTime.parse("2022-02-26T14:01:25"));
 		diaryRecordMapper.insertDiaryRecord(record);
 	}
 	
@@ -101,17 +93,9 @@ public class DiaryRecordMapperTest {
 	@DatabaseSetup(value = "/mapper/DiaryRecord/setup/")
 	@ExpectedDatabase(value = "/mapper/DiaryRecord/update/",table="diary_record")
 	void updateDiaryRecordsで一つの投稿が更新される() throws Exception{
-		DiaryRecord record = new DiaryRecord();
-		record.setUserName("糸井");
-		record.setCategoryId(3);
-		record.setDiaryDay(Date.valueOf("2022-01-31"));
-		record.setRecord1("うどん");
-		record.setRecord2("唐揚げ");
-		record.setRecord3(null);
-		record.setImageName(null);
-		record.setMemo("冷凍食品");
-		record.setCreateAt(LocalDateTime.parse("2022-02-02T10:22:57"));
-		record.setUpdateAt(LocalDateTime.parse("2022-02-02T16:23:33"));
+		DiaryRecord record = new DiaryRecord("糸井",3,Date.valueOf("2022-01-31"),
+				             "うどん","唐揚げ",null,
+				             null,"冷凍食品",LocalDateTime.parse("2022-02-02T10:22:57"),LocalDateTime.parse("2022-02-02T16:23:33"));
 		diaryRecordMapper.updateDiaryRecord(record);
 	}
 	

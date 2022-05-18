@@ -60,16 +60,8 @@ public class AccountInfoMapperTest {
 	@DatabaseSetup(value = "/mapper/AccountInfo/setup/")
 	@ExpectedDatabase(value = "/mapper/AccountInfo/update/account_info/")
 	void updateAccountInfoでユーザレコードが1件更新される() throws Exception{
-		AccountInfo info = new AccountInfo();
-		info.setUserName("加藤健");
-		info.setNickName("kenken");
-		info.setProfile("間食が止まらない");
-		info.setStatus(3);
-		info.setGender(1);
-		info.setAge(3);
-		info.setHeight(167);
-		info.setWeight(64);
-		info.setUpdateAt(LocalDateTime.parse("2022-02-10T20:35:12"));
+		AccountInfo info = new AccountInfo("加藤健","kenken","間食が止まらない",
+				                           3,1,3,167,64,null,LocalDateTime.parse("2022-02-10T20:35:12"));
 		accountInfoMapper.updateAccountInfo(info);
 	}
 	
@@ -87,10 +79,7 @@ public class AccountInfoMapperTest {
 	@DatabaseSetup(value = "/mapper/AccountInfo/setup/")
 	@ExpectedDatabase(value = "/mapper/AccountInfo/insert/",table="password_history")
 	void insertPasswordHistoryでPW履歴レコードが1件追加される() throws Exception{
-		PasswordHistory history = new PasswordHistory();
-		history.setUserName("miho");
-		history.setPassword("script-Java");
-		history.setUseDay(LocalDateTime.parse("2022-02-10T20:39:45"));
+		PasswordHistory history = new PasswordHistory("miho","script-Java",LocalDateTime.parse("2022-02-10T20:39:45"));
 		accountInfoMapper.insertPasswordHistory(history);
 	}
 	

@@ -48,6 +48,7 @@ public class FileUploadFormTest {
     
     @Test
     void メディアタイプやでバリデーションエラー発生() throws Exception{
+    	//メディアタイプに問題あり
     	File upFile = new File("src/test/resources/image/testApp.js");
 		Path path = Paths.get(upFile.getCanonicalPath());
 		byte[] bytes = Files.readAllBytes(path);
@@ -58,6 +59,7 @@ public class FileUploadFormTest {
     	assertTrue(bindingResult.getFieldError("multipartFile")
     			                .toString().contains("ファイル拡張子がjpg,jpegであることを確認してください"));
     	
+    	//拡張子に問題あり
     	file = new MockMultipartFile("file","testApp.png","multipart/form-data",bytes);
     	form.setMultipartFile(file);
     	validator.validate(form, bindingResult);

@@ -24,8 +24,8 @@ public class ConfirmFileUploadValidator implements ConstraintValidator<ConfirmFi
 		List<MediaType> mediaTypeList = Arrays.asList(MediaType.IMAGE_JPEG,MediaType.MULTIPART_FORM_DATA);
 	    List<String> extList = Arrays.asList("jpg", "jpeg");
 	    
-	    return  mediaTypeList.stream().anyMatch((mType) -> mediaType.includes(mType))
-	                        && extList.stream().anyMatch((v) -> extension.toLowerCase().equals(v));
+	    return mediaTypeList.stream().anyMatch((mType) -> mediaType.includes(mType))
+	        && extList.stream().anyMatch((v) -> extension.toLowerCase().equals(v));
 	}
 
 }

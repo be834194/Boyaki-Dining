@@ -22,18 +22,16 @@ public interface PostMapper {
 	void deletePost(@Param("userName")String userName,
 			        @Param("postId")long postId);
 	PostRecord findOnePostRecord(long postId);
+	List<PostRecord> findPostRecord(@Param("nickName")String nickName,
+                                    @Param("pageable")Pageable pageable);
+	List<PostRecord> searchPostRecord(@Param("category") int[] category,
+                                      @Param("status") int[] status,
+                                      @Param("content") String[] content,
+                                      @Param("pageable")Pageable pageable);
 	
 	void insertComment(Comment comment);
 	List<CommentRecord> findCommentRecord(@Param("postId")long postId,
 			                              @Param("pageable")Pageable pageable);
-	
-	List<PostRecord> findPostRecord(@Param("nickName")String nickName,
-			                        @Param("pageable")Pageable pageable);
-	List<PostRecord> searchPostRecord(@Param("category") int[] category,
-			                          @Param("status") int[] status,
-			                          @Param("content") String[] content,
-			                          @Param("pageable")Pageable pageable
-			                          );
 	
 	Optional<Integer> currentRate(@Param("postId")long postId,
 			                      @Param("userName")String userName);

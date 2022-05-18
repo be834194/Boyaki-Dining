@@ -44,11 +44,7 @@ public class RegistrationMapperTest {
 	@DatabaseSetup(value = "/mapper/Registration/setup/")
 	@ExpectedDatabase(value = "/mapper/Registration/insert/account/",table="account")
 	void insertMemberでユーザレコードが1件追加される() throws Exception{
-		Account account = new Account();
-		account.setUserName("マクベイ");
-		account.setPassword("sun-flan-sis");
-		account.setMail("north-east@gmail.com");
-		account.setRole("ROLE_USER");
+		Account account = new Account("マクベイ","sun-flan-sis","north-east@gmail.com","ROLE_USER");
 		registrationMapper.insertAccount(account);
 	}
 	
@@ -56,10 +52,7 @@ public class RegistrationMapperTest {
 	@DatabaseSetup(value = "/mapper/Registration/setup/")
 	@ExpectedDatabase(value = "/mapper/Registration/insert/password_history/",table="password_history")
 	void insertPasswordHistoryでPW履歴レコードが1件追加される() throws Exception{
-		PasswordHistory history = new PasswordHistory();
-		history.setUserName("糸井");
-		history.setPassword("sigeSATO");
-		history.setUseDay(LocalDateTime.parse("2022-02-08T11:00:52"));
+		PasswordHistory history = new PasswordHistory("糸井","sigeSATO",LocalDateTime.parse("2022-02-08T11:00:52"));
 		registrationMapper.insertPasswordHistory(history);
 	}
 	
@@ -67,17 +60,9 @@ public class RegistrationMapperTest {
 	@DatabaseSetup(value = "/mapper/Registration/setup/")
 	@ExpectedDatabase(value = "/mapper/Registration/insert/account_info/",table="account_info")
 	void insertAccountInfoでユーザ情報レコードが1件追加される() throws Exception{
-		AccountInfo info = new AccountInfo();
-		info.setUserName("加藤健");
-		info.setNickName("加藤健");
-		info.setProfile("間食が止まらない");
-		info.setStatus(3);
-		info.setGender(1);
-		info.setAge(3);
-		info.setHeight(165);
-		info.setWeight(60);
-		info.setCreateAt(LocalDateTime.parse("2022-02-01T12:19:33"));
-		info.setUpdateAt(LocalDateTime.parse("2022-02-01T12:19:33"));
+		AccountInfo info = new AccountInfo("加藤健","加藤健","間食が止まらない",3,1,3,165,60,
+				                           LocalDateTime.parse("2022-02-01T12:19:33"),
+				                           LocalDateTime.parse("2022-02-01T12:19:33"));
 		registrationMapper.insertAccountInfo(info);
 	}
 	

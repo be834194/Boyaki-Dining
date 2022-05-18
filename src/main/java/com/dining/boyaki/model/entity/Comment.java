@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 public class Comment {
 	
+	private long commentId;
+	
 	private long postId;
 	
 	private String userName;
@@ -27,6 +29,14 @@ public class Comment {
 		this.createAt = createAt;
 	}
 	
+	public long getCommentId() {
+		return commentId;
+	}
+
+	public void setCommentId(long commentId) {
+		this.commentId = commentId;
+	}
+
 	public long getPostId() {
 		return postId;
 	}
@@ -63,7 +73,7 @@ public class Comment {
 		return createAt;
 	}
 	
-	public void setCreateat(LocalDateTime createAt) {
+	public void setCreateAt(LocalDateTime createAt) {
 		this.createAt = createAt;
 	}
 	

@@ -39,9 +39,7 @@ public class OldPasswordValidatorCombinedTest {
 	@Test
 	@DatabaseSetup(value = "/validation/setup/")
 	void validateでパスワードが一致するのでエラーが発生しない() throws Exception{
-		form.setUserName("糸井");
-		form.setMail("mother@yahoo.co.jp");
-		form.setOldPassword("sigeSIGE");
+		form = new PasswordChangeForm("糸井","mother@yahoo.co.jp","sigeSIGE",null,null);
 		
 		oldPasswordValidator.validate(form, bindingResult);
 		assertEquals(0,bindingResult.getFieldErrorCount());
@@ -53,9 +51,7 @@ public class OldPasswordValidatorCombinedTest {
 	@DatabaseSetup(value = "/validation/setup/")
 	void validateでパスワードの不一致やメールアドレスの誤りでエラーが発生する(
 			String userName,String mail,String oldPassword) throws Exception{
-		form.setUserName(userName);
-		form.setMail(mail);
-		form.setOldPassword(oldPassword);
+		form = new PasswordChangeForm(userName,mail,oldPassword,null,null);
 		
 		oldPasswordValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());

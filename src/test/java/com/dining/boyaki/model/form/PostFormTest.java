@@ -23,12 +23,19 @@ public class PostFormTest {
     BindingResult bindingResult = new BindException(form,"PostForm");
     
     @Test
-    void バリデーション問題あり() throws Exception{
-    	form.setUserName("糸井");
-    	form.setNickName("sigeno");
+    void バリデーション問題なし() throws Exception{
+    	form = new PostForm("糸井","sigeno","お腹周りが改善されなくてダイエットめげそう",0);
+    	
+    	validator.validate(form, bindingResult);
+		assertEquals(0,bindingResult.getFieldErrorCount());
+    }
+    
+    @Test
+    void 指定サイズ範囲外でエラー発生() throws Exception{
+    	form = new PostForm("糸井","sigeno",null,0);
     	form.setContent("12345678901234567890123456789012345678901234567890"
     			      + "123456789012345678901234567890123456789012345678901");
-    	form.setPostCategory(0);
+    	
     	validator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("content")
@@ -37,10 +44,8 @@ public class PostFormTest {
     
     @Test
     void 空文字でバリデーションエラー発生() throws Exception{
-    	form.setUserName("糸井");
-    	form.setNickName("sigeno");
-    	form.setContent("");
-    	form.setPostCategory(0);
+    	form = new PostForm("糸井","sigeno","",0);
+    	
     	validator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("content")
@@ -49,24 +54,12 @@ public class PostFormTest {
     
     @Test
     void Nullでバリデーションエラー発生() throws Exception{
-    	form.setUserName("糸井");
-    	form.setNickName("sigeno");
-    	form.setContent(null);
-    	form.setPostCategory(0);
+    	form = new PostForm("糸井","sigeno",null,0);
+    	
     	validator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("content")
                                 .toString().contains("投稿内容は必須項目です"));
-    }
-    
-    @Test
-    void バリデーション問題なし() throws Exception{
-    	form.setUserName("糸井");
-    	form.setNickName("sigeno");
-    	form.setContent("お腹周りが改善されなくてダイエットめげそう");
-    	form.setPostCategory(0);
-    	validator.validate(form, bindingResult);
-		assertEquals(0,bindingResult.getFieldErrorCount());
     }
 
 }
