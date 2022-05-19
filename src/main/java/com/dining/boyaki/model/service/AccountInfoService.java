@@ -46,7 +46,7 @@ public class AccountInfoService {
 				                           form.getProfile(),form.getStatus(),
 				                           form.getGender(),form.getAge(),
 				                           form.getHeight(),form.getWeight(),
-				                           null,LocalDateTime.now());
+				                           null,LocalDateTime.now()); //アカウント作成時刻はnull
 		accountInfoMapper.updateAccountInfo(info);
 	}
 	

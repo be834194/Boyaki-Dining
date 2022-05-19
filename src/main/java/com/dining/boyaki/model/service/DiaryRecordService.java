@@ -25,10 +25,10 @@ public class DiaryRecordService {
 	
 	@Transactional(readOnly = true)
 	public List<CalendarRecord> findAllCalendarRecords(String userName) {
+		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+		
 		List<DiaryRecord> diaryRecords = diaryRecordMapper.findAllDiaryRecords(userName);
 		List<CalendarRecord> calendarRecords = new ArrayList<CalendarRecord>();
-		
-		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
 		for(int i = 0; i < diaryRecords.size(); i++) {
 			DiaryRecord diary = diaryRecords.get(i);
 			CalendarRecord calendar = new CalendarRecord();
@@ -103,9 +103,10 @@ public class DiaryRecordService {
     
     @Transactional(readOnly = false)
     public void deleteDiaryRecord(DiaryRecordForm form) {
-    	DiaryRecord diary = new DiaryRecord(form.getUserName(),form.getCategoryId(),form.getDiaryDay(),
-                                            form.getRecord1(),form.getRecord2(),form.getRecord3(),
-                                            form.getImageName(),form.getMemo(),form.getCreateAt(),LocalDateTime.now());
+    	DiaryRecord diary = new DiaryRecord();
+    	diary.setUserName(form.getUserName());
+    	diary.setCategoryId(form.getCategoryId());
+    	diary.setDiaryDay(form.getDiaryDay());
     	diaryRecordMapper.deleteDiaryRecord(diary);
     }
 

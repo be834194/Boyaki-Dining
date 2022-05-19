@@ -73,15 +73,8 @@ public class AccountInfoServiceCombinedTest {
 		datetime = LocalDateTime.of(2022, 2, 10, 20, 35, 12);
 		mock.when(LocalDateTime::now).thenReturn(datetime);
 		
-		AccountInfoForm info = new AccountInfoForm();
-		info.setUserName("加藤健");
-		info.setNickName("kenken");
-		info.setProfile("間食が止まらない");
-		info.setStatus(3);
-		info.setGender(1);
-		info.setAge(3);
-		info.setHeight(167);
-		info.setWeight(64);
+		AccountInfoForm info = new AccountInfoForm("加藤健","kenken","間食が止まらない",
+				                                   3,1,3,167,64);
 		accountInfoService.updateAccountInfo(info);
 	}
 	
@@ -92,12 +85,8 @@ public class AccountInfoServiceCombinedTest {
 		datetime = LocalDateTime.of(2022, 2, 10, 20, 39, 45);
 		mock.when(LocalDateTime::now).thenReturn(datetime);
 		
-		PasswordChangeForm form = new PasswordChangeForm();
-		form.setUserName("miho");
-		form.setMail("miho@gmail.com");
-		form.setOldPassword("ocean-Nu");
-		form.setPassword("script-Java");
-		form.setConfirmPassword("script-Java");
+		PasswordChangeForm form = new PasswordChangeForm("miho","miho@gmail.com","ocean-Nu",
+				                                         "script-Java","script-Java");
 		accountInfoService.updatePassword(form);
 	}
 	

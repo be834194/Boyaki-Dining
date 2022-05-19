@@ -17,11 +17,13 @@ public class PasswordHistoryService {
 		this.passwordHistoryMapper = passwordHistoryMapper;
 	}
 	
+	//現在のパスワードを取得
 	@Transactional(readOnly = true)
 	public String findPassword(String userName,String mail) {
 		return passwordHistoryMapper.findPassword(userName, mail);
 	}
 	
+	//〇〇日前までのパスワード履歴を取得
 	@Transactional(readOnly = true)
 	public List<PasswordHistory> findUseFrom(String userName,LocalDateTime time){
 		return passwordHistoryMapper.findUseFrom(userName, time);

@@ -90,11 +90,7 @@ public class PostServiceCombinedTest {
 	@ExpectedDatabase(value = "/service/Post/insert/post/",table="post"
 			         ,assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void insertPostで投稿が1件追加される() throws Exception{
-		PostForm form = new PostForm();
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setContent("糖質制限ってどこまでやればいいの～？");
-		form.setPostCategory(2);
+		PostForm form = new PostForm("miho","匿名","糖質制限ってどこまでやればいいの～？",2);
 		
 		LocalDateTime datetime = LocalDateTime.parse("2022-03-08T09:31:12");
     	mock.when(LocalDateTime::now).thenReturn(datetime);
@@ -113,19 +109,16 @@ public class PostServiceCombinedTest {
 	@ExpectedDatabase(value = "/service/Post/insert/comment/",table="comment"
 	         ,assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void insertCommentで投稿へのコメントが一件追加される() throws Exception{
-		CommentForm form = new CommentForm();
-		form.setPostId(9);
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setContent("牛乳私も試してみます！");
-		
+		CommentForm form = new CommentForm(9,"miho","匿名","牛乳私も試してみます！");
 		LocalDateTime datetime = LocalDateTime.parse("2022-03-10T16:27:38");
     	mock.when(LocalDateTime::now).thenReturn(datetime);
 		postService.insertComment(form);
 	}
+	
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
 	void findCommentRecordで投稿一つに対するコメントを全件取得する() throws Exception{
+		//0ページ目
 		List<CommentRecord> record = postService.findCommentList(7, 0);
 		assertEquals(5,record.size());
 		assertEquals("sigeno",record.get(0).getNickName());
@@ -134,10 +127,12 @@ public class PostServiceCombinedTest {
 		assertEquals("2022-03-10 19:44:28",record.get(0).getCreateAt());
 		assertEquals("2022-03-07 09:52:28",record.get(4).getCreateAt());
 		
+		//1ページ目
 		record = postService.findCommentList(7, 1);
 		assertEquals(1,record.size());
 		assertEquals("2022-03-07 09:44:28",record.get(0).getCreateAt());
 		
+		//2ページ目
 		record = postService.findCommentList(7, 2);
 		assertEquals(0,record.size());
 	}
@@ -170,6 +165,7 @@ public class PostServiceCombinedTest {
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
 	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
+		//0ページ目
 		List<PostRecord> record = postService.findPostRecord("sigeno", 0);
 		assertEquals(5,record.size());
 		assertEquals("11",record.get(0).getPostId());
@@ -182,10 +178,12 @@ public class PostServiceCombinedTest {
 		assertEquals("2022-03-01 18:07:15",record.get(3).getCreateAt());
 		assertEquals("2022-03-01 12:07:27",record.get(4).getCreateAt());
 		
+		//1ページ目
 		record = postService.findPostRecord("sigeno", 1);
 		assertEquals(1,record.size());
 		assertEquals("2022-03-01 12:06:21",record.get(0).getCreateAt());
 		
+		//2ページ目
 		record = postService.findPostRecord("sigeno", 2);
 		assertTrue(record.isEmpty());
 	}
@@ -202,6 +200,7 @@ public class PostServiceCombinedTest {
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
 	void searchPostRecordで全件取得する() throws Exception{
+		//0ページ目
         List<PostRecord> record = postService.searchPostRecord(category,status,text,0);
         assertEquals(5,record.size());
         assertEquals("11",record.get(0).getPostId());
@@ -214,10 +213,12 @@ public class PostServiceCombinedTest {
 		assertEquals("2022-03-02 12:55:08",record.get(3).getCreateAt());
 		assertEquals("2022-03-02 11:12:50",record.get(4).getCreateAt());
 		
+		//2ページ目
 		record = postService.searchPostRecord(category,status,text,2);
 		assertEquals(1,record.size());
 		assertEquals("2022-02-28 23:30:34",record.get(0).getCreateAt());
 		
+		//3ページ目
 		record = postService.searchPostRecord(category,status,text,3);
 		assertTrue(record.isEmpty());
 	}
@@ -225,6 +226,7 @@ public class PostServiceCombinedTest {
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
 	void searchPostRecordで一つの条件で絞り込んで取得する() throws Exception{
+		//0ページ目、カテゴリ(運動・筋トレ,塩分)
 		category = new int[]{5,3};
 		List<PostRecord> record = postService.searchPostRecord(category,status,text,0);
 		assertEquals(2,record.size());
@@ -233,6 +235,7 @@ public class PostServiceCombinedTest {
 		assertEquals("塩分",record.get(1).getPostCategory());
 		assertEquals("2022-03-01 18:29:51",record.get(1).getCreateAt());
 		
+		//0ページ目、ステータス(ダイエット中,尿酸値高め)
 		category = new int[] {};
 		status = new int[]{1,7};
 		record = postService.searchPostRecord(category,status,text,0);
@@ -244,6 +247,7 @@ public class PostServiceCombinedTest {
 		assertEquals("2022-03-01 18:29:51",record.get(3).getCreateAt());
 		assertEquals("2022-02-28 23:30:34",record.get(4).getCreateAt());
 		
+		//0ページ目、投稿
 		status = new int[] {};
 		text = "改善";
 		record = postService.searchPostRecord(category,status,text,0);
@@ -257,7 +261,7 @@ public class PostServiceCombinedTest {
 	void searchPostRecordで二つの条件で絞り込んで取得する() throws Exception{
 		category = new int[]{3,7};
 		status = new int[]{1,6};
-		
+		//0ページ目、カテゴリ(塩分,尿酸値)+ステータス(ダイエット中,コレステロール高め)
 		List<PostRecord> record = postService.searchPostRecord(category,status,text,0);
 		assertEquals(1,record.size());
 		assertEquals("ダイエット中",record.get(0).getStatus());
@@ -266,6 +270,7 @@ public class PostServiceCombinedTest {
 		
 		category = new int[]{};
 		text = "検査";
+		//0ページ目、ステータス(ダイエット中,コレステロール高め)+投稿
 		record = postService.searchPostRecord(category,status,text,0);
 		assertEquals(1,record.size());
 		assertEquals("ダイエット中",record.get(0).getStatus());
@@ -274,6 +279,7 @@ public class PostServiceCombinedTest {
 		
 		category = new int[]{3,7};
 		status = new int[]{};
+		//0ページ目、カテゴリ(塩分,尿酸値)+投稿
 		record = postService.searchPostRecord(category,status,text,0);
 		assertEquals(2,record.size());
 		assertEquals("尿酸値",record.get(0).getPostCategory());
@@ -290,6 +296,7 @@ public class PostServiceCombinedTest {
 		category = new int[]{1,2,3};
 		status = new int[]{1,7};
 		text = "ダイエット　効果";
+		//0ページ目、カテゴリ(ダイエット,糖質,塩分)+ステータス(ダイエット中,尿酸値高め)+投稿内容
 		List<PostRecord> record = postService.searchPostRecord(category, status, text,0);
 		assertEquals(1,record.size());
 		assertEquals("ダイエット",record.get(0).getPostCategory());
