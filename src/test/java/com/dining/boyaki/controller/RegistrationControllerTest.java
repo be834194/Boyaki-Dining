@@ -65,11 +65,7 @@ public class RegistrationControllerTest {
 	
 	@Test
 	void registで新規登録後にログイン画面へ遷移する() throws Exception{
-		RegisterForm form = new RegisterForm();
-		form.setUserName("マクベイ");
-		form.setMail("north-east@gmail.com");
-		form.setPassword("sun-flan-sis");
-		form.setConfirmPassword("sun-flan-sis");
+		RegisterForm form = new RegisterForm("マクベイ","north-east@gmail.com","sun-flan-sis","sun-flan-sis");
 		doNothing().when(registrationService).insertAccount(form);
 		
 		this.mockMvc.perform(post("/regist")
@@ -86,11 +82,7 @@ public class RegistrationControllerTest {
 	
 	@Test
 	void registで新規登録が失敗する() throws Exception{
-		RegisterForm form = new RegisterForm();
-		form.setUserName("");
-		form.setMail("");
-		form.setPassword("");
-		form.setConfirmPassword("sun-flan-sis");
+		RegisterForm form = new RegisterForm("","","","sun-flan-sis");
 		doNothing().when(registrationService).insertAccount(form);
 		
 		this.mockMvc.perform(post("/regist")

@@ -63,7 +63,7 @@
 		    <input type="hidden" id="nickName" name="nickName" th:field="*{nickName}">
 		    <input type="hidden" id="postId" name="postId" th:field="*{postId}"><br>
 		<div class="form-button">
-		    <span th:text=${validMessage}></span>
+		    <span class="error-messages"　th:text=${validMessage}></span>
 		    <button class="btn btn-green" type="submit">コメントする</button>
 		</div>
 		</form>
