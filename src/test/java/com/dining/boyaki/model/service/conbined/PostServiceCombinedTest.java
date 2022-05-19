@@ -155,15 +155,6 @@ public class PostServiceCombinedTest {
 	
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
-	void sumRateで投稿を件の総いいね数を取得する() throws Exception{
-		int rate = postService.sumRate(2);
-		assertEquals(2,rate);
-		rate = postService.sumRate(7);
-		assertEquals(0,rate);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/Post/setup/")
 	void findPostRecordでユーザ一人の投稿情報を全件取得する() throws Exception{
 		//0ページ目
 		List<PostRecord> record = postService.findPostRecord("sigeno", 0);
@@ -186,15 +177,6 @@ public class PostServiceCombinedTest {
 		//2ページ目
 		record = postService.findPostRecord("sigeno", 2);
 		assertTrue(record.isEmpty());
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/service/Post/setup/")
-	@ExpectedDatabase(value = "/service/Post/likes/",table="likes")
-	void updateRateでlikeテーブルにデータが追加もしくは更新される() throws Exception{
-		postService.updateRate(1, "加藤健");
-		postService.updateRate(2, "加藤健");
-		postService.updateRate(3, "加藤健");
 	}
 	
 	@Test

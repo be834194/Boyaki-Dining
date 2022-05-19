@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -155,42 +154,6 @@ public class PostServiceTest {
 		List<CommentRecord> result = postService.findCommentList(3, 0);
 		assertEquals(2,result.size());
 		verify(postMapper,times(1)).findCommentRecord(3, PageRequest.of(0, 5));
-	}
-	
-	@Test
-	void sumRateで投稿を件の総いいね数を取得する() throws Exception{
-		when(postMapper.sumRate(2)).thenReturn(Optional.of(0));
-		when(postMapper.sumRate(3)).thenReturn(Optional.of(5));
-		
-		int rate = postService.sumRate(2);
-		assertEquals(0,rate);
-		verify(postMapper,times(1)).sumRate(2);
-		
-		rate = postService.sumRate(3);
-		assertEquals(5,rate);
-		verify(postMapper,times(1)).sumRate(3);
-	}
-	
-	@Test
-	void updateRateでlikeテーブルにデータが追加もしくは更新される() throws Exception{
-		when(postMapper.currentRate(1, "加藤健")).thenReturn(Optional.of(-1));
-		when(postMapper.currentRate(2, "加藤健")).thenReturn(Optional.of(0));
-		when(postMapper.currentRate(3, "加藤健")).thenReturn(Optional.of(1));
-		doNothing().when(postMapper).insertRate(1, "加藤健", 1);
-		doNothing().when(postMapper).updateRate(2, "加藤健", 1);
-		doNothing().when(postMapper).updateRate(3, "加藤健", 0);
-		
-		postService.updateRate(1, "加藤健");
-		verify(postMapper,times(1)).currentRate(1, "加藤健");
-		verify(postMapper,times(1)).insertRate(1, "加藤健", 1);
-		
-		postService.updateRate(2, "加藤健");
-		verify(postMapper,times(1)).currentRate(2, "加藤健");
-		verify(postMapper,times(1)).updateRate(2, "加藤健", 1);
-		
-		postService.updateRate(3, "加藤健");
-		verify(postMapper,times(1)).currentRate(3, "加藤健");
-		verify(postMapper,times(1)).updateRate(3, "加藤健", 0);
 	}
 	
 	@Test
