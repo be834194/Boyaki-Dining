@@ -7,19 +7,18 @@ import com.dining.boyaki.model.mapper.LikesMapper;
 
 @Service
 public class LikesService {
-	
+
 	private final LikesMapper likesMapper;
 
 	public LikesService(LikesMapper likesMapper) {
 		this.likesMapper = likesMapper;
 	}
-	
+
 	@Transactional(readOnly = true)
 	public int sumRate(long postId) {
 		return likesMapper.sumRate(postId).orElse(0);
 	}
-	
-	
+
 	@Transactional(readOnly = false)
 	public void updateRate(long postId,String userName) {
 		//あるユーザの、投稿に対する現在の評価状態を取得

@@ -23,14 +23,18 @@ import com.dining.boyaki.model.enums.PostCategory;
 import com.dining.boyaki.model.enums.StatusList;
 import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
+import com.dining.boyaki.model.service.LikesService;
 import com.dining.boyaki.model.service.PostService;
 
 @Controller
 public class PostController {
 	
+	private final LikesService likesService;
+	
 	private final PostService postService;
 	
-	public PostController(PostService postService) {
+	public PostController(LikesService likesService,PostService postService) {
+		this.likesService = likesService;
 		this.postService = postService;
 	}
 	
@@ -63,7 +67,7 @@ public class PostController {
 		}
 		
 		//総いいね数の取得
-		int sumRate = postService.sumRate(postId);
+		int sumRate = likesService.sumRate(postId);
 		model.addAttribute("sumRate",sumRate);
 		
 		return "Post/PostDetail";
@@ -88,9 +92,9 @@ public class PostController {
 	@PreAuthorize("principal.username != 'guestuser'")
 	String updateRate(@AuthenticationPrincipal AccountUserDetails details,
 			          @RequestParam(value="postId")long postId,Model model) {
-		postService.updateRate(postId, details.getUsername());
+		likesService.updateRate(postId, details.getUsername());
 		
-		int sumRate = postService.sumRate(postId);
+		int sumRate = likesService.sumRate(postId);
 		model.addAttribute("sumRate",sumRate);
 		return "Post/PostDetail :: rateFragment";
 	}

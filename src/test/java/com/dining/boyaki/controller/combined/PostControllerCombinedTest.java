@@ -47,6 +47,7 @@ import com.dining.boyaki.model.enums.StatusList;
 import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
+import com.dining.boyaki.model.service.LikesService;
 import com.dining.boyaki.model.service.PostService;
 import com.dining.boyaki.util.CsvDataSetLoader;
 import com.dining.boyaki.util.WithMockCustomUser;
@@ -62,7 +63,7 @@ import com.dining.boyaki.util.WithMockCustomUser;
 			includeFilters = @ComponentScan.Filter
 			                (type = FilterType.ASSIGNABLE_TYPE,
 			                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
-			                		  PostService.class}))
+			                		 LikesService.class,PostService.class}))
 @Transactional
 public class PostControllerCombinedTest {
 	
