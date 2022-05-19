@@ -60,17 +60,12 @@ public class PostServiceTest {
 	@Test
 	void findNickNameでニックネームを1件取得する() throws Exception{
 		when(postMapper.findNickName("糸井")).thenReturn("sigeno");
-		
 		String nickName = postService.findNickName("糸井");
 		assertEquals("sigeno",nickName);
 		verify(postMapper,times(1)).findNickName("糸井");
-	}
-	
-	@Test
-	void findNickNameでニックネームを取得できない場合はnullが返ってくる() throws Exception{
-		when(postMapper.findNickName("kenken")).thenReturn(null);
 		
-		String nickName = postService.findNickName("kenken");
+		when(postMapper.findNickName("kenken")).thenReturn(null);
+		nickName = postService.findNickName("kenken");
 		assertEquals(null,nickName);
 		verify(postMapper,times(1)).findNickName("kenken");
 	}
@@ -92,24 +87,17 @@ public class PostServiceTest {
 		assertEquals(2,result.getGender());
 		assertEquals(2,result.getAge());
 		verify(postMapper,times(1)).findProfile("匿名");
-	}
-	
-	@Test
-	void findProfileでユーザ情報レコードを取得できない場合はnullが返ってくる() throws Exception{
+		
 		when(postMapper.findProfile("miho")).thenReturn(null);
 		
-		AccountInfo result = postService.findProfile("miho");
+		result = postService.findProfile("miho");
 		assertEquals(null,result);
 		verify(postMapper,times(1)).findProfile("miho");
 	}
 	
 	@Test
 	void insertPostで投稿が1件追加される() throws Exception{
-		PostForm form = new PostForm();
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setContent("糖質制限ってどこまでやればいいの～？");
-		form.setPostCategory(2);
+		PostForm form = new PostForm("miho","匿名","糖質制限ってどこまでやればいいの～？",2);
 		doNothing().when(postMapper).insertPost(any(Post.class));
 		
 		postService.insertPost(form);
@@ -126,14 +114,8 @@ public class PostServiceTest {
 	
 	@Test
 	void findOnePostRecordで投稿を一件取得する() throws Exception{
-		PostRecord record = new PostRecord();
-		record.setPostId("10");
-		record.setUserName("糸井");
-		record.setNickName("sigeno");
-		record.setContent("ノンアル飽きた！");
-		record.setStatus("中性脂肪・コレステロール高め");
-		record.setPostCategory("ダイエット");
-		record.setCreateAt("2022-03-03 19:32:44");
+		PostRecord record = new PostRecord("10","糸井","sigeno","中性脂肪・コレステロール高め","ダイエット",
+				                           "ノンアル飽きた！","2022-03-03 19:32:44");
 		when(postMapper.findOnePostRecord(10)).thenReturn(record);
 		
 		PostRecord result = postService.findOnePostRecord(10);
@@ -145,24 +127,16 @@ public class PostServiceTest {
 		assertEquals("ダイエット",result.getPostCategory());
 		assertEquals("2022-03-03 19:32:44",result.getCreateAt());
 		verify(postMapper,times(1)).findOnePostRecord(10);
-	}
-	
-	@Test
-	void findOnePostRecordで投稿を一件取得できない場合はnullが返ってくる() throws Exception{
-		when(postMapper.findOnePostRecord(10)).thenReturn(null);
 		
-		PostRecord result = postService.findOnePostRecord(10);
+		when(postMapper.findOnePostRecord(20)).thenReturn(null);
+		result = postService.findOnePostRecord(20);
 		assertEquals(null,result);
-		verify(postMapper,times(1)).findOnePostRecord(10);
+		verify(postMapper,times(1)).findOnePostRecord(20);
 	}
 	
 	@Test
 	void insertCommentで投稿へのコメントが一件追加される() throws Exception{
-		CommentForm form = new CommentForm();
-		form.setPostId(9);
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setContent("牛乳私も試してみます！");
+		CommentForm form = new CommentForm(9,"miho","匿名","牛乳私も試してみます！");
 		doNothing().when(postMapper).insertComment(any(Comment.class));
 		
 		postService.insertComment(form);
@@ -242,21 +216,23 @@ public class PostServiceTest {
 		PostRecord record = new PostRecord();
 		recordList.add(record);
 		recordList.add(record);
-		
 		int[] category = new int[]{};
 		int[] status = new int[]{};
 		String text = " 		";
 		when(postMapper.searchPostRecord(any(),any(),any(),any())).thenReturn(recordList);
 		
+		//textがタブの場合
 		List<PostRecord> result = postService.searchPostRecord(category, status, text,0);
 		assertEquals(2,result.size());
 		verify(postMapper,times(1)).searchPostRecord(any(),any(),any(),any());
 		
+		//textがnullの場合
 		text = null;
 		result = postService.searchPostRecord(category, status, text,0);
 		assertEquals(2,result.size());
 		verify(postMapper,times(2)).searchPostRecord(any(),any(),any(),any());
 		
+		//textが空文字の場合
 		text = "";
 		result = postService.searchPostRecord(category, status, text,0);
 		assertEquals(2,result.size());

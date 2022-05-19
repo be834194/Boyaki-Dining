@@ -1,8 +1,6 @@
 package com.dining.boyaki.model.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,7 +44,9 @@ public class AdminServiceTest {
     	post.setNickName("sigeno");
     	post.setContent("sample");
     	when(adminMapper.findPost(3)).thenReturn(post);
+    	when(adminMapper.findPost(30)).thenReturn(null);
     	when(adminMapper.findComment(4)).thenReturn(comment);
+    	when(adminMapper.findComment(40)).thenReturn(null);
     	doNothing().when(adminMapper).deletePost(3);
     	doNothing().when(adminMapper).deleteComment(4);
     }
@@ -58,6 +58,10 @@ public class AdminServiceTest {
 		assertEquals("sigeno",result.getNickName());
 		assertEquals("sample",result.getContent());
 		verify(adminMapper,times(1)).findPost(3);
+		
+		result = adminService.findPost(30);
+		assertEquals(null,result);
+		verify(adminMapper,times(1)).findPost(30);
 	}
 	
 	@Test
@@ -73,6 +77,10 @@ public class AdminServiceTest {
 		assertEquals("加藤健",result.getNickName());
 		assertEquals("応援しています",result.getContent());
 		verify(adminMapper,times(1)).findComment(4);
+		
+		result = adminService.findComment(40);
+		assertEquals(null,result);
+		verify(adminMapper,times(1)).findComment(40);
 	}
 	
 	@Test

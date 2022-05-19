@@ -37,6 +37,9 @@ public class AdminServiceCombinedTest {
 		assertEquals("糸井",result.getUserName());
 		assertEquals("sigeno",result.getNickName());
 		assertEquals("ドーナツは穴が開いてるからゼロカロリーって本当？",result.getContent());
+		
+		result = adminService.findPost(30);
+		assertEquals(null,result);
 	}
 	
 	@Test
@@ -53,6 +56,9 @@ public class AdminServiceCombinedTest {
 		assertEquals("加藤健",result.getUserName());
 		assertEquals("加藤健",result.getNickName());
 		assertEquals("応援してます",result.getContent());
+		
+		result = adminService.findComment(40);
+		assertEquals(null,result);
 	}
 	
 	@Test

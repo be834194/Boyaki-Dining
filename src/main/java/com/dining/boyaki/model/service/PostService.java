@@ -101,7 +101,7 @@ public class PostService {
 		String[] content;
 		if(text == null || text.equals("")) {
 			content = null;
-		}else {
+		}else { //空白,タブを置換
 		    content = text.replaceAll("　", " ").replaceAll("	", " ")
 		    		      .split(" ");
 		    if(content.length == 0) {

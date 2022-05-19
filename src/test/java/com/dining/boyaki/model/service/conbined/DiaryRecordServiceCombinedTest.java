@@ -93,16 +93,10 @@ public class DiaryRecordServiceCombinedTest {
 	void insertDiaryRecordでDiaryRecordを1件追加する() throws Exception{
 		datetime = LocalDateTime.parse("2022-02-26T14:01:25");
 		mock.when(LocalDateTime::now).thenReturn(datetime);
-		DiaryRecordForm form = new DiaryRecordForm();
-		form.setUserName("加藤健");
-		form.setCategoryId(2);
-		form.setDiaryDay(Date.valueOf("2022-02-26"));
-		form.setRecord1("白米");
-		form.setRecord2("生姜焼き");
-		form.setRecord3("きのこのマリネ");
-		form.setImageName("FLeLXKVUUAAgeF0.jpeg");
-		form.setMemo(null);
-		form.setCreateAt(datetime);
+		DiaryRecordForm form = new DiaryRecordForm("加藤健",2,Date.valueOf("2022-02-26"),
+				                                   "白米","生姜焼き","きのこのマリネ",
+				                                   "FLeLXKVUUAAgeF0.jpeg",null,datetime);
+
 		diaryRecordService.insertDiaryRecord(form);
 	}
 	
@@ -112,16 +106,10 @@ public class DiaryRecordServiceCombinedTest {
 	void updateDiaryRecordでDiaryRecordを1件更新する() throws Exception{
 		datetime = LocalDateTime.parse("2022-02-02T16:23:33");
 		mock.when(LocalDateTime::now).thenReturn(datetime);
-		DiaryRecordForm form = new DiaryRecordForm();
-		form.setUserName("糸井");
-		form.setCategoryId(3);
-		form.setDiaryDay(Date.valueOf("2022-01-31"));
-		form.setRecord1("うどん");
-		form.setRecord2("唐揚げ");
-		form.setRecord3(null);
-		form.setImageName(null);
-		form.setMemo("冷凍食品");
-		form.setCreateAt(LocalDateTime.parse("2022-02-02T10:22:57"));
+		DiaryRecordForm form = new DiaryRecordForm("糸井",3,Date.valueOf("2022-01-31"),
+				                                   "うどん","唐揚げ",null,
+				                                   null,"冷凍食品",LocalDateTime.parse("2022-02-02T10:22:57"));
+		
 		diaryRecordService.updateDiaryRecord(form);
 	}
 	
@@ -133,12 +121,6 @@ public class DiaryRecordServiceCombinedTest {
 		form.setUserName("miho");
 		form.setCategoryId(3);
 		form.setDiaryDay(Date.valueOf("2022-01-26"));
-		form.setRecord1(null);
-		form.setRecord2("チキンステーキ");
-		form.setRecord3("余りもの野菜炒め");
-		form.setImageName(null);
-		form.setMemo(null);
-		form.setCreateAt(LocalDateTime.parse("2022-01-26T18:42:15"));
 		diaryRecordService.deleteDiaryRecord(form);
 	}
 

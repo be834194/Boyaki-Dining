@@ -42,11 +42,7 @@ public class RegistrationServiceTest {
 	
 	@Test
 	void insertAccountでaccountとpassword_historyとaccount_infoが登録される() throws Exception{
-		RegisterForm form = new RegisterForm();
-		form.setUserName("マクベイ");
-		form.setPassword("sun-flan-sis");
-		form.setMail("north-east@gmail.com");
-		form.setConfirmPassword("sun-flan-sis");
+		RegisterForm form = new RegisterForm("マクベイ","north-east@gmail.com","sun-flan-sis","sun-flan-sis");
 		
 		when(passwordEncoder.encode(form.getPassword())).thenReturn("sun-flan-sis");
 		doNothing().when(registrationMapper).insertAccount(any(Account.class));
