@@ -43,6 +43,7 @@ import com.dining.boyaki.model.enums.StatusList;
 import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
+import com.dining.boyaki.model.service.LikesService;
 import com.dining.boyaki.model.service.PostService;
 import com.dining.boyaki.util.WithMockCustomUser;
 
@@ -60,6 +61,9 @@ public class PostControllerTest {
 	
 	@Autowired
     private WebApplicationContext context;
+	
+	@MockBean
+	LikesService likesService;
 	
 	@MockBean
 	PostService postService;
@@ -129,7 +133,7 @@ public class PostControllerTest {
 			when(postService.findOnePostRecord(333)).thenReturn(null);
 			when(postService.findNickName("マクベイ")).thenReturn("マッキー");
 			when(postService.findNickName("miho")).thenReturn("匿名");
-			when(postService.sumRate(7)).thenReturn(4);
+			when(likesService.sumRate(7)).thenReturn(4);
 		}
 		
 		@Test
@@ -148,7 +152,7 @@ public class PostControllerTest {
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
 			verify(postService,times(1)).findNickName("マクベイ");
-			verify(postService,times(1)).sumRate(7);
+			verify(likesService,times(1)).sumRate(7);
 		}
 		
 		@Test
@@ -167,7 +171,7 @@ public class PostControllerTest {
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
 			verify(postService,times(1)).findNickName("miho");
-			verify(postService,times(1)).sumRate(7);
+			verify(likesService,times(1)).sumRate(7);
 		}
 		
 		@Test
@@ -241,8 +245,8 @@ public class PostControllerTest {
 		@Test
 		@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 		void updateRateでいいねが更新される() throws Exception{
-			doNothing().when(postService).updateRate(7,"miho");
-			when(postService.sumRate(7)).thenReturn(5);
+			doNothing().when(likesService).updateRate(7,"miho");
+			when(likesService.sumRate(7)).thenReturn(5);
 			
 			mockMvc.perform(post("/index/boyaki/rate")
 					       .param("postId", "7")
@@ -251,8 +255,8 @@ public class PostControllerTest {
 			       .andExpect(status().is2xxSuccessful())
 			       .andExpect(model().attribute("sumRate", 5))
 			       .andExpect(view().name("Post/PostDetail :: rateFragment"));
-			verify(postService,times(1)).updateRate(7, "miho");
-			verify(postService,times(1)).sumRate(7);
+			verify(likesService,times(1)).updateRate(7, "miho");
+			verify(likesService,times(1)).sumRate(7);
 		}
 		
 		@Test

@@ -1,7 +1,6 @@
 package com.dining.boyaki.model.mapper;
 
 import java.util.List;
-import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
@@ -33,13 +32,4 @@ public interface PostMapper {
 	List<CommentRecord> findCommentRecord(@Param("postId")long postId,
 			                              @Param("pageable")Pageable pageable);
 	
-	Optional<Integer> currentRate(@Param("postId")long postId,
-			                      @Param("userName")String userName);
-	Optional<Integer> sumRate(@Param("postId")long postId);
-	void insertRate(@Param("postId")long postId,
-                    @Param("userName")String userName,
-                    @Param("rate")int rate);
-	void updateRate(@Param("postId")long postId,
-		            @Param("userName")String userName,
-		            @Param("rate")int rate);
 }
