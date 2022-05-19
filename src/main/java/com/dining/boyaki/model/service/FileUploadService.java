@@ -39,6 +39,7 @@ public class FileUploadService {
 
 	    try(FileOutputStream fos = new FileOutputStream(uploadFile)){
 	    	fos.write(fileUploadForm.getMultipartFile().getBytes());
+	    	fos.close();
 			BufferedImage bi = ImageIO.read(uploadFile);
 			if (bi != null) {
 				uploadFile.delete();
