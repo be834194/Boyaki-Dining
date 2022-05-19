@@ -94,11 +94,7 @@ public class RegistrationControllerCombinedTest {
 	@DatabaseSetup(value="/controller/Registration/setup/")
 	@ExpectedDatabase(value="/controller/Registration/insert/",assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void registで新規登録後にログイン画面へ遷移する() throws Exception{
-		RegisterForm form = new RegisterForm();
-		form.setUserName("マクベイ");
-		form.setMail("north-east@gmail.com");
-		form.setPassword("sun-flan-sis");
-		form.setConfirmPassword("sun-flan-sis");
+		RegisterForm form = new RegisterForm("マクベイ","north-east@gmail.com","sun-flan-sis","sun-flan-sis");
 		this.mockMvc.perform(post("/regist")
 				            .flashAttr("registerForm", form)
 				            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -114,11 +110,7 @@ public class RegistrationControllerCombinedTest {
 		       "sigeno,example@ezweb.ne.jp"})
 	@DatabaseSetup(value="/controller/Registration/setup/")
 	void registで新規登録が失敗する(String userName,String mail) throws Exception{
-		RegisterForm form = new RegisterForm();
-		form.setUserName(userName);
-		form.setMail(mail);
-		form.setPassword("");
-		form.setConfirmPassword("hogehoge");
+		RegisterForm form = new RegisterForm(userName,mail,"","hogehoge");
 		this.mockMvc.perform(post("/regist")
 				            .flashAttr("registerForm", form)
 				            .contentType(MediaType.APPLICATION_FORM_URLENCODED)

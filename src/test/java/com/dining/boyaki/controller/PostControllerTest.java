@@ -147,6 +147,7 @@ public class PostControllerTest {
 			       .andExpect(model().attribute("sumRate", 4))
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
+			verify(postService,times(1)).findNickName("マクベイ");
 			verify(postService,times(1)).sumRate(7);
 		}
 		
@@ -165,6 +166,7 @@ public class PostControllerTest {
 			       .andExpect(model().attribute("sumRate", 4))
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
+			verify(postService,times(1)).findNickName("miho");
 			verify(postService,times(1)).sumRate(7);
 		}
 		
@@ -191,7 +193,6 @@ public class PostControllerTest {
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
     class createComment {
 		CommentForm form;
-		
 		@BeforeEach
 		void setUp() {
 			form = new CommentForm(5,"miho","匿名","応援してます");
@@ -309,15 +310,11 @@ public class PostControllerTest {
 	@Nested
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
     class createPost {
-		
-		PostForm form = new PostForm();
+		PostForm form;
 		
 		@BeforeEach
 		void setUp() {
-			form.setUserName("miho");
-			form.setNickName("匿名");
-			form.setContent("糖質制限ってどこまでやればいいの～？");
-			form.setPostCategory(2);
+			form = new PostForm("miho","匿名","糖質制限ってどこまでやればいいの～？",2);
 			doNothing().when(postService).insertPost(form);
 		}
 	

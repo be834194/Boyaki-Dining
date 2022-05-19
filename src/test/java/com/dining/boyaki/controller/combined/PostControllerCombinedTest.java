@@ -298,7 +298,6 @@ public class PostControllerCombinedTest {
 		mock.when(LocalDateTime::now).thenReturn(datetime);
 		
 		PostForm form = new PostForm("miho","匿名","糖質制限ってどこまでやればいいの～？",2);
-		form.setPostCategory(2);
 		this.mockMvc.perform(post("/index/boyaki/post/insert")
 			                .flashAttr("postForm", form)
 				            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -312,12 +311,9 @@ public class PostControllerCombinedTest {
 	@WithMockCustomUser(userName="miho",password="ocean_Nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
 	void insertPostでバリデーションエラーが発生する() throws Exception{
-		PostForm form = new PostForm();
-		form.setUserName("miho");
-		form.setNickName("匿名");
+		PostForm form = new PostForm("miho","匿名",null,2);
 		form.setContent("12345678901234567890123456789012345678901234567890"
 				      + "123456789012345678901234567890123456789012345678901");
-		form.setPostCategory(2);
 		this.mockMvc.perform(post("/index/boyaki/post/insert")
 				            .flashAttr("postForm", form)
 				            .contentType(MediaType.APPLICATION_FORM_URLENCODED)

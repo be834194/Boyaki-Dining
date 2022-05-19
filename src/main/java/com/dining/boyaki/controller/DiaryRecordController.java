@@ -104,7 +104,7 @@ public class DiaryRecordController {
 	public String showUserEditContent(@AuthenticationPrincipal AccountUserDetails details,
 			                          @PathVariable("id")int id,
 			                          @PathVariable("diaryDay")String diaryDay,
-			                          Model model) throws Exception{
+			                          @ModelAttribute("fileUploadForm") FileUploadForm file,Model model) throws Exception{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date parsedDate =  format.parse(diaryDay);
 
@@ -122,7 +122,6 @@ public class DiaryRecordController {
 		}
 		
 		model.addAttribute("diaryRecordForm", form);
-		model.addAttribute("fileUploadForm",new FileUploadForm());
 		model.addAttribute("lists", DiaryRecordCategory.values());
 		return "UserCalendar/Edit";
 	}
@@ -139,7 +138,7 @@ public class DiaryRecordController {
 		}
 		
 		DiaryRecordForm exist = diaryRecordService.findOneDiaryRecord(details.getUsername(), form.getCategoryId(), form.getDiaryDay());
-		if(exist != null && exist != null && !exist.getCreateAt().equals(form.getCreateAt()) ) {
+		if(exist != null && !exist.getCreateAt().equals(form.getCreateAt()) ) {
 			model.addAttribute("lists", DiaryRecordCategory.values());
 			model.addAttribute("message","既に同じカテゴリ、同じ日付で登録されています");
 			return "UserCalendar/Edit";
