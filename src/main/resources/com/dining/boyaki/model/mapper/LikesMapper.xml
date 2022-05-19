@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dining.boyaki.model.mapper.LikesMapper">
+    
+    <select id = "currentRate" resultType="int">
+        SELECT
+            rate
+        FROM
+            likes
+        WHERE
+            postid = #{postId}
+        AND username = #{userName}
+    </select>
+    
+    <select id = "sumRate" resultType="int">
+        SELECT
+            sum(rate)
+        FROM
+            likes
+        WHERE
+            postid = #{postId}
+        GROUP BY postid
+    </select>
+    
+    <insert id = "insertRate">
+        INSERT INTO
+            likes(postid,username,rate)
+        VALUES(
+               #{postId},
+               #{userName},
+               #{rate}
+               )
+    </insert>
+    
+    <update id = "updateRate">
+        UPDATE
+            likes
+        SET rate = #{rate}
+        WHERE postid = #{postId}
+        and   username = #{userName}
+    </update>
+
+</mapper>

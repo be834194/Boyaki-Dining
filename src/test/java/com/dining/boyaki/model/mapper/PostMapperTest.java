@@ -289,39 +289,5 @@ public class PostMapperTest {
 		record = postMapper.findCommentRecord(7, PageRequest.of(2, 5));
 		assertEquals(0,record.size());
 	}
-	
-	@Test
-	@DatabaseSetup(value = "/mapper/Post/setup/")
-	void currentRateで評価状態を取得する() throws Exception{
-		int result =  postMapper.currentRate(2, "miho").orElse(-1);
-		assertEquals(1,result);
-		
-		result =  postMapper.currentRate(10, "miho").orElse(-1);
-		assertEquals(-1,result);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/mapper/Post/setup/")
-	void sumRateで評価状態を取得する() throws Exception{
-		int result =  postMapper.sumRate(2).orElse(0);
-		assertEquals(2,result);
-		
-		result =  postMapper.sumRate(5).orElse(0);
-		assertEquals(0,result);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/mapper/Post/setup/")
-	@ExpectedDatabase(value = "/mapper/Post/insert/likes/",table="likes")
-	void inserttRateで評価状態を追加する() throws Exception{
-		postMapper.insertRate(3, "miho", 1);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/mapper/Post/setup/")
-	@ExpectedDatabase(value = "/mapper/Post/update/",table="likes")
-	void inserttRateで評価状態を更新する() throws Exception{
-		postMapper.updateRate(1, "miho", 1);
-	}
 
 }
