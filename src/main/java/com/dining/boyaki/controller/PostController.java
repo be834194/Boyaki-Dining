@@ -69,6 +69,9 @@ public class PostController {
 		//総いいね数の取得
 		int sumRate = likesService.sumRate(postId);
 		model.addAttribute("sumRate",sumRate);
+		//投稿に対する現在の評価状態を取得
+		int currentRate = likesService.currentRate(postId,details.getUsername());
+		model.addAttribute("currentRate",currentRate);
 		
 		return "Post/PostDetail";
 	}
@@ -94,8 +97,13 @@ public class PostController {
 			          @RequestParam(value="postId")long postId,Model model) {
 		likesService.updateRate(postId, details.getUsername());
 		
+		//総いいね数の取得
 		int sumRate = likesService.sumRate(postId);
 		model.addAttribute("sumRate",sumRate);
+		//投稿に対する現在の評価状態を取得
+		int currentRate = likesService.currentRate(postId,details.getUsername());
+		model.addAttribute("currentRate",currentRate);
+		
 		return "Post/PostDetail :: rateFragment";
 	}
 	
