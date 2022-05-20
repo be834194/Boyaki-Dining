@@ -134,6 +134,8 @@ public class PostControllerTest {
 			when(postService.findNickName("マクベイ")).thenReturn("マッキー");
 			when(postService.findNickName("miho")).thenReturn("匿名");
 			when(likesService.sumRate(7)).thenReturn(4);
+			when(likesService.currentRate(7,"マクベイ")).thenReturn(1);
+			when(likesService.currentRate(7,"miho")).thenReturn(-1);
 		}
 		
 		@Test
@@ -149,10 +151,12 @@ public class PostControllerTest {
 			       .andExpect(model().attribute("commentForm", 
 	                                            hasProperty("nickName",is("マッキー"))))
 			       .andExpect(model().attribute("sumRate", 4))
+			       .andExpect(model().attribute("currentRate", 1))
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
 			verify(postService,times(1)).findNickName("マクベイ");
 			verify(likesService,times(1)).sumRate(7);
+			verify(likesService,times(1)).currentRate(7, "マクベイ");
 		}
 		
 		@Test
@@ -168,10 +172,12 @@ public class PostControllerTest {
 			       .andExpect(model().attribute("commentForm", 
                                                 hasProperty("nickName",is("匿名"))))
 			       .andExpect(model().attribute("sumRate", 4))
+			       .andExpect(model().attribute("currentRate", -1))
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
 			verify(postService,times(1)).findNickName("miho");
 			verify(likesService,times(1)).sumRate(7);
+			verify(likesService,times(1)).currentRate(7, "miho");
 		}
 		
 		@Test
@@ -247,6 +253,7 @@ public class PostControllerTest {
 		void updateRateでいいねが更新される() throws Exception{
 			doNothing().when(likesService).updateRate(7,"miho");
 			when(likesService.sumRate(7)).thenReturn(5);
+			when(likesService.currentRate(7, "miho")).thenReturn(1);
 			
 			mockMvc.perform(post("/index/boyaki/rate")
 					       .param("postId", "7")
@@ -254,9 +261,11 @@ public class PostControllerTest {
 				           .with(SecurityMockMvcRequestPostProcessors.csrf()))
 			       .andExpect(status().is2xxSuccessful())
 			       .andExpect(model().attribute("sumRate", 5))
+			       .andExpect(model().attribute("currentRate", 1))
 			       .andExpect(view().name("Post/PostDetail :: rateFragment"));
 			verify(likesService,times(1)).updateRate(7, "miho");
 			verify(likesService,times(1)).sumRate(7);
+			verify(likesService,times(1)).currentRate(7, "miho");
 		}
 		
 		@Test

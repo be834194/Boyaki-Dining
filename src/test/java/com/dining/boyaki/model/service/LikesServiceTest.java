@@ -46,6 +46,25 @@ public class LikesServiceTest {
 	}
 	
 	@Test
+	void currentRateで投稿に対する現在の評価状態を取得() throws Exception{
+		when(likesMapper.currentRate(1, "加藤健")).thenReturn(Optional.of(-1));
+		when(likesMapper.currentRate(2, "加藤健")).thenReturn(Optional.of(1));
+		when(likesMapper.currentRate(3, "加藤健")).thenReturn(Optional.of(0));
+		
+		int rate = likesService.currentRate(1, "加藤健");
+		assertEquals(-1,rate);
+		verify(likesMapper,times(1)).currentRate(1, "加藤健");
+		
+		rate = likesService.currentRate(2, "加藤健");
+		assertEquals(1,rate);
+		verify(likesMapper,times(1)).currentRate(2, "加藤健");
+		
+		rate = likesService.currentRate(3, "加藤健");
+		assertEquals(0,rate);
+		verify(likesMapper,times(1)).currentRate(3, "加藤健");
+	}
+	
+	@Test
 	void updateRateでlikeテーブルにデータが追加もしくは更新される() throws Exception{
 		when(likesMapper.currentRate(1, "加藤健")).thenReturn(Optional.of(-1));
 		when(likesMapper.currentRate(2, "加藤健")).thenReturn(Optional.of(0));

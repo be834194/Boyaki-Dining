@@ -36,9 +36,10 @@
 					</div>
 				</form>
 			</div>
-			<div class="form-button">
-			    <img th:src="@{/images/likes.png}" v-on:click="likes">
+			<div class="form-button" v-on:click="likes">
 			    <span id="sumRate" th:fragment="rateFragment">
+			        <img th:if="${currentRate} == 1" th:src="@{/images/yesLikes.png}">
+			        <img th:unless="${currentRate} == 1" th:src="@{/images/noLikes.png}">
 			        &nbsp;<span style="font-size:20px;" th:text="${sumRate}"></span>
 				</span>
 			</div>
