@@ -39,6 +39,19 @@ public class LikesServiceCombinedTest {
 	
 	@Test
 	@DatabaseSetup(value = "/service/Post/setup/")
+	void currentRateで投稿に対する現在の評価状態を取得() throws Exception{
+		int rate = likesService.currentRate(1, "加藤健");
+		assertEquals(-1,rate);
+		
+		rate = likesService.currentRate(2, "加藤健");
+		assertEquals(1,rate);
+		
+		rate = likesService.currentRate(3, "加藤健");
+		assertEquals(0,rate);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/service/Post/setup/")
 	@ExpectedDatabase(value = "/service/Post/likes/",table="likes")
 	void updateRateでlikeテーブルにデータが追加もしくは更新される() throws Exception{
 		likesService.updateRate(1, "加藤健");

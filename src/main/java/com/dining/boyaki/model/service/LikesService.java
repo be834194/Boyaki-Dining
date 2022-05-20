@@ -18,6 +18,10 @@ public class LikesService {
 	public int sumRate(long postId) {
 		return likesMapper.sumRate(postId).orElse(0);
 	}
+	
+	public int currentRate(long postId,String userName) {
+		return likesMapper.currentRate(postId, userName).orElse(-1);
+	}
 
 	@Transactional(readOnly = false)
 	public void updateRate(long postId,String userName) {
