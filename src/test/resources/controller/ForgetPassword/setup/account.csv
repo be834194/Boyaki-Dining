@@ -1,5 +1,6 @@
 username,password,mail,role
 "admin", "select*fomUser","admin@softbank",     "ROLE_ADMIN"
+"guestuser","gesugesudegesu","guest@gmail.com","ROLE_USER"
 "miho",  "ocean-Nu",      "miho@gmail.com",     "ROLE_USER"
 "加藤健","pinballs",      "example@ezweb.ne.jp","ROLE_USER"
 "糸井",  "sigeSIGE",      "mother@yahoo.co.jp", "ROLE_USER"
