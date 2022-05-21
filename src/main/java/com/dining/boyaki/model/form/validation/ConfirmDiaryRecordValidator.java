@@ -28,7 +28,7 @@ public class ConfirmDiaryRecordValidator implements ConstraintValidator<ConfirmD
 		}
 		
 		boolean matched = Arrays.stream(objects).allMatch(Objects::isNull);
-		if (!matched) {
+		if (!matched) { //全てnullでない場合
 			return true;
         }
 		context.disableDefaultConstraintViolation();

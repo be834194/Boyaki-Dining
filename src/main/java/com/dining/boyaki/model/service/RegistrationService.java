@@ -27,16 +27,17 @@ public class RegistrationService {
 	
 	@Transactional(readOnly = false)
 	public void insertAccount(RegisterForm form) {
+		LocalDateTime datetime = LocalDateTime.now();
 		form.setPassword(passwordEncoder.encode(form.getPassword()));
 		
 		Account account = new Account(form.getUserName(),form.getPassword(),form.getMail(),"ROLE_USER");
 		registrationMapper.insertAccount(account);
 		
-		PasswordHistory history = new PasswordHistory(form.getUserName(),form.getPassword(),LocalDateTime.now());
+		PasswordHistory history = new PasswordHistory(form.getUserName(),form.getPassword(),datetime);
 		registrationMapper.insertPasswordHistory(history);
 		
 		AccountInfo info = new AccountInfo(form.getUserName(),form.getUserName(),null,0,0,0,
-				                           165,60,LocalDateTime.now(),LocalDateTime.now());
+				                           165,60,datetime,datetime);
 		registrationMapper.insertAccountInfo(info);
 	}
 

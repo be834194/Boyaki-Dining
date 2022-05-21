@@ -64,25 +64,6 @@ public class PostService {
 	}
 	
 	@Transactional(readOnly = true)
-	public int sumRate(long postId) {
-		return postMapper.sumRate(postId).orElse(0);
-	}
-	
-	
-	@Transactional(readOnly = false)
-	public void updateRate(long postId,String userName) {
-		int currentRate = postMapper.currentRate(postId, userName).orElse(-1);
-		if(currentRate == -1) {
-			postMapper.insertRate(postId, userName,1);
-		}else if(currentRate == 0){
-			postMapper.updateRate(postId, userName,1);
-		}else {
-			postMapper.updateRate(postId, userName,0);
-		}
-			
-	}
-	
-	@Transactional(readOnly = true)
 	public List<PostRecord> findPostRecord(String nickName,int page) {
 		List<PostRecord> records = postMapper.findPostRecord(nickName, PageRequest.of(page, 5));
 		return records;
@@ -101,7 +82,7 @@ public class PostService {
 		String[] content;
 		if(text == null || text.equals("")) {
 			content = null;
-		}else {
+		}else { //空白,タブを置換
 		    content = text.replaceAll("　", " ").replaceAll("	", " ")
 		    		      .split(" ");
 		    if(content.length == 0) {

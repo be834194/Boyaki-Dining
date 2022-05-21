@@ -210,7 +210,7 @@ public class AccountInfoControllerTest {
 		
 		@Test
 		@WithMockUser(username="guestuser",authorities= {"ROLE_USER"})
-		void showConfirmPageでアカウント削除されない() throws Exception{
+		void deleteAccountでアカウント削除されない() throws Exception{
 			AccountInfoForm form = new AccountInfoForm();
 			mockMvc.perform(post("/index/mypage/confirm/delete")
 					       .flashAttr("AccountInfoForm", form)

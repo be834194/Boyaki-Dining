@@ -43,6 +43,7 @@ import com.dining.boyaki.model.enums.StatusList;
 import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
+import com.dining.boyaki.model.service.LikesService;
 import com.dining.boyaki.model.service.PostService;
 import com.dining.boyaki.util.WithMockCustomUser;
 
@@ -60,6 +61,9 @@ public class PostControllerTest {
 	
 	@Autowired
     private WebApplicationContext context;
+	
+	@MockBean
+	LikesService likesService;
 	
 	@MockBean
 	PostService postService;
@@ -129,7 +133,9 @@ public class PostControllerTest {
 			when(postService.findOnePostRecord(333)).thenReturn(null);
 			when(postService.findNickName("マクベイ")).thenReturn("マッキー");
 			when(postService.findNickName("miho")).thenReturn("匿名");
-			when(postService.sumRate(7)).thenReturn(4);
+			when(likesService.sumRate(7)).thenReturn(4);
+			when(likesService.currentRate(7,"マクベイ")).thenReturn(1);
+			when(likesService.currentRate(7,"miho")).thenReturn(-1);
 		}
 		
 		@Test
@@ -145,9 +151,12 @@ public class PostControllerTest {
 			       .andExpect(model().attribute("commentForm", 
 	                                            hasProperty("nickName",is("マッキー"))))
 			       .andExpect(model().attribute("sumRate", 4))
+			       .andExpect(model().attribute("currentRate", 1))
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
-			verify(postService,times(1)).sumRate(7);
+			verify(postService,times(1)).findNickName("マクベイ");
+			verify(likesService,times(1)).sumRate(7);
+			verify(likesService,times(1)).currentRate(7, "マクベイ");
 		}
 		
 		@Test
@@ -163,9 +172,12 @@ public class PostControllerTest {
 			       .andExpect(model().attribute("commentForm", 
                                                 hasProperty("nickName",is("匿名"))))
 			       .andExpect(model().attribute("sumRate", 4))
+			       .andExpect(model().attribute("currentRate", -1))
 			       .andExpect(view().name("Post/PostDetail"));
 			verify(postService,times(1)).findOnePostRecord(7);
-			verify(postService,times(1)).sumRate(7);
+			verify(postService,times(1)).findNickName("miho");
+			verify(likesService,times(1)).sumRate(7);
+			verify(likesService,times(1)).currentRate(7, "miho");
 		}
 		
 		@Test
@@ -191,7 +203,6 @@ public class PostControllerTest {
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
     class createComment {
 		CommentForm form;
-		
 		@BeforeEach
 		void setUp() {
 			form = new CommentForm(5,"miho","匿名","応援してます");
@@ -240,8 +251,9 @@ public class PostControllerTest {
 		@Test
 		@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
 		void updateRateでいいねが更新される() throws Exception{
-			doNothing().when(postService).updateRate(7,"miho");
-			when(postService.sumRate(7)).thenReturn(5);
+			doNothing().when(likesService).updateRate(7,"miho");
+			when(likesService.sumRate(7)).thenReturn(5);
+			when(likesService.currentRate(7, "miho")).thenReturn(1);
 			
 			mockMvc.perform(post("/index/boyaki/rate")
 					       .param("postId", "7")
@@ -249,9 +261,11 @@ public class PostControllerTest {
 				           .with(SecurityMockMvcRequestPostProcessors.csrf()))
 			       .andExpect(status().is2xxSuccessful())
 			       .andExpect(model().attribute("sumRate", 5))
+			       .andExpect(model().attribute("currentRate", 1))
 			       .andExpect(view().name("Post/PostDetail :: rateFragment"));
-			verify(postService,times(1)).updateRate(7, "miho");
-			verify(postService,times(1)).sumRate(7);
+			verify(likesService,times(1)).updateRate(7, "miho");
+			verify(likesService,times(1)).sumRate(7);
+			verify(likesService,times(1)).currentRate(7, "miho");
 		}
 		
 		@Test
@@ -309,15 +323,11 @@ public class PostControllerTest {
 	@Nested
 	@WithMockCustomUser(userName="miho",password="ocean_nu",role="ROLE_USER")
     class createPost {
-		
-		PostForm form = new PostForm();
+		PostForm form;
 		
 		@BeforeEach
 		void setUp() {
-			form.setUserName("miho");
-			form.setNickName("匿名");
-			form.setContent("糖質制限ってどこまでやればいいの～？");
-			form.setPostCategory(2);
+			form = new PostForm("miho","匿名","糖質制限ってどこまでやればいいの～？",2);
 			doNothing().when(postService).insertPost(form);
 		}
 	

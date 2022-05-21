@@ -13,20 +13,20 @@
 健康に気を使う暮らしがストレスになり、既存のアプリやメモ帳だけでは思ったように食事管理が出来ませんでした。
 
 アプリ作成のアイディアを思いついたのは、あるラジオ番組のお悩み相談のコーナーでした。
-「自身の悩みを第三者に打ち明ける、話だけでも聞いてもらうと気持ちが楽になる」ということに気づき、
+**「自身の悩みを第三者に打ち明ける、話だけでも聞いてもらうと気持ちが楽になる」** ということに気づき、
 これを食事管理アプリの機能の一部として実装出来ないか考えました。  
 また、コロナ禍における健康づくりに悩んでいる人がとても多いことを知り、より一層アプリ制作の意欲が湧きました。
 
-健康を意識した生活で生じた悩みやストレスを第三者に打ち明け、前向き&継続的に健康生活に取り組めるようなアプリを作成したいと思い、
+**健康を意識した生活で生じた悩みやストレスを第三者に打ち明け、前向き&継続的に健康生活に取り組めるようなアプリ** を作成したいと思い、
 Boyaki-diningを作成いたしました。
 
 # 使用技術
-+ Java 17  
++ Java 17
 + Spring boot 2.6.6
     + Spring Data JPA 2.6.6
     + Spring Security 2.6.6
     + Spring Validaton 2.6.6
-    + Spring Cloud for Amazon Web Services 2.2.6  
+    + Spring Cloud for Amazon Web Services 2.2.6
 + HTML(Thymeleaf), CSS
 + javaScript
     + JQuery 3.5.1
@@ -43,10 +43,9 @@ Boyaki-diningを作成いたしました。
     + h2database 1.4.200
 + mybatis 2.2.2
 + passay 1.6.1
-+ junit 5.8.2
++ Junit 5.8.2
 + dbunit 2.6.0
-+ mockito 4.0.0
-
++ Mockito 4.0.0
 + Nginx 1.20.0
 + Tomcat 9.0.60
 
@@ -58,7 +57,9 @@ Boyaki-diningを作成いたしました。
     + パスワードを忘れた際の再設定機能
     + プロフィール、パスワード変更機能
     + BMI測定機能
-+ 食事管理機能
++ 管理機能
+    + 公序良俗に反する投稿、コメントの削除機能
++ 食事記録機能
     + 食事記録の登録・編集・削除機能
     + 写真のアップロード機能
 + 相談・グチ機能
@@ -71,24 +72,31 @@ Boyaki-diningを作成いたしました。
 # 工夫点・アピールポイント
 + 食事管理  
 　カレンダー形式で、いつ何を食べたか分かりやすく表示しました。
+![MyVideo_3_AdobeCreativeCloudExpress](https://user-images.githubusercontent.com/93772790/169641730-6a8e11b7-23bb-4ed2-a050-91c3971dafaf.gif)
+
 + グチ・悩み投稿機能  
 　検索機能に加え、投稿にカテゴリを設け、より細かく絞り込んで情報を探せるようにしました。
+![MyVideo_4_AdobeCreativeCloudExpress](https://user-images.githubusercontent.com/93772790/169642248-051b96a6-3348-412c-82b6-3cd85d7aa4f0.gif)
 
 # データベース構成図
-![boyaki-dining jpg](https://user-images.githubusercontent.com/93772790/167281996-1da1fda2-35e7-42e8-adc1-28792129e8f9.png)
+![database](https://user-images.githubusercontent.com/93772790/169642257-62b675ea-3ca1-44f1-be68-cf8c56f22fcb.jpg)
 
 # インフラ構成図
-![sample](https://user-images.githubusercontent.com/93772790/167281969-96dd815f-4c79-4db1-9a58-1dcd2585d59f.jpg)
+ACMを利用したSSL認証ではなく、EC2内のサーバ(Nginx)にサーバ証明書を設定しています。
+![sample](https://user-images.githubusercontent.com/93772790/169641591-73042d82-cc6f-4a29-b616-aef633bb4410.jpg)
 
 # ポートフォリオ作成を経て、身についたもの
-アプリケーションの設計能力(画面設計、DB設計)  
-バリデーションを伴うCRUD機能の実装  
-ファイルのアップロード機能の実装  
-単体テスト・統合テストの実施  
-基本的なwebサーバ、インフラの構築
++ アプリケーションの設計能力(画面設計、DB設計)  
++ バリデーションを伴うCRUD機能の実装  
++ ファイルのアップロード機能の実装  
++ JUnit,Mockitoを用いた単体テスト、統合テストの実施  
++ 基本的なwebサーバ、インフラの構築
 
 # 今後の課題
-投稿のお気に入り機能  
-ユーザー間のフォロー機能  
-Dockerを用いた環境構築  
-CircleCIを用いたCI/CDパイプラインの構築  
++ 機能の追加
+    + 投稿のお気に入り機能
+    + ユーザー間のフォロー機能
++ コードのリファクタリング
+    + 複数のクラスに記述している同じ処理を一つにまとめる 
++ Dockerを用いた環境構築
++ CircleCIを用いたCI/CDパイプラインの構築

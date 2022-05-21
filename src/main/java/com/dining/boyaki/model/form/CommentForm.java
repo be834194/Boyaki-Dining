@@ -23,9 +23,7 @@ public class CommentForm implements Serializable{
 		
 	}
 
-	public CommentForm(long postId, String userName, String nickName,
-			@Size(max = 100, message = "100文字以内で入力してください") @NotEmpty(message = "投稿内容は必須項目です") String content) {
-		super();
+	public CommentForm(long postId, String userName, String nickName,String content) {
 		this.postId = postId;
 		this.userName = userName;
 		this.nickName = nickName;

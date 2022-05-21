@@ -42,9 +42,7 @@ public class OldPasswordValidatorTest {
 	
 	@Test
 	void validateでパスワードが一致するのでエラーが発生しない() throws Exception{
-		form.setUserName("糸井");
-		form.setMail("mother@yahoo.co.jp");
-		form.setOldPassword("sigeSIGE");
+		form = new PasswordChangeForm("糸井","mother@yahoo.co.jp","sigeSIGE",null,null);
 		when(passwordHistoryService.findPassword("糸井", "mother@yahoo.co.jp")).thenReturn("sigeSIGE");
 		when(passwordEncoder.matches("sigeSIGE", "sigeSIGE")).thenReturn(true);
 		
@@ -56,32 +54,28 @@ public class OldPasswordValidatorTest {
 	
 	@Test
 	void validateでパスワードが一致しないのでエラーが発生する() throws Exception{
-		form.setUserName("糸井");
-		form.setMail("mother@yahoo.co.jp");
-		form.setOldPassword("sigesige");
+		form = new PasswordChangeForm("糸井","mother@yahoo.co.jp","missmiss",null,null);
 		when(passwordHistoryService.findPassword("糸井", "mother@yahoo.co.jp")).thenReturn("sigeSIGE");
-		when(passwordEncoder.matches("sigesige", "sigeSIGE")).thenReturn(false);
+		when(passwordEncoder.matches("missmiss", "sigeSIGE")).thenReturn(false);
 		
 		oldPasswordValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("oldPassword")
-				.toString().contains("メールアドレスに誤りがあるか、ログイン中のパスワードと異なります"));
+				                .toString().contains("メールアドレスに誤りがあるか、ログイン中のパスワードと異なります"));
 		verify(passwordHistoryService,times(1)).findPassword("糸井", "mother@yahoo.co.jp");
-		verify(passwordEncoder,times(1)).matches("sigesige", "sigeSIGE");
+		verify(passwordEncoder,times(1)).matches("missmiss", "sigeSIGE");
 	}
 	
 	@Test
 	void validateでパスワードが取得できないのでエラーが発生する() throws Exception{
-		form.setUserName("糸井");
-		form.setMail("father@yahoo.co.jp");
-		form.setOldPassword("sigeSIGE");
+		form = new PasswordChangeForm("糸井","father@yahoo.co.jp","sigeSIGE",null,null);
 		when(passwordHistoryService.findPassword("糸井", "father@yahoo.co.jp")).thenReturn(null);
 		when(passwordEncoder.matches("sigeSIGE", "sigeSIGE")).thenReturn(false);
 		
 		oldPasswordValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("oldPassword")
-				.toString().contains("メールアドレスに誤りがあるか、ログイン中のパスワードと異なります"));
+				                .toString().contains("メールアドレスに誤りがあるか、ログイン中のパスワードと異なります"));
 		verify(passwordHistoryService,times(1)).findPassword("糸井", "father@yahoo.co.jp");
 		verify(passwordEncoder,times(0)).matches("sigeSIGE", "sigeSIGE");
 	}

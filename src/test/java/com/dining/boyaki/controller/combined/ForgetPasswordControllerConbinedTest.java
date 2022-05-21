@@ -107,6 +107,23 @@ public class ForgetPasswordControllerConbinedTest {
 	
 	@Test
 	@DatabaseSetup(value="/controller/ForgetPassword/setup/")
+	void updatePasswordでゲストユーザのPW更新処理が失敗する() throws Exception{
+		RegisterForm form = new RegisterForm();
+		form.setMail("guest@gmail.com");
+		form.setPassword("hogehoge");
+		form.setConfirmPassword("hogehoge");
+		this.mockMvc.perform(post("/updatePassword")
+			                .flashAttr("registerForm", form)
+			                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+			        .andExpect(status().is3xxRedirection())
+			        .andExpect(model().hasNoErrors())
+			        .andExpect(flash().attribute("guestError", "ゲストログイン用のユーザはパスワードを変更出来ません！"))
+			        .andExpect(redirectedUrl("/resetpassword"));
+	}
+	
+	@Test
+	@DatabaseSetup(value="/controller/ForgetPassword/setup/")
 	void updatePasswordでPW更新処理が失敗する() throws Exception{
 		RegisterForm form = new RegisterForm();
 		form.setMail("disney@gmail.com");

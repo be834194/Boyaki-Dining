@@ -47,6 +47,7 @@ import com.dining.boyaki.model.enums.StatusList;
 import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
 import com.dining.boyaki.model.service.AccountUserDetailsService;
+import com.dining.boyaki.model.service.LikesService;
 import com.dining.boyaki.model.service.PostService;
 import com.dining.boyaki.util.CsvDataSetLoader;
 import com.dining.boyaki.util.WithMockCustomUser;
@@ -62,7 +63,7 @@ import com.dining.boyaki.util.WithMockCustomUser;
 			includeFilters = @ComponentScan.Filter
 			                (type = FilterType.ASSIGNABLE_TYPE,
 			                 value = {AccountUserDetailsService.class,BeanConfig.class,SuccessHandler.class,
-			                		  PostService.class}))
+			                		 LikesService.class,PostService.class}))
 @Transactional
 public class PostControllerCombinedTest {
 	
@@ -135,6 +136,7 @@ public class PostControllerCombinedTest {
 				.andExpect(model().attribute("commentForm", 
 				                             hasProperty("nickName",is("加藤健"))))
 		       .andExpect(model().attribute("sumRate", 1))
+		       .andExpect(model().attribute("currentRate", 1))
 		       .andExpect(view().name("Post/PostDetail"));
 	}
 	
@@ -152,6 +154,7 @@ public class PostControllerCombinedTest {
 				.andExpect(model().attribute("commentForm", 
 				                             hasProperty("nickName",is("匿名"))))
 		       .andExpect(model().attribute("sumRate", 1))
+		       .andExpect(model().attribute("currentRate", -1))
 		       .andExpect(view().name("Post/PostDetail"));
 	}
 	
@@ -220,25 +223,28 @@ public class PostControllerCombinedTest {
 	@DatabaseSetup(value="/controller/Post/setup/")
 	@ExpectedDatabase(value = "/controller/Post/likes/",table="likes")
 	void updateRateでいいねが更新される() throws Exception{
-		mockMvc.perform(post("/index/boyaki/rate")
+		mockMvc.perform(post("/index/boyaki/rate") //1をinsert
 				       .param("postId", "7")
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		       .andExpect(status().is2xxSuccessful())
 		       .andExpect(model().attribute("sumRate", 2))
+		       .andExpect(model().attribute("currentRate", 1))
 		       .andExpect(view().name("Post/PostDetail :: rateFragment"));
-		mockMvc.perform(post("/index/boyaki/rate")
+		mockMvc.perform(post("/index/boyaki/rate") //0にupdate
 				       .param("postId", "2")
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		       .andExpect(status().is2xxSuccessful())
-		       .andExpect(model().attribute("sumRate", 1));
-		mockMvc.perform(post("/index/boyaki/rate")
+		       .andExpect(model().attribute("sumRate", 1))
+		       .andExpect(model().attribute("currentRate", 0));
+		mockMvc.perform(post("/index/boyaki/rate") //1にupdate
 				       .param("postId", "1")
 				       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			           .with(SecurityMockMvcRequestPostProcessors.csrf()))
 		       .andExpect(status().is2xxSuccessful())
-		       .andExpect(model().attribute("sumRate", 1));
+		       .andExpect(model().attribute("sumRate", 1))
+		       .andExpect(model().attribute("currentRate", 1));
 	}
 	
 	@Test
@@ -298,7 +304,6 @@ public class PostControllerCombinedTest {
 		mock.when(LocalDateTime::now).thenReturn(datetime);
 		
 		PostForm form = new PostForm("miho","匿名","糖質制限ってどこまでやればいいの～？",2);
-		form.setPostCategory(2);
 		this.mockMvc.perform(post("/index/boyaki/post/insert")
 			                .flashAttr("postForm", form)
 				            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -312,12 +317,9 @@ public class PostControllerCombinedTest {
 	@WithMockCustomUser(userName="miho",password="ocean_Nu",role="ROLE_USER")
 	@DatabaseSetup(value="/controller/Post/setup/")
 	void insertPostでバリデーションエラーが発生する() throws Exception{
-		PostForm form = new PostForm();
-		form.setUserName("miho");
-		form.setNickName("匿名");
+		PostForm form = new PostForm("miho","匿名",null,2);
 		form.setContent("12345678901234567890123456789012345678901234567890"
 				      + "123456789012345678901234567890123456789012345678901");
-		form.setPostCategory(2);
 		this.mockMvc.perform(post("/index/boyaki/post/insert")
 				            .flashAttr("postForm", form)
 				            .contentType(MediaType.APPLICATION_FORM_URLENCODED)

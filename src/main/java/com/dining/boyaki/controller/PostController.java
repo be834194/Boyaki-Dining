@@ -23,14 +23,18 @@ import com.dining.boyaki.model.enums.PostCategory;
 import com.dining.boyaki.model.enums.StatusList;
 import com.dining.boyaki.model.form.CommentForm;
 import com.dining.boyaki.model.form.PostForm;
+import com.dining.boyaki.model.service.LikesService;
 import com.dining.boyaki.model.service.PostService;
 
 @Controller
 public class PostController {
 	
+	private final LikesService likesService;
+	
 	private final PostService postService;
 	
-	public PostController(PostService postService) {
+	public PostController(LikesService likesService,PostService postService) {
+		this.likesService = likesService;
 		this.postService = postService;
 	}
 	
@@ -51,21 +55,23 @@ public class PostController {
 		}
 		model.addAttribute("postRecord",record);
 		
-		CommentForm comment = new CommentForm();
 		String nickName = postService.findNickName(details.getUsername());
-		comment.setUserName(details.getUsername());
-		comment.setNickName(nickName);
-		comment.setPostId(postId);
+		CommentForm comment = new CommentForm(postId,details.getUsername(),nickName,null);
 		model.addAttribute("commentForm",comment);
 		
+		//削除ボタンの有無
 		if(record.getUserName().equals(details.getUsername())) {
 			model.addAttribute("ableDeleted","true");
 		}else {
 			model.addAttribute("ableDeleted","false");
 		}
 		
-		int sumRate = postService.sumRate(postId);
+		//総いいね数の取得
+		int sumRate = likesService.sumRate(postId);
 		model.addAttribute("sumRate",sumRate);
+		//投稿に対する現在の評価状態を取得
+		int currentRate = likesService.currentRate(postId,details.getUsername());
+		model.addAttribute("currentRate",currentRate);
 		
 		return "Post/PostDetail";
 	}
@@ -89,10 +95,15 @@ public class PostController {
 	@PreAuthorize("principal.username != 'guestuser'")
 	String updateRate(@AuthenticationPrincipal AccountUserDetails details,
 			          @RequestParam(value="postId")long postId,Model model) {
-		postService.updateRate(postId, details.getUsername());
+		likesService.updateRate(postId, details.getUsername());
 		
-		int sumRate = postService.sumRate(postId);
+		//総いいね数の取得
+		int sumRate = likesService.sumRate(postId);
 		model.addAttribute("sumRate",sumRate);
+		//投稿に対する現在の評価状態を取得
+		int currentRate = likesService.currentRate(postId,details.getUsername());
+		model.addAttribute("currentRate",currentRate);
+		
 		return "Post/PostDetail :: rateFragment";
 	}
 	
@@ -113,10 +124,8 @@ public class PostController {
 	@PreAuthorize("principal.username != 'guestuser'")
 	String showPostCreate(@AuthenticationPrincipal AccountUserDetails details,
 			              Model model) {
-		PostForm form = new PostForm();
 		String nickName = postService.findNickName(details.getUsername());
-		form.setUserName(details.getUsername());
-		form.setNickName(nickName);
+		PostForm form = new PostForm(details.getUsername(),nickName,null,1);
 		
 		model.addAttribute("postForm",form);
 		model.addAttribute("postCategory", PostCategory.values());

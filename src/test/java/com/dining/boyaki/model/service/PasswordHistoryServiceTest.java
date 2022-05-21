@@ -37,31 +37,22 @@ public class PasswordHistoryServiceTest {
 	@Test
 	void findPasswordでパスワードを取得する()  throws Exception{
 		when(passwordHistoryMapper.findPassword("miho", "miho@gmail.com")).thenReturn("ocean_Nu");
-		
 		String password = passwordHistoryService.findPassword("miho", "miho@gmail.com");
 		assertEquals("ocean_Nu",password);
 		verify(passwordHistoryMapper,times(1)).findPassword("miho", "miho@gmail.com");
-	}
-	
-	@Test
-	void findPasswordでパスワードを取得できない場合はnullが返ってくる()  throws Exception{
-		when(passwordHistoryMapper.findPassword("miho", "miho@gmail.com")).thenReturn(null);
-		String password = passwordHistoryService.findPassword("miho", "miho@gmail.com");
+		
+		when(passwordHistoryMapper.findPassword("miho", "ocean@gmail.com")).thenReturn(null);
+		password = passwordHistoryService.findPassword("miho", "ocean@gmail.com");
 		assertEquals(null,password);
+		verify(passwordHistoryMapper,times(1)).findPassword("miho", "ocean@gmail.com");
 	}
 	
 	@Test
 	void findUseFromでユーザ一人のPW更新履歴を降順で取得する() throws Exception{
 		List<PasswordHistory> histories = new ArrayList<PasswordHistory>();
-		PasswordHistory history = new PasswordHistory();
-		history.setUserName("加藤健");
-		history.setPassword("ten_bear");
-		history.setUseDay(LocalDateTime.of(2021, 12, 15, 01, 22,39));
+		PasswordHistory history = new PasswordHistory("加藤健","ten_bear",LocalDateTime.of(2021, 12, 15, 01, 22,39));
 		histories.add(history);
-		history = new PasswordHistory();
-		history.setUserName("加藤健");
-		history.setPassword("pinballs");
-		history.setUseDay(LocalDateTime.of(2022, 01, 13, 01, 22,39));
+		history = new PasswordHistory("加藤健","pinballs",LocalDateTime.of(2022, 01, 13, 01, 22,39));
 		histories.add(history);
 		when(passwordHistoryMapper.findUseFrom("加藤健", LocalDateTime.of(2021, 12, 13, 01, 22,39))).thenReturn(histories);
 		
@@ -73,15 +64,12 @@ public class PasswordHistoryServiceTest {
 		assertEquals("pinballs",result.get(1).getPassword());
 		assertEquals(LocalDateTime.of(2022, 01, 13, 01, 22,39),result.get(1).getUseDay());
 		verify(passwordHistoryMapper,times(1)).findUseFrom("加藤健", LocalDateTime.of(2021, 12, 13, 01, 22,39));
-	}
-	
-	@Test
-	void findUseFromでユーザ一人のPW更新履歴が取得できない場合はnullが返ってくる() throws Exception{
-		List<PasswordHistory> histories = new ArrayList<PasswordHistory>();
-		when(passwordHistoryMapper.findUseFrom("加藤健", LocalDateTime.of(2021, 12, 13, 01, 22,39))).thenReturn(histories);
 		
-		List<PasswordHistory> result = passwordHistoryService.findUseFrom("加藤健", LocalDateTime.of(2021, 12, 13, 01, 22,39));
+		histories = new ArrayList<PasswordHistory>();
+        when(passwordHistoryMapper.findUseFrom("加藤健", LocalDateTime.of(2021, 11, 30, 01, 22,39))).thenReturn(histories);
+		result = passwordHistoryService.findUseFrom("加藤健", LocalDateTime.of(2021, 11, 30, 01, 22,39));
 		assertTrue(result.isEmpty());
+		verify(passwordHistoryMapper,times(1)).findUseFrom("加藤健", LocalDateTime.of(2021, 11, 30, 01, 22,39));
 	}
 	
 }

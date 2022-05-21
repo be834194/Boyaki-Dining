@@ -3,6 +3,9 @@ package com.dining.boyaki.model.entity;
 import java.time.LocalDateTime;
 
 public class Post {
+	
+	private long postId;
+	
 	private String userName;
 	 
 	private String nickName;
@@ -23,6 +26,14 @@ public class Post {
 		this.content = content;
 		this.postCategory = postCategory;
 		this.createAt = createAt;
+	}
+
+	public long getPostId() {
+		return postId;
+	}
+
+	public void setPostId(long postId) {
+		this.postId = postId;
 	}
 
 	public String getUserName() {

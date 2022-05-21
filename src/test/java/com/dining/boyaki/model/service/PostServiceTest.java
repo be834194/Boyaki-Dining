@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,17 +59,12 @@ public class PostServiceTest {
 	@Test
 	void findNickNameでニックネームを1件取得する() throws Exception{
 		when(postMapper.findNickName("糸井")).thenReturn("sigeno");
-		
 		String nickName = postService.findNickName("糸井");
 		assertEquals("sigeno",nickName);
 		verify(postMapper,times(1)).findNickName("糸井");
-	}
-	
-	@Test
-	void findNickNameでニックネームを取得できない場合はnullが返ってくる() throws Exception{
-		when(postMapper.findNickName("kenken")).thenReturn(null);
 		
-		String nickName = postService.findNickName("kenken");
+		when(postMapper.findNickName("kenken")).thenReturn(null);
+		nickName = postService.findNickName("kenken");
 		assertEquals(null,nickName);
 		verify(postMapper,times(1)).findNickName("kenken");
 	}
@@ -92,24 +86,17 @@ public class PostServiceTest {
 		assertEquals(2,result.getGender());
 		assertEquals(2,result.getAge());
 		verify(postMapper,times(1)).findProfile("匿名");
-	}
-	
-	@Test
-	void findProfileでユーザ情報レコードを取得できない場合はnullが返ってくる() throws Exception{
+		
 		when(postMapper.findProfile("miho")).thenReturn(null);
 		
-		AccountInfo result = postService.findProfile("miho");
+		result = postService.findProfile("miho");
 		assertEquals(null,result);
 		verify(postMapper,times(1)).findProfile("miho");
 	}
 	
 	@Test
 	void insertPostで投稿が1件追加される() throws Exception{
-		PostForm form = new PostForm();
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setContent("糖質制限ってどこまでやればいいの～？");
-		form.setPostCategory(2);
+		PostForm form = new PostForm("miho","匿名","糖質制限ってどこまでやればいいの～？",2);
 		doNothing().when(postMapper).insertPost(any(Post.class));
 		
 		postService.insertPost(form);
@@ -126,14 +113,8 @@ public class PostServiceTest {
 	
 	@Test
 	void findOnePostRecordで投稿を一件取得する() throws Exception{
-		PostRecord record = new PostRecord();
-		record.setPostId("10");
-		record.setUserName("糸井");
-		record.setNickName("sigeno");
-		record.setContent("ノンアル飽きた！");
-		record.setStatus("中性脂肪・コレステロール高め");
-		record.setPostCategory("ダイエット");
-		record.setCreateAt("2022-03-03 19:32:44");
+		PostRecord record = new PostRecord("10","糸井","sigeno","中性脂肪・コレステロール高め","ダイエット",
+				                           "ノンアル飽きた！","2022-03-03 19:32:44");
 		when(postMapper.findOnePostRecord(10)).thenReturn(record);
 		
 		PostRecord result = postService.findOnePostRecord(10);
@@ -145,24 +126,16 @@ public class PostServiceTest {
 		assertEquals("ダイエット",result.getPostCategory());
 		assertEquals("2022-03-03 19:32:44",result.getCreateAt());
 		verify(postMapper,times(1)).findOnePostRecord(10);
-	}
-	
-	@Test
-	void findOnePostRecordで投稿を一件取得できない場合はnullが返ってくる() throws Exception{
-		when(postMapper.findOnePostRecord(10)).thenReturn(null);
 		
-		PostRecord result = postService.findOnePostRecord(10);
+		when(postMapper.findOnePostRecord(20)).thenReturn(null);
+		result = postService.findOnePostRecord(20);
 		assertEquals(null,result);
-		verify(postMapper,times(1)).findOnePostRecord(10);
+		verify(postMapper,times(1)).findOnePostRecord(20);
 	}
 	
 	@Test
 	void insertCommentで投稿へのコメントが一件追加される() throws Exception{
-		CommentForm form = new CommentForm();
-		form.setPostId(9);
-		form.setUserName("miho");
-		form.setNickName("匿名");
-		form.setContent("牛乳私も試してみます！");
+		CommentForm form = new CommentForm(9,"miho","匿名","牛乳私も試してみます！");
 		doNothing().when(postMapper).insertComment(any(Comment.class));
 		
 		postService.insertComment(form);
@@ -181,42 +154,6 @@ public class PostServiceTest {
 		List<CommentRecord> result = postService.findCommentList(3, 0);
 		assertEquals(2,result.size());
 		verify(postMapper,times(1)).findCommentRecord(3, PageRequest.of(0, 5));
-	}
-	
-	@Test
-	void sumRateで投稿を件の総いいね数を取得する() throws Exception{
-		when(postMapper.sumRate(2)).thenReturn(Optional.of(0));
-		when(postMapper.sumRate(3)).thenReturn(Optional.of(5));
-		
-		int rate = postService.sumRate(2);
-		assertEquals(0,rate);
-		verify(postMapper,times(1)).sumRate(2);
-		
-		rate = postService.sumRate(3);
-		assertEquals(5,rate);
-		verify(postMapper,times(1)).sumRate(3);
-	}
-	
-	@Test
-	void updateRateでlikeテーブルにデータが追加もしくは更新される() throws Exception{
-		when(postMapper.currentRate(1, "加藤健")).thenReturn(Optional.of(-1));
-		when(postMapper.currentRate(2, "加藤健")).thenReturn(Optional.of(0));
-		when(postMapper.currentRate(3, "加藤健")).thenReturn(Optional.of(1));
-		doNothing().when(postMapper).insertRate(1, "加藤健", 1);
-		doNothing().when(postMapper).updateRate(2, "加藤健", 1);
-		doNothing().when(postMapper).updateRate(3, "加藤健", 0);
-		
-		postService.updateRate(1, "加藤健");
-		verify(postMapper,times(1)).currentRate(1, "加藤健");
-		verify(postMapper,times(1)).insertRate(1, "加藤健", 1);
-		
-		postService.updateRate(2, "加藤健");
-		verify(postMapper,times(1)).currentRate(2, "加藤健");
-		verify(postMapper,times(1)).updateRate(2, "加藤健", 1);
-		
-		postService.updateRate(3, "加藤健");
-		verify(postMapper,times(1)).currentRate(3, "加藤健");
-		verify(postMapper,times(1)).updateRate(3, "加藤健", 0);
 	}
 	
 	@Test
@@ -242,21 +179,23 @@ public class PostServiceTest {
 		PostRecord record = new PostRecord();
 		recordList.add(record);
 		recordList.add(record);
-		
 		int[] category = new int[]{};
 		int[] status = new int[]{};
 		String text = " 		";
 		when(postMapper.searchPostRecord(any(),any(),any(),any())).thenReturn(recordList);
 		
+		//textがタブの場合
 		List<PostRecord> result = postService.searchPostRecord(category, status, text,0);
 		assertEquals(2,result.size());
 		verify(postMapper,times(1)).searchPostRecord(any(),any(),any(),any());
 		
+		//textがnullの場合
 		text = null;
 		result = postService.searchPostRecord(category, status, text,0);
 		assertEquals(2,result.size());
 		verify(postMapper,times(2)).searchPostRecord(any(),any(),any(),any());
 		
+		//textが空文字の場合
 		text = "";
 		result = postService.searchPostRecord(category, status, text,0);
 		assertEquals(2,result.size());

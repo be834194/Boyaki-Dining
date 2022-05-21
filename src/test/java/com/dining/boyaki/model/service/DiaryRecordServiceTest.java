@@ -37,30 +37,18 @@ public class DiaryRecordServiceTest {
 	@InjectMocks
 	DiaryRecordService diaryRecordService;
 	
-	DiaryRecord diary = new DiaryRecord();
+	DiaryRecord diary;
 	DiaryRecordForm form = new DiaryRecordForm();
 	
 	@BeforeEach
     void setUp() {
     	MockitoAnnotations.openMocks(this);
-    	
-    	diary.setUserName("miho");
-		diary.setCategoryId(1);
-		diary.setDiaryDay(Date.valueOf("2022-02-15"));
-		diary.setRecord1("食パン2枚");
-		diary.setRecord2("目玉焼き");
-		diary.setRecord3(null);
-		diary.setImageName("20220215.jpg");
-		diary.setMemo(null);
-		diary.setCreateAt(LocalDateTime.parse("2022-02-15T11:22:33"));
-		form.setCategoryId(1);
-		form.setDiaryDay(Date.valueOf("2022-02-15"));
-		form.setRecord1("食パン2枚");
-		form.setRecord2("目玉焼き");
-		form.setRecord3(null);
-		form.setImageName("20220215.jpg");
-		form.setMemo(null);
-		form.setCreateAt(LocalDateTime.parse("2022-02-15T11:22:33"));
+    	diary = new DiaryRecord("miho",1,Date.valueOf("2022-02-15"),
+    			                "食パン2枚","目玉焼き",null,
+    			                "20220215.jpg",null,LocalDateTime.parse("2022-02-15T11:22:33"),null);
+    	form = new DiaryRecordForm("mih0",1,Date.valueOf("2022-02-15"),
+    			                   "食パン2枚","目玉焼き",null,
+                                   "20220215.jpg",null,LocalDateTime.parse("2022-02-15T11:22:33"));
     }
 	
 	@Test
@@ -85,37 +73,17 @@ public class DiaryRecordServiceTest {
 	@Test
 	void findAllCalendarRecordsで取得したDiaryRecordをCalendarRecordに詰め替える() throws Exception{
 		List<DiaryRecord> diaryRecords = new ArrayList<DiaryRecord>();
-		DiaryRecord diary = new DiaryRecord();
-		diary.setUserName("加藤健");
-		diary.setCategoryId(1);
-		diary.setDiaryDay(Date.valueOf("2022-02-16"));
-		diary.setRecord1(null);
-		diary.setRecord2(null);
-		diary.setRecord3("昨日のサラダ");
+		DiaryRecord diary = new DiaryRecord("加藤健",1,Date.valueOf("2022-02-16"),
+				                             null,null,"昨日のサラダ",null,null,null,null);
 		diaryRecords.add(diary);
-		diary = new DiaryRecord();
-		diary.setUserName("加藤健");
-		diary.setCategoryId(2);
-		diary.setDiaryDay(Date.valueOf("2022-02-17"));
-		diary.setRecord1("白米");
-		diary.setRecord2("生姜焼き");
-		diary.setRecord3("きゅうりの浅漬け");
+		diary = new DiaryRecord("加藤健",2,Date.valueOf("2022-02-17"),
+				                "白米","生姜焼き","きゅうりの浅漬け",null,null,null,null);
 		diaryRecords.add(diary);
-		diary = new DiaryRecord();
-		diary.setUserName("加藤健");
-		diary.setCategoryId(3);
-		diary.setDiaryDay(Date.valueOf("2022-02-18"));
-		diary.setRecord1("牛丼");
-		diary.setRecord2(null);
-		diary.setRecord3("生野菜のサラダ");
+		diary = new DiaryRecord("加藤健",3,Date.valueOf("2022-02-18"),
+				                "牛丼",null,"生野菜のサラダ",null,null,null,null);
 		diaryRecords.add(diary);
-		diary = new DiaryRecord();
-		diary.setUserName("加藤健");
-		diary.setCategoryId(4);
-		diary.setDiaryDay(Date.valueOf("2022-02-18"));
-		diary.setRecord1("ビール一缶");
-		diary.setRecord2("肉まん");
-		diary.setRecord3("自宅からお花茶屋まで徒歩で往復30分");
+		diary = new DiaryRecord("加藤健",4,Date.valueOf("2022-02-18"),
+				                "ビール一缶","肉まん","自宅からお花茶屋まで徒歩で往復30分",null,null,null,null);
 		diaryRecords.add(diary);
 		when(diaryRecordMapper.findAllDiaryRecords("加藤健")).thenReturn(diaryRecords);
 		
@@ -137,9 +105,7 @@ public class DiaryRecordServiceTest {
 	
 	@Test
 	void findOneDiaryRecordでDiaryRecordを1件取得する() throws Exception{
-		when(diaryRecordMapper.findOneDiaryRecord("miho", 0, Date.valueOf("2022-02-15")))
-		   .thenReturn(diary);
-		
+		when(diaryRecordMapper.findOneDiaryRecord("miho", 0, Date.valueOf("2022-02-15"))).thenReturn(diary);
 		DiaryRecordForm result = diaryRecordService.findOneDiaryRecord("miho", 0, Date.valueOf("2022-02-15"));
 		assertEquals(1,result.getCategoryId());
 		assertEquals("2022-02-15",result.getDiaryDay().toString());
@@ -150,14 +116,9 @@ public class DiaryRecordServiceTest {
 		assertNull(result.getMemo());
 		assertEquals(LocalDateTime.parse("2022-02-15T11:22:33"),result.getCreateAt());
 		verify(diaryRecordMapper,times(1)).findOneDiaryRecord("miho", 0, Date.valueOf("2022-02-15"));
-	}
-	
-	@Test
-	void findOneDiaryRecordでDiaryRecordが取得できない場合nullが返ってくる() throws Exception{
-		when(diaryRecordMapper.findOneDiaryRecord("加藤健", 4, Date.valueOf("2022-02-01")))
-		   .thenReturn(null);
 		
-		DiaryRecordForm result = diaryRecordService.findOneDiaryRecord("加藤健", 4, Date.valueOf("2022-02-01"));
+		when(diaryRecordMapper.findOneDiaryRecord("加藤健", 4, Date.valueOf("2022-02-01"))).thenReturn(null);
+		result = diaryRecordService.findOneDiaryRecord("加藤健", 4, Date.valueOf("2022-02-01"));
 		assertNull(result);
 		verify(diaryRecordMapper,times(1)).findOneDiaryRecord("加藤健", 4, Date.valueOf("2022-02-01"));
 	}

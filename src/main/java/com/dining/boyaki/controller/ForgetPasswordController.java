@@ -45,6 +45,11 @@ public class ForgetPasswordController {
 		if(result.hasErrors()) {
 			return "Login/ResettingPassword";
 		}
+		if(form.getMail().equals("guest@gmail.com")) {
+			model.addFlashAttribute("guestError", "ゲストログイン用のユーザはパスワードを変更出来ません！");
+			return "redirect:/resetpassword";
+		}
+		
 		updatePasswordService.updatePassword(form);
 		model.addFlashAttribute("register", "パスワードを再設定いたしました");
 		return "redirect:/login";

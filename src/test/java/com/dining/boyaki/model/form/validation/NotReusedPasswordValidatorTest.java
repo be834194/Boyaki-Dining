@@ -69,22 +69,13 @@ public class NotReusedPasswordValidatorTest {
 	void validateで新パスワードが重複せずエラーが発生しない() throws Exception{
 		RuleResult result = new RuleResult();
 		result.setValid(true);
-		form.setUserName("加藤健");
-		form.setMail("example@ezweb.ne.jp");
-		form.setOldPassword("pinballs");
-		form.setPassword("wonderSong");
-		form.setConfirmPassword("wonderSong");
+		form = new PasswordChangeForm("加藤健","example@ezweb.ne.jp","pinballs",
+				                      "wonderSong","wonderSong");
 		List<PasswordHistory> histories = new ArrayList<PasswordHistory>();
-		PasswordHistory history = new PasswordHistory();
-		history.setUserName("加藤健");
-		history.setPassword("ten_bear");
-		history.setUseDay(LocalDateTime.of(2021, 12, 15, 01, 22,39));
-		histories.add(history);
-		history = new PasswordHistory();
-		history.setUserName("加藤健");
-		history.setPassword("pinballs");
-		history.setUseDay(LocalDateTime.of(2022, 01, 13, 01, 22,39));
-		histories.add(history);
+		PasswordHistory history1 = new PasswordHistory("加藤健","ten_bear",LocalDateTime.of(2021, 12, 15, 01, 22,39));
+		histories.add(history1);
+		PasswordHistory history2 = new PasswordHistory("加藤健","pinballs",LocalDateTime.of(2022, 01, 13, 01, 22,39));
+		histories.add(history2);
 		
 		when(passwordEncoder.matches("wonderSong", "pinballs")).thenReturn(false);
 		when(passwordHistoryService.findPassword("加藤健", "example@ezweb.ne.jp")).thenReturn("pinballs");
@@ -103,11 +94,8 @@ public class NotReusedPasswordValidatorTest {
 	
 	@Test
 	void validateで30日以内のパスワード変更履歴がない場合はエラーが発生しない() throws Exception{
-		form.setUserName("加藤健");
-		form.setMail("example@ezweb.ne.jp");
-		form.setOldPassword("pinballs");
-		form.setPassword("wonderSong");
-		form.setConfirmPassword("wonderSong");
+		form = new PasswordChangeForm("加藤健","example@ezweb.ne.jp","pinballs",
+                                      "wonderSong","wonderSong");
 		List<PasswordHistory> histories = new ArrayList<PasswordHistory>();
 		
 		when(passwordEncoder.matches("wonderSong", "pinballs")).thenReturn(false);
@@ -127,11 +115,8 @@ public class NotReusedPasswordValidatorTest {
 	
 	@Test
 	void validateでメールアドレスの誤りでエラーが発生する() throws Exception{
-		form.setUserName("加藤健");
-		form.setMail("hogehoge@ezweb.ne.jp");
-		form.setOldPassword("pinballs");
-		form.setPassword("wonderSong");
-		form.setConfirmPassword("wonderSong");
+		form = new PasswordChangeForm("加藤健","hogehoge@ezweb.ne.jp","pinballs",
+                                      "wonderSong","wonderSong");
 		
 		when(passwordEncoder.matches("wonderSong", "pinballs")).thenReturn(false);
 		when(passwordHistoryService.findPassword("加藤健", "hogehoge@ezweb.ne.jp")).thenReturn(null);
@@ -142,7 +127,7 @@ public class NotReusedPasswordValidatorTest {
 		notReusedPasswordValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("mail")
-				.toString().contains("メールアドレスに誤りがあります"));
+				                .toString().contains("メールアドレスに誤りがあります"));
 		verify(passwordEncoder,times(0)).matches("wonderSong", "pinballs");
 		verify(passwordHistoryService,times(1)).findPassword("加藤健", "hogehoge@ezweb.ne.jp");
 		verify(passwordHistoryService,times(0)).findUseFrom("加藤健", datetime.minusDays(30)
@@ -153,11 +138,8 @@ public class NotReusedPasswordValidatorTest {
 	
 	@Test
 	void validateで旧パスワードと一致してエラーが発生する() throws Exception{
-		form.setUserName("加藤健");
-		form.setMail("example@ezweb.ne.jp");
-		form.setOldPassword("pinballs");
-		form.setPassword("pinballs");
-		form.setConfirmPassword("pinballs");
+		form = new PasswordChangeForm("加藤健","example@ezweb.ne.jp","pinballs",
+                                      "pinballs","pinballs");
 		
 		when(passwordEncoder.matches("pinballs", "pinballs")).thenReturn(true);
 		when(passwordHistoryService.findPassword("加藤健", "example@ezweb.ne.jp")).thenReturn("pinballs");
@@ -168,7 +150,7 @@ public class NotReusedPasswordValidatorTest {
 		notReusedPasswordValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("password")
-				.toString().contains("ログイン中のパスワードと一緒です"));
+				                .toString().contains("ログイン中のパスワードと一緒です"));
 		verify(passwordEncoder,times(1)).matches("pinballs", "pinballs");
 		verify(passwordHistoryService,times(1)).findPassword("加藤健", "example@ezweb.ne.jp");
 		verify(passwordHistoryService,times(0)).findUseFrom("加藤健", datetime.minusDays(30)
@@ -180,22 +162,13 @@ public class NotReusedPasswordValidatorTest {
 	void validateで新パスワードが過去30日以内のパスワードと一致してエラーが発生する() throws Exception{
 		RuleResult result = new RuleResult();
 		result.setValid(false);
-		form.setUserName("加藤健");
-		form.setMail("example@ezweb.ne.jp");
-		form.setOldPassword("pinballs");
-		form.setPassword("ten_bear");
-		form.setConfirmPassword("ten_bear");
+		form = new PasswordChangeForm("加藤健","example@ezweb.ne.jp","pinballs",
+				                      "ten_bear","ten_bear");
 		List<PasswordHistory> histories = new ArrayList<PasswordHistory>();
-		PasswordHistory history = new PasswordHistory();
-		history.setUserName("加藤健");
-		history.setPassword("ten_bear");
-		history.setUseDay(LocalDateTime.of(2021, 12, 15, 01, 22,39));
-		histories.add(history);
-		history = new PasswordHistory();
-		history.setUserName("加藤健");
-		history.setPassword("pinballs");
-		history.setUseDay(LocalDateTime.of(2022, 01, 13, 01, 22,39));
-		histories.add(history);
+		PasswordHistory history1 = new PasswordHistory("加藤健","ten_bear",LocalDateTime.of(2021, 12, 15, 01, 22,39));
+		histories.add(history1);
+		PasswordHistory history2 = new PasswordHistory("加藤健","pinballs",LocalDateTime.of(2022, 01, 13, 01, 22,39));
+		histories.add(history2);
 		
 		when(passwordEncoder.matches("ten_bear", "pinballs")).thenReturn(false);
 		when(passwordHistoryService.findPassword("加藤健", "example@ezweb.ne.jp")).thenReturn("pinballs");
@@ -206,7 +179,7 @@ public class NotReusedPasswordValidatorTest {
 		notReusedPasswordValidator.validate(form, bindingResult);
 		assertEquals(1,bindingResult.getFieldErrorCount());
 		assertTrue(bindingResult.getFieldError("password")
-				.toString().contains("30日以内に使用したパスワードはご利用できません"));
+				                .toString().contains("30日以内に使用したパスワードはご利用できません"));
 		verify(passwordEncoder,times(1)).matches("ten_bear", "pinballs");
 		verify(passwordHistoryService,times(1)).findPassword("加藤健", "example@ezweb.ne.jp");
 		verify(passwordHistoryService,times(1)).findUseFrom("加藤健", datetime.minusDays(30)

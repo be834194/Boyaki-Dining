@@ -7,7 +7,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -51,43 +50,28 @@ public class AccountInfoServiceTest {
 		
 		@BeforeEach
 		void setUp(){
-			info = new AccountInfo();
-			info.setUserName("糸井");
-			info.setNickName("sigeno");
-			info.setProfile("今年中に体重5キロ落としたい");
-			info.setStatus(3);
-			info.setGender(3);
-			info.setAge(2);
-			form = new AccountInfoForm();
-			form.setUserName("糸井");
-			form.setNickName("sigeno");
-			form.setProfile("今年中に体重5キロ落としたい");
-			form.setStatus(3);
-			form.setGender(3);
-			form.setAge(2);
+			info = new AccountInfo("糸井","sigeno","今年中に体重5キロ落としたい",
+					               3,3,2,165,60,null,null);
+			form = new AccountInfoForm("糸井","sigeno","今年中に体重5キロ落としたい",
+					                   3,3,2,165,60);
+			when(accountInfoMapper.findAccountInfo("糸井")).thenReturn(info);
+			when(accountInfoMapper.findAccountInfo("miho")).thenReturn(null);
 		}
 	
 		@Test
 		void findAccountInfoでユーザ情報レコードを1件取得する() {
-			when(accountInfoMapper.findAccountInfo("糸井")).thenReturn(info);
-			
 			AccountInfoForm result =  accountInfoService.findAccountInfo("糸井");
 			assertEquals("糸井",result.getUserName());
 			assertEquals("sigeno",result.getNickName());
 			assertEquals("今年中に体重5キロ落としたい",result.getProfile());
 			assertEquals(3,result.getStatus());
 			assertEquals(3,result.getGender());
-			assertEquals(2,result.getAge());
+			assertEquals(2,result.getAge());;
 			verify(accountInfoMapper,times(1)).findAccountInfo("糸井");
-		}
-	
-		@Test
-		void findAccountInfoでユーザ情報レコードが取得できない場合はnullが返ってくる() {
-			when(accountInfoMapper.findAccountInfo("糸井")).thenReturn(null);
 			
-			AccountInfoForm result =  accountInfoService.findAccountInfo("糸井");
+			result =  accountInfoService.findAccountInfo("miho");
 			assertEquals(null,result);
-			verify(accountInfoMapper,times(1)).findAccountInfo("糸井");
+			verify(accountInfoMapper,times(1)).findAccountInfo("miho");
 		}
 		
 		@Test
@@ -101,21 +85,9 @@ public class AccountInfoServiceTest {
 	
 	@Test
 	void updatePasswordでパスワードを更新する() {
-		PasswordChangeForm form = new PasswordChangeForm();
-		form.setUserName("加藤健");
-		form.setMail("example@ezweb.ne.jp");
-		form.setOldPassword("pinballs");
-		form.setPassword("wonderSong");
-		form.setConfirmPassword("wonderSong");
-		
-		Account account = new Account();
-		account.setUserName("加藤健");
-		account.setPassword("wonderSong");
-		account.setMail("example@ezweb.ne.jp");
-		PasswordHistory history = new PasswordHistory();
-		history.setUserName("加藤健");
-		history.setPassword("wonderSong");
-		history.setUseDay(LocalDateTime.now());
+		PasswordChangeForm form = new PasswordChangeForm("加藤健","example@ezweb.ne.jp","pinballs",
+				                                         "wonderSong","wonderSong");
+		Account account = new Account("加藤健","wonderSong","example@ezweb.ne.jp",null);
 		
 		when(passwordEncoder.encode(form.getPassword())).thenReturn(account.getPassword());
 		doNothing().when(accountInfoMapper).updatePassword(any(Account.class));

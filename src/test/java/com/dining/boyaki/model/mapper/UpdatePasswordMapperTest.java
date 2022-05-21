@@ -54,10 +54,7 @@ public class UpdatePasswordMapperTest {
 	@DatabaseSetup(value = "/mapper/UpdatePassword/setup/")
 	@ExpectedDatabase(value = "/mapper/UpdatePassword/update/password_history/",table="password_history")
 	void insertPasswordHistoryでPW履歴レコードが1件追加される() throws Exception{
-		PasswordHistory history = new PasswordHistory();
-		history.setUserName("miho");
-		history.setPassword("script-Java");
-		history.setUseDay(LocalDateTime.parse("2022-02-10T20:39:45"));
+		PasswordHistory history = new PasswordHistory("miho","script-Java",LocalDateTime.parse("2022-02-10T20:39:45"));
 		updatePasswordMapper.insertPasswordHistory(history);
 	}
 

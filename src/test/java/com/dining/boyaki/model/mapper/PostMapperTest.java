@@ -89,12 +89,8 @@ public class PostMapperTest {
 	@ExpectedDatabase(value = "/mapper/Post/insert/post/",table="post"
 	                 ,assertionMode=DatabaseAssertionMode.NON_STRICT)
 	void insertPostで投稿が1件追加される() throws Exception{
-		Post post = new Post();
-		post.setUserName("miho");
-		post.setNickName("匿名");
-		post.setContent("糖質制限ってどこまでやればいいの～？");
-		post.setPostCategory(2);
-		post.setCreateAt(LocalDateTime.parse("2022-03-08T09:31:12"));
+		Post post = new Post("miho","匿名","糖質制限ってどこまでやればいいの～？",
+				             2,LocalDateTime.parse("2022-03-08T09:31:12"));
 		postMapper.insertPost(post);
 	}
 	
@@ -123,40 +119,8 @@ public class PostMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
-	@ExpectedDatabase(value = "/mapper/Post/insert/comment/",table="comment"
-                     ,assertionMode=DatabaseAssertionMode.NON_STRICT)
-	void insertCommentで投稿へのコメントが一件追加される() throws Exception{
-		Comment comment = new Comment();
-		comment.setPostId(9);
-		comment.setUserName("miho");
-		comment.setNickName("匿名");
-		comment.setContent("牛乳私も試してみます！");
-		comment.setCreateat(LocalDateTime.parse("2022-03-10T16:27:38"));
-		postMapper.insertComment(comment);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/mapper/Post/setup/")
-	void findCommentRecordで投稿一つに対するコメントを全件取得する() throws Exception{
-		List<CommentRecord> record = postMapper.findCommentRecord(7, PageRequest.of(0, 5));
-		assertEquals(5,record.size());
-		assertEquals("sigeno",record.get(0).getNickName());
-		assertEquals("中性脂肪・コレステロール高め",record.get(0).getStatus());
-		assertEquals("test",record.get(0).getContent());;
-		assertEquals("2022-03-10 19:44:28",record.get(0).getCreateAt());
-		assertEquals("2022-03-07 09:52:28",record.get(4).getCreateAt());
-		
-		record = postMapper.findCommentRecord(7, PageRequest.of(1, 5));
-		assertEquals(1,record.size());
-		assertEquals("2022-03-07 09:44:28",record.get(0).getCreateAt());
-		
-		record = postMapper.findCommentRecord(7, PageRequest.of(2, 5));
-		assertEquals(0,record.size());
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/mapper/Post/setup/")
 	void findPostRecordでユーザ一人の投稿を全件取得する() throws Exception{
+		//0ページ目
 		List<PostRecord> record = postMapper.findPostRecord("sigeno", PageRequest.of(0, 5));
 		assertEquals(5,record.size());
 		assertEquals("11",record.get(0).getPostId());
@@ -169,10 +133,12 @@ public class PostMapperTest {
 		assertEquals("2022-03-01 18:07:15",record.get(3).getCreateAt());
 		assertEquals("2022-03-01 12:07:27",record.get(4).getCreateAt());
 		
+		//1ページ目
 		record = postMapper.findPostRecord("sigeno", PageRequest.of(1, 5));
 		assertEquals(1,record.size());
 		assertEquals("2022-03-01 12:06:21",record.get(0).getCreateAt());
 		
+		//2ページ目
 		record = postMapper.findPostRecord("sigeno", PageRequest.of(2, 5));
 		assertEquals(0,record.size());
 	}
@@ -180,6 +146,7 @@ public class PostMapperTest {
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
 	void searchPostRecordで全件取得する() throws Exception{
+		//0ページ目
 		List<PostRecord> record = postMapper.searchPostRecord(category,status,content,
 				                                              PageRequest.of(0, 5));
 		assertEquals(5,record.size());
@@ -193,11 +160,13 @@ public class PostMapperTest {
 		assertEquals("2022-03-02 12:55:08",record.get(3).getCreateAt());
 		assertEquals("2022-03-02 11:12:50",record.get(4).getCreateAt());
 		
+		//2ページ目
 		record = postMapper.searchPostRecord(category,status,content,
                                              PageRequest.of(2, 5));
 		assertEquals(1,record.size());
 		assertEquals("2022-02-28 23:30:34",record.get(0).getCreateAt());
 		
+		//3ページ目
 		record = postMapper.searchPostRecord(category,status,content,
 		                                     PageRequest.of(3, 5));
 		assertEquals(0,record.size());
@@ -206,6 +175,7 @@ public class PostMapperTest {
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
 	void searchPostRecordで一つの条件で絞り込んで取得する() throws Exception{
+		//0ページ目、カテゴリ(運動・筋トレ,塩分)
 		category = new int[]{5,3};
 		List<PostRecord> record = postMapper.searchPostRecord(category,status,null,
 				                                              PageRequest.of(0, 5));
@@ -215,6 +185,7 @@ public class PostMapperTest {
 		assertEquals("塩分",record.get(1).getPostCategory());
 		assertEquals("2022-03-01 18:29:51",record.get(1).getCreateAt());
 		
+		//0ページ目、ステータス(ダイエット中,尿酸値高め)
 		status = new int[]{1,7};
 		record = postMapper.searchPostRecord(null,status,null,
 				                             PageRequest.of(0, 5));
@@ -226,6 +197,7 @@ public class PostMapperTest {
 		assertEquals("2022-03-01 18:29:51",record.get(3).getCreateAt());
 		assertEquals("2022-02-28 23:30:34",record.get(4).getCreateAt());
 		
+		//0ページ目、投稿
 		content = new String[]{"改善"};
 		record = postMapper.searchPostRecord(null,null,content,
 				                             PageRequest.of(0, 5));
@@ -241,6 +213,7 @@ public class PostMapperTest {
 		status = new int[]{1,6};
 		content = new String[]{"検査"};
 		
+		//0ページ目、カテゴリ(塩分,尿酸値)+ステータス(ダイエット中,コレステロール高め)
 		List<PostRecord> record = postMapper.searchPostRecord(category,status,null,
 				                                              PageRequest.of(0, 5));
 		assertEquals(1,record.size());
@@ -248,6 +221,7 @@ public class PostMapperTest {
 		assertEquals("塩分",record.get(0).getPostCategory());
 		assertEquals("2022-03-01 18:29:51",record.get(0).getCreateAt());
 		
+		//0ページ目、ステータス(ダイエット中,コレステロール高め)+投稿
 		record = postMapper.searchPostRecord(null,status,content,
 				                             PageRequest.of(0, 5));
 		assertEquals(1,record.size());
@@ -255,6 +229,7 @@ public class PostMapperTest {
 		assertTrue(record.get(0).getContent().contains("検査"));
 		assertEquals("2022-03-01 18:29:51",record.get(0).getCreateAt());
 		
+		//0ページ目、カテゴリ(塩分,尿酸値)+投稿
 		record = postMapper.searchPostRecord(category,null,content,
 				                             PageRequest.of(0, 5));
 		assertEquals(2,record.size());
@@ -269,6 +244,7 @@ public class PostMapperTest {
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
 	void searchPostRecordで投稿情報を絞り込んで取得する() throws Exception{
+		//0ページ目、カテゴリ(ダイエット,糖質,塩分)+ステータス(ダイエット中,尿酸値高め)+投稿内容
 		category = new int[]{1,2,3};
 		status = new int[]{1,7};
 		content = new String[]{"ダイエット","効果"};
@@ -284,36 +260,34 @@ public class PostMapperTest {
 	
 	@Test
 	@DatabaseSetup(value = "/mapper/Post/setup/")
-	void currentRateで評価状態を取得する() throws Exception{
-		int result =  postMapper.currentRate(2, "miho").orElse(-1);
-		assertEquals(1,result);
+	@ExpectedDatabase(value = "/mapper/Post/insert/comment/",table="comment"
+                     ,assertionMode=DatabaseAssertionMode.NON_STRICT)
+	void insertCommentで投稿へのコメントが一件追加される() throws Exception{
+		Comment comment = new Comment(9,"miho","匿名","牛乳私も試してみます！",
+				                      LocalDateTime.parse("2022-03-10T16:27:38"));
+		postMapper.insertComment(comment);
+	}
+	
+	@Test
+	@DatabaseSetup(value = "/mapper/Post/setup/")
+	void findCommentRecordで投稿一つに対するコメントを全件取得する() throws Exception{
+		//0ページ目
+		List<CommentRecord> record = postMapper.findCommentRecord(7, PageRequest.of(0, 5));
+		assertEquals(5,record.size());
+		assertEquals("sigeno",record.get(0).getNickName());
+		assertEquals("中性脂肪・コレステロール高め",record.get(0).getStatus());
+		assertEquals("test",record.get(0).getContent());;
+		assertEquals("2022-03-10 19:44:28",record.get(0).getCreateAt());
+		assertEquals("2022-03-07 09:52:28",record.get(4).getCreateAt());
 		
-		result =  postMapper.currentRate(10, "miho").orElse(-1);
-		assertEquals(-1,result);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/mapper/Post/setup/")
-	void sumRateで評価状態を取得する() throws Exception{
-		int result =  postMapper.sumRate(2).orElse(0);
-		assertEquals(2,result);
+		//1ページ目
+		record = postMapper.findCommentRecord(7, PageRequest.of(1, 5));
+		assertEquals(1,record.size());
+		assertEquals("2022-03-07 09:44:28",record.get(0).getCreateAt());
 		
-		result =  postMapper.sumRate(5).orElse(0);
-		assertEquals(0,result);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/mapper/Post/setup/")
-	@ExpectedDatabase(value = "/mapper/Post/insert/likes/",table="likes")
-	void inserttRateで評価状態を追加する() throws Exception{
-		postMapper.insertRate(3, "miho", 1);
-	}
-	
-	@Test
-	@DatabaseSetup(value = "/mapper/Post/setup/")
-	@ExpectedDatabase(value = "/mapper/Post/update/",table="likes")
-	void inserttRateで評価状態を更新する() throws Exception{
-		postMapper.updateRate(1, "miho", 1);
+		//2ページ目
+		record = postMapper.findCommentRecord(7, PageRequest.of(2, 5));
+		assertEquals(0,record.size());
 	}
 
 }

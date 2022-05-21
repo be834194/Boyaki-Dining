@@ -52,15 +52,15 @@ public class NotReusedPasswordValidator implements Validator {
 					return;
 				} else {
 					errors.rejectValue("password", 
-     			           "PasswordChangeForm.password",
-                            "30日以内に使用したパスワードはご利用できません");
+     			                       "PasswordChangeForm.password",
+                                       "30日以内に使用したパスワードはご利用できません");
 				}
-			} else {
+			} else { //isCurrentPasswordCheckで新パスワードが現パスワードと一致した場合
 				errors.rejectValue("password", 
 	        			           "PasswordChangeForm.password",
 	                               "ログイン中のパスワードと一緒です");
 			}
-		} else {
+		} else { //passwordHistoryServiceでメールが取得できない場合
 			errors.rejectValue("mail", 
 					           "PasswordChangeForm.mail",
                                "メールアドレスに誤りがあります");
@@ -69,10 +69,10 @@ public class NotReusedPasswordValidator implements Validator {
 	
 	//入力された新パスワードが、現在使われているパスワードと一致した場合はfalseを返す
 	public boolean isCurrentPasswordCheck(String newPassword,String currentPassword) {
-		if(!passwordEncoder.matches(newPassword, currentPassword)) {
-			return true;
+		if(passwordEncoder.matches(newPassword, currentPassword)) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	//入力された新パスワードが、過去30日以内に使われたパスワードと一致しないか確認する
