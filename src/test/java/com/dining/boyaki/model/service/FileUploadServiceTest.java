@@ -1,17 +1,16 @@
 package com.dining.boyaki.model.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
-import org.apache.commons.imaging.ImageWriteException;
-import org.apache.commons.imaging.ImageReadException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
@@ -38,9 +37,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.util.IOUtils;
+import com.amazonaws.SdkClientException;
 import com.dining.boyaki.model.form.FileUploadForm;
 
 @RunWith(SpringRunner.class)
@@ -111,56 +112,46 @@ public class FileUploadServiceTest {
 	void fileUploadでファイルがアップロードされる() throws Exception{
 		UUID uuidName = UUID.fromString("f3241f8f-006e-4429-8438-f42adb1d1869");
 		uuid.when(UUID::randomUUID).thenReturn(uuidName);
-		when(s3Client.putObject(any(), any(), any(File.class))).thenReturn(new PutObjectResult());
-		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
+		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
+		when(s3Client.putObject(any(String.class), any(String.class), any(InputStream.class), any(ObjectMetadata.class))).thenReturn(new PutObjectResult());
 		
 		String fileName =  fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/",null);
-		assertEquals("f3241f8f-006e-4429-8438-f42adb1d1869 2022-04-20 21-04-45.jpg",fileName);
-		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
-		verify(s3Client,times(1)).putObject(any(), any(), any(File.class));
+		assertEquals("2022-04-20 21-04-45 f3241f8f-006e-4429-8438-f42adb1d1869.jpg",fileName);
+		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
+		verify(s3Client,times(1)).putObject(any(String.class), any(String.class), any(InputStream.class), any(ObjectMetadata.class));
 		
 		fileName =  fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/","hogehoge.jpg");
 		assertEquals("hogehoge.jpg",fileName);
-		verify(exifRewriter,times(2)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
-		verify(s3Client,times(2)).putObject(any(), any(), any(File.class));
+		verify(exifRewriter,times(2)).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
+		verify(s3Client,times(2)).putObject(any(String.class), any(String.class), any(InputStream.class), any(ObjectMetadata.class));
 	}
 	
 	@Test
 	void fileUploadでAmazonServiceExceptionが発生する() throws Exception{
-		doThrow(new AmazonServiceException("S3との接続が拒否されました")).when(s3Client).putObject(any(), any(), any(File.class));		
-		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
+		doThrow(new AmazonServiceException("S3との接続が拒否されました"))
+		           .when(s3Client).putObject(any(String.class), any(String.class), any(InputStream.class), any(ObjectMetadata.class));		
+		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
 		
 		            //発生するであろう例外のクラス、ラムダ式でテスト対象の処理
 		Throwable e = assertThrows(Exception.class,
 				() -> {fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/",null);});
 		assertEquals(AmazonServiceException.class,e.getClass());
-		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
-		verify(s3Client,times(1)).putObject(any(), any(), any(File.class));
-		
+		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
+		verify(s3Client,times(1)).putObject(any(), any(), any(), any());
 	}
 	
 	@Test
-	void fileUploadでImageWriteExceptionが発生する() throws Exception{
-		when(s3Client.putObject(any(), any(), any(File.class))).thenReturn(new PutObjectResult());
-		doThrow(new ImageWriteException("読み込み失敗")).when(exifRewriter).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));	
+	void fileUploadでSdkClientExceptionが発生する() throws Exception{
+		doThrow(new SdkClientException("Data read has a different length"))
+		           .when(s3Client).putObject(any(String.class), any(String.class), any(InputStream.class), any(ObjectMetadata.class));		
+		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
 		
+		            //発生するであろう例外のクラス、ラムダ式でテスト対象の処理
 		Throwable e = assertThrows(Exception.class,
 				() -> {fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/",null);});
-		assertEquals(ImageWriteException.class,e.getClass());
-		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
-		verify(s3Client,times(0)).putObject(any(), any(), any(File.class));
-	}
-	
-	@Test
-	void fileUploadでImageReadExceptionが発生する() throws Exception{
-		when(s3Client.putObject(any(), any(), any(File.class))).thenReturn(new PutObjectResult());
-		doThrow(new ImageReadException("読み込み失敗")).when(exifRewriter).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));	
-		
-		Throwable e = assertThrows(Exception.class,
-				() -> {fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/",null);});
-		assertEquals(ImageReadException.class,e.getClass());
-		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(FileOutputStream.class));
-		verify(s3Client,times(0)).putObject(any(), any(), any(File.class));
+		assertEquals(SdkClientException.class,e.getClass());
+		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
+		verify(s3Client,times(1)).putObject(any(), any(), any(), any());
 	}
 	
 	@Test
