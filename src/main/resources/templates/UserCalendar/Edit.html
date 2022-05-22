@@ -15,7 +15,6 @@
 <h2>食事記録編集</h2>
 <div class="container">
 	<form class="row" id="category" enctype="multipart/form-data" th:action="@{/index/record/commit}" method="POST">
-	<p th:text="${message}"></p>
 	<div class="col-sm-6" th:object="${diaryRecordForm}">
 		<div class="row card forms">
 		    <div class="form-group">
@@ -72,6 +71,7 @@
 		    <div th:object="${fileUploadForm}">
 	            <input type="file" th:field="*{multipartFile}" v-on:change="uploads" v-on:click="doDisabled">
 	            <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="error-messages"></div>
+	            <p class="error-messages" th:text="${message}"></p>
 	        </div><br>
 	        <div class="between-blocks">
 			    <button class="btn btn-red" type="submit" id="delete" name="delete" value="delete"

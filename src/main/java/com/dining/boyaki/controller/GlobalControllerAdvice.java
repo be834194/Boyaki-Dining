@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.http.HttpStatus;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.ImageReadException;
 
@@ -27,7 +28,7 @@ public class GlobalControllerAdvice {
         return "error/404";
     }
 	
-	@ExceptionHandler(value= {AmazonServiceException.class,IOException.class
+	@ExceptionHandler(value= {AmazonServiceException.class,SdkClientException.class,IOException.class
 	                         ,ImageWriteException.class,ImageReadException.class})
 	public String Parse_ImageIoException(){
 		return "error/Other";
