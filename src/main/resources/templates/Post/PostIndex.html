@@ -24,21 +24,6 @@
 </div>
 <div id="boyakiApp" class="container">
 	<div class="row">
-	    <article class="col-sm-9">
-		    <div v-for="(value,key) in PostRecords">
-			    <a v-bind:href="`/index/boyaki/${value.postId}`">
-				    <p>{{value.content}}</p>
-				</a>
-				<div class="between-blocks">
-				    <a v-bind:href="`/index/boyaki/profile/${value.nickName}`">
-				        <div>{{value.nickName}} さん</div>
-				    </a>
-					<span>{{value.createAt}}</span>
-				</div><hr>
-		    </div>
-		    <input type="button" class="col-sm-12" id="scroll" value="追加で読み込む"
-		           v-on:click="search" v-bind:disabled="disabled" />
-	    </article>
 		<aside class="col-sm-3">
 			<div class="area">
 			    <div class="form-group">
@@ -67,6 +52,21 @@
 				</div>
 			</div>
 		</aside>
+		<article class="col-sm-9">
+		    <div v-for="(value,key) in PostRecords">
+			    <a v-bind:href="`/index/boyaki/${value.postId}`">
+				    <p>{{value.content}}</p>
+				</a>
+				<div class="between-blocks">
+				    <a v-bind:href="`/index/boyaki/profile/${value.nickName}`">
+				        <div>{{value.nickName}} さん</div>
+				    </a>
+					<span>{{value.createAt}}</span>
+				</div><hr>
+		    </div>
+		    <input type="button" class="col-sm-12" id="scroll" value="追加で読み込む"
+		           v-on:click="search" v-bind:disabled="disabled" />
+	    </article>
     </div>
 </div>
 

@@ -22,17 +22,7 @@
 </div>
 <div id="profileApp" class="container">
     <div class="row" th:each="obj:${accountInfo}">
-	    <article class="col-sm-9">
-		    <div v-for="(value,key) in PostRecords">
-			    <a v-bind:href="`/index/boyaki/${value.postId}`">
-				    <p>{{value.content}}</p>
-				</a>
-				<span>{{value.createAt}}</span><hr>
-		    </div>
-		    <input type="button" class="col-sm-12" id="scroll" value="追加で読み込む"
-		           v-on:click="find" v-bind:disabled="disabled" />
-	    </article>
-		<aside class="col-sm-3">
+        <aside class="col-sm-3">
 		    <div class="area">
 			    <p id="nickName" th:text="${obj.nickName}"></p>
 			    <span th:each="status:${statusList}">
@@ -56,6 +46,16 @@
 				<pre th:text="${obj.profile}"></pre>
 		    </div>
 		</aside>
+	    <article class="col-sm-9">
+		    <div v-for="(value,key) in PostRecords">
+			    <a v-bind:href="`/index/boyaki/${value.postId}`">
+				    <p>{{value.content}}</p>
+				</a>
+				<span>{{value.createAt}}</span><hr>
+		    </div>
+		    <input type="button" class="col-sm-12" id="scroll" value="追加で読み込む"
+		           v-on:click="find" v-bind:disabled="disabled" />
+	    </article>
     </div>
 </div>
 <script th:src="@{/js/profileApp.js}">

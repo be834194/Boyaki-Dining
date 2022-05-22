@@ -15,7 +15,7 @@ var category = {
 			size = file.size
 			type = file.type
             errors = ''
-		    if (size > 10000000) {
+		    if (size > 10485760) {
 		      errors += 'ファイルの上限サイズ10MBを超えています\n'
 		    }
 		    if(type != 'image/jpeg'){
