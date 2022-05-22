@@ -1,53 +1,56 @@
-# boyaki-dining
+# Boyaki-Dining
 + 同じような健康状態で悩んでいる人たちがどう過ごしているのか、どういう風に健康に気を使っているのか知りたい
 + 悩みを聞いてほしい、グチを吐き出してスッキリしたい
 
 というような、健康に関する悩み,ストレスを共有,質問できる食事記録管理アプリです。
-
-![MyVideo_1_AdobeCreativeCloudExpress](https://user-images.githubusercontent.com/93772790/168478498-8fd1cf0d-6970-4cf6-91a6-79f8d4159c3a.gif)
-
+![MyVideo_1_AdobeCreativeCloudExpress (1)](https://user-images.githubusercontent.com/93772790/169694233-4b9b4f12-749f-416b-b651-b30b8b426588.gif)
 
 # 作成背景
-健康診断で尿酸値が高いと言われ、食事・運動に気を付けた生活を始めました。  
+私事ですが、21年秋ごろの定期健診で尿酸値が高いと診断され、食事・運動に気を付けた生活を始めました。  
 しかしリモートワークとコロナ禍による閉塞感に加え、悩みを相談する相手が身近にいないことから、
 健康に気を使う暮らしがストレスになり、既存のアプリやメモ帳だけでは思ったように食事管理が出来ませんでした。
 
 アプリ作成のアイディアを思いついたのは、あるラジオ番組のお悩み相談のコーナーでした。
 **「自身の悩みを第三者に打ち明ける、話だけでも聞いてもらうと気持ちが楽になる」** ということに気づき、
 これを食事管理アプリの機能の一部として実装出来ないか考えました。  
-また、コロナ禍における健康づくりに悩んでいる人がとても多いことを知り、より一層アプリ制作の意欲が湧きました。
+また、**コロナ禍における健康づくり** に悩んでいる人がとても多いことを知り、より一層アプリ制作の意欲が湧きました。
 
 **健康を意識した生活で生じた悩みやストレスを第三者に打ち明け、前向き&継続的に健康生活に取り組めるようなアプリ** を作成したいと思い、
-Boyaki-diningを作成いたしました。
+Boyaki-Diningを作成いたしました。
 
 # 使用技術
+## バックエンド
 + Java 17
 + Spring boot 2.6.6
-    + Spring Data JPA 2.6.6
-    + Spring Security 2.6.6
-    + Spring Validaton 2.6.6
-    + Spring Cloud for Amazon Web Services 2.2.6
+    + Spring Data JPA
+    + Spring Security
+    + Spring Validaton
+    + Spring Cloud for Amazon Web Services
++ mybatis 2.2.2
++ h2database 1.4.200
++ passay 1.6.1
++ Junit 5.8.2
++ dbunit 2.6.0
++ Mockito 4.0.0
+
+## フロントエンド
 + HTML(Thymeleaf), CSS
 + javaScript
     + JQuery 3.5.1
     + fullcalendar 3.5.1
     + Vue
     + Axios
+
+## インフラ、Webサーバ
 + AWS
     + EC2
+        + Nginx 1.20.0
+        + Tomcat 9.0.60
     + RDS
     + S3
     + Route53
 + Database
     + mysql 8.0.28
-    + h2database 1.4.200
-+ mybatis 2.2.2
-+ passay 1.6.1
-+ Junit 5.8.2
-+ dbunit 2.6.0
-+ Mockito 4.0.0
-+ Nginx 1.20.0
-+ Tomcat 9.0.60
 
 # 機能一覧
 + アカウント周辺機能
@@ -76,7 +79,7 @@ Boyaki-diningを作成いたしました。
 
 + グチ・悩み投稿機能  
 　検索機能に加え、投稿にカテゴリを設け、より細かく絞り込んで情報を探せるようにしました。
-![MyVideo_4_AdobeCreativeCloudExpress](https://user-images.githubusercontent.com/93772790/169642248-051b96a6-3348-412c-82b6-3cd85d7aa4f0.gif)
+![MyVideo_3_AdobeCreativeCloudExpress (1)](https://user-images.githubusercontent.com/93772790/169694246-03928323-d8d6-44c3-bb10-9b864a744d0c.gif)
 
 # データベース構成図
 ![database](https://user-images.githubusercontent.com/93772790/169642257-62b675ea-3ca1-44f1-be68-cf8c56f22fcb.jpg)
@@ -85,7 +88,7 @@ Boyaki-diningを作成いたしました。
 ACMを利用したSSL認証ではなく、EC2内のサーバ(Nginx)にサーバ証明書を設定しています。
 ![sample](https://user-images.githubusercontent.com/93772790/169641591-73042d82-cc6f-4a29-b616-aef633bb4410.jpg)
 
-# ポートフォリオ作成を経て、身についたもの
+# ポートフォリオ作成を経て学んだこと、身についたもの
 + アプリケーションの設計能力(画面設計、DB設計)  
 + バリデーションを伴うCRUD機能の実装  
 + ファイルのアップロード機能の実装  
