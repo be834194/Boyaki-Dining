@@ -37,8 +37,8 @@ public class FileUploadService {
 	}
 	
 	public boolean fileValid(FileUploadForm fileUploadForm) throws IOException{
-	    try(ByteArrayInputStream fos = new ByteArrayInputStream(fileUploadForm.getMultipartFile().getBytes())){
-			BufferedImage bi = ImageIO.read(fos);
+	    try(ByteArrayInputStream bis = new ByteArrayInputStream(fileUploadForm.getMultipartFile().getBytes())){
+			BufferedImage bi = ImageIO.read(bis);
 			if (bi != null) {
 				return true;
 			} else {
@@ -66,12 +66,13 @@ public class FileUploadService {
         	exifRewriter.removeExifMetadata(bytes, uploadFileStream);
         	
         	//メタデータ設定してS3へアップロード
-        	try(ByteArrayInputStream fos = new ByteArrayInputStream(uploadFileStream.toByteArray())){
+        	try(ByteArrayInputStream bis = new ByteArrayInputStream(uploadFileStream.toByteArray())){
         		ObjectMetadata metaData = new ObjectMetadata();
         		byte[] size = uploadFileStream.toByteArray();
         		metaData.setContentLength(size.length);
+        		
         		//S3の格納先オブジェクト名,ファイル名,inputStream,メタデータ
-            	s3Client.putObject(s3PathName, fileName, fos, metaData);
+            	s3Client.putObject(s3PathName, fileName, bis, metaData);
         	}	
         	return fileName;
         } catch (AmazonServiceException e) {

@@ -128,30 +128,30 @@ public class FileUploadServiceTest {
 	
 	@Test
 	void fileUploadでAmazonServiceExceptionが発生する() throws Exception{
+		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
 		doThrow(new AmazonServiceException("S3との接続が拒否されました"))
 		           .when(s3Client).putObject(any(String.class), any(String.class), any(InputStream.class), any(ObjectMetadata.class));		
-		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
 		
 		            //発生するであろう例外のクラス、ラムダ式でテスト対象の処理
 		Throwable e = assertThrows(Exception.class,
 				() -> {fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/",null);});
 		assertEquals(AmazonServiceException.class,e.getClass());
 		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
-		verify(s3Client,times(1)).putObject(any(), any(), any(), any());
+		verify(s3Client,times(1)).putObject(any(String.class), any(String.class), any(InputStream.class), any(ObjectMetadata.class));
 	}
 	
 	@Test
 	void fileUploadでSdkClientExceptionが発生する() throws Exception{
+		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
 		doThrow(new SdkClientException("Data read has a different length"))
 		           .when(s3Client).putObject(any(String.class), any(String.class), any(InputStream.class), any(ObjectMetadata.class));		
-		doNothing().when(exifRewriter).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
 		
 		            //発生するであろう例外のクラス、ラムダ式でテスト対象の処理
 		Throwable e = assertThrows(Exception.class,
 				() -> {fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads/",null);});
 		assertEquals(SdkClientException.class,e.getClass());
 		verify(exifRewriter,times(1)).removeExifMetadata(any(byte[].class), any(ByteArrayOutputStream.class));
-		verify(s3Client,times(1)).putObject(any(), any(), any(), any());
+		verify(s3Client,times(1)).putObject(any(String.class), any(String.class), any(InputStream.class), any(ObjectMetadata.class));
 	}
 	
 	@Test
