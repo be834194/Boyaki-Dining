@@ -15,7 +15,6 @@
 <h2>食事記録登録</h2>
 <div class="container">
     <form class="form-height" id="category" th:action="@{/index/create/insert}" method="post" enctype="multipart/form-data">
-    <p th:text="${message}"></p>
     <div class="col-sm-6" th:object="${diaryRecordForm}">
 	    <div class="row card forms">
 	        <div class="form-group">
@@ -67,7 +66,8 @@
 			</div>
 			<div th:object="${fileUploadForm}">
 		        <input type="file" th:field="*{multipartFile}" v-on:change="uploads">
-		        <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="err"></div>
+		        <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="error-messages"></div>
+		        <p class="error-messages" th:text="${message}"></p>
 		    </div>
 			<div class="form-button">
 			    <button class="btn btn-green" type="submit">登録する</button>
