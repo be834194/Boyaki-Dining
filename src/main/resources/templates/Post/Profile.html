@@ -45,6 +45,7 @@
 				</span>
 				<pre th:text="${obj.profile}"></pre>
 		    </div>
+		    <a th:href="@{/index/boyaki}">投稿一覧へ戻る</a>
 		</aside>
 	    <article class="col-sm-9">
 		    <div v-for="(value,key) in PostRecords">
@@ -57,8 +58,8 @@
 		           v-on:click="find" v-bind:disabled="disabled" />
 	    </article>
     </div>
-</div>
-<script th:src="@{/js/profileApp.js}">
-</script>
+</div><br>
+<script th:src="@{/js/profileApp.js}"></script>
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
 </html>

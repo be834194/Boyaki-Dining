@@ -30,11 +30,10 @@
 				    <div>投稿内容</div>
 				    <input type="search" class="form-control" id="textkeyword" name="textkeyword" v-model="keyword"/>
 				</div>
-			    <div>
-				    <button class="btn btn-green" type="submit" v-on:click="startSearch">検索</button>&nbsp;&nbsp;
-				    <button class="btn btn-red" type="reset" v-on:click="resetSearch">検索値の初期化</button>
-				    <br><br>
-			    </div>
+			    <div class="between-blocks">
+			        <button class="btn btn-red" type="reset" v-on:click="resetSearch">検索値の初期化</button>
+			        <button class="btn btn-green" type="submit" v-on:click="startSearch">検索</button>
+			    </div><br>
 				<div class="form-group">
 				<div>フィルタ</div>
 				    <div>投稿種別</div>
@@ -68,10 +67,9 @@
 		           v-on:click="search" v-bind:disabled="disabled" />
 	    </article>
     </div>
-</div>
+</div><br>
 
-<script th:src="@{/js/boyakiApp.js}">
-</script>
+<script th:src="@{/js/boyakiApp.js}"></script>
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
-
 </html>

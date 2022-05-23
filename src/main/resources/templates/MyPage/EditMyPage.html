@@ -77,10 +77,9 @@
 		</div>
 	</div>
 	</form>
-	<br><a th:href="@{/index/mypage}">マイページへ戻る</a>
-	<br><a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
-	<br><a th:href="@{/index/mypage/confirm}">退会する</a>
+	<a th:href="@{/index/mypage}">マイページへ戻る</a><br>
+	<a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a><br><br>
 </div>
-
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
 </html>

@@ -13,16 +13,19 @@
 <div th:replace="flagment/loginheader :: login-header"></div>
 <div id="home" class="big-bg">
 　　　　<div class="home-content">
+        <br>
 		<p>日々の食事や運動をシンプルに記録できるアプリです。</p>
 		<p>ユーザ同士で健康の悩みを相談したり、グチを聞いてもらうことも出来ます。</p>
 		<br>
 		<p>誰かに話を聞いてもらって、少しでも気持ちを軽くしてみませんか？</p>
 		<br>
+		<br>
 		<div class="home-blocks">
 			<a class="btn btn-orange" th:href="@{/login}">ログインする<br>(ゲストログインはこちら)</a>
-			<a class="btn btn-orange" th:href="@{/registration}">新規登録はこちら</a>
+			<a class="btn btn-orange" th:href="@{/registration}">新規登録は<br>こちら</a>
 		</div>
 　　　　</div>
 </div>
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
 </html>
