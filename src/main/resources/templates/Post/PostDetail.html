@@ -65,7 +65,7 @@
 		    <input type="hidden" id="postId" name="postId" th:field="*{postId}">
 		<div class="form-button">
 		    <span class="error-messages"　th:text=${validMessage}></span>
-		    <button class="btn btn-green" type="submit">コメントする</button>
+		    <button class="btn btn-green" type="submit" onClick="return postConfirm()">コメントする</button>
 		</div>
 		</form>
 		<a th:href="@{/index/boyaki/post}">投稿する</a><br>
@@ -75,6 +75,7 @@
 
 <script th:src="@{/js/likesApp.js}"></script>
 <script th:src="@{/js/deleteCheck.js}"></script>
+<script th:src="@{/js/postCheck.js}"></script>
 <div th:replace="flagment/footer :: common-footer"></div>
 </body>
 </html>
