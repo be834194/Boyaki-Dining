@@ -16,6 +16,10 @@
 			url : '/api/events/all',
 			backgroundColor: '#ffffff',
 			},
+		dayClick: function (data) {
+			var date = moment(data).format('YYYY-MM-DD');
+            location.href = '/index/create?date=' + date;
+        },
 		eventRender : function(event, element) {
 		element.find('span.fc-title').html(element.find('span.fc-title').text());
 		    }
@@ -35,5 +39,6 @@
 	</h4>
 </div>
 <div id='calendar'></div>
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
 </html>

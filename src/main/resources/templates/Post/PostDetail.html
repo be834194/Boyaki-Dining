@@ -62,17 +62,19 @@
 		              placeholder="1~100文字以内でコメントを記入してください"></textarea>
 		    <input type="hidden" id="userName" name="userName" th:field="*{userName}">
 		    <input type="hidden" id="nickName" name="nickName" th:field="*{nickName}">
-		    <input type="hidden" id="postId" name="postId" th:field="*{postId}"><br>
+		    <input type="hidden" id="postId" name="postId" th:field="*{postId}">
 		<div class="form-button">
 		    <span class="error-messages"　th:text=${validMessage}></span>
 		    <button class="btn btn-green" type="submit">コメントする</button>
 		</div>
 		</form>
+		<a th:href="@{/index/boyaki/post}">投稿する</a><br>
+		<a th:href="@{/index/boyaki}">投稿一覧へ戻る</a><br><br>
 	</div>
 </div>
 
 <script th:src="@{/js/likesApp.js}"></script>
 <script th:src="@{/js/deleteCheck.js}"></script>
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
-
 </html>

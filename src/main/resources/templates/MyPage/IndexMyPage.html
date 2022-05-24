@@ -59,10 +59,10 @@
 		    <td th:text="${bmi}"></td>
 		</tr>
 	</table>
-	<br><a th:href="@{/index/mypage/edit}">プロフィールを変更する</a>
-	<br><a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a>
-	<br><a th:href="@{/index/mypage/confirm}">退会する</a>
+	<a th:href="@{/index/mypage/edit}">プロフィールを変更する</a><br>
+	<a th:href="@{/index/mypage/changepassword}">パスワードを変更する</a><br>
+	<a th:href="@{/index/mypage/confirm}">退会する</a><br><br>
 </div>
-
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
 </html>

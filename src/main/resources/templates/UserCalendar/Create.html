@@ -23,13 +23,13 @@
 			    	<option th:each="list:${lists}" 
 			                th:value="${list.categoryId}" th:text="${list.categoryName}"></option>
 			    </select>
-			    <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" th:errorclass="err"></div>
+			    <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" th:errorclass="error-messages"></div>
 			</div>
 			<div class="form-group">
-			    <label for="diaryDay">日付</label> 
+			    <label for="diaryDay">日付</label>
 			    <input class="form-control" type="date" id="diaryDay" name="diaryDay" 
-			           th:value="${#dates.format(new java.util.Date(),'yyyy-MM-dd')}">
-			    <div th:if="${#fields.hasErrors('diaryDay')}" th:errors="*{diaryDay}" th:errorclass="err"></div>
+			           th:value="*{diaryDay}">
+			    <div th:if="${#fields.hasErrors('diaryDay')}" th:errors="*{diaryDay}" th:errorclass="error-messages"></div>
 			</div>
 			<div class="form-group">
 			    <label for="record1">
@@ -75,10 +75,10 @@
 	    </div>
     </div>
 	</form>
-	<a th:href="@{/index}">カレンダーへ戻る</a>
+	<a th:href="@{/index}">カレンダーへ戻る</a><br><br>
 </div>
 
-<script th:src="@{/js/editDiaryRecord.js}">
-</script>
+<script th:src="@{/js/createDiaryRecord.js}"></script>
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
 </html>

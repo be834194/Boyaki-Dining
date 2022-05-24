@@ -84,10 +84,11 @@
 	    <img th:src="${image}" style="width: 100%; height:auto;" /><br>
 	</div>
 	</form>
-	<br><a th:href="@{/index}">カレンダーへ戻る</a>
+	<a th:href="@{/index}">カレンダーへ戻る</a><br><br>
 </div>
 
 <script th:src="@{/js/editDiaryRecord.js}"></script>
 <script th:src="@{/js/deleteCheck.js}"></script>
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
 </html>
