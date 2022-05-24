@@ -14,19 +14,17 @@ var category = {
 	},
 	methods:{
 		check() {
-			console.log(this.date == null)
-			if(dateValue == null) {
-				var today = new Date();
-			    today.setDate(today.getDate());
-			    var yyyy = today.getFullYear();
-			    var mm = ("0"+(today.getMonth()+1)).slice(-2);
-			    var dd = ("0"+today.getDate()).slice(-2);
+			var today = new Date();
+			today.setDate(today.getDate());
+			var yyyy = today.getFullYear();
+			var mm = ("0"+(today.getMonth()+1)).slice(-2);
+			var dd = ("0"+today.getDate()).slice(-2);
+			if(dateValue == null) { // クエリの値が無いなら、今日の日付
 			    document.getElementById("diaryDay").value = yyyy+'-'+mm+'-'+dd;
-			console.log(regex.test(this.date))
-			}else if(regex.test(this.date)){
+			}else if(regex.test(this.date)){ // 正規表現が正しいなら、取得した日付
 				document.getElementById("diaryDay").value = this.date;
-		    }else {
-			    this.formatValid = false;
+		    }else { // 正規表現が間違いなら、今日の日付
+			    document.getElementById("diaryDay").value = yyyy+'-'+mm+'-'+dd;
 		    }
         },
 		uploads(event) {

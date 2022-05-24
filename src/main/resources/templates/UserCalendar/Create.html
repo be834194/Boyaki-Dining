@@ -27,14 +27,8 @@
 			</div>
 			<div class="form-group">
 			    <label for="diaryDay">日付</label>
-			    <span v-if='formatValid'>
-			        <input class="form-control" type="date" id="diaryDay" name="diaryDay" 
-			               th:value="*{diaryDay}">
-			    </span>
-			    <span v-else>
 			    <input class="form-control" type="date" id="diaryDay" name="diaryDay" 
-			           th:value="${#dates.format(new java.util.Date(),'yyyy-MM-dd')}">
-			    </span>
+			           th:value="*{diaryDay}">
 			    <div th:if="${#fields.hasErrors('diaryDay')}" th:errors="*{diaryDay}" th:errorclass="error-messages"></div>
 			</div>
 			<div class="form-group">
