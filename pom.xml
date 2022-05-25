@@ -168,6 +168,7 @@
                     <outputEncoding>UTF-8</outputEncoding>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                     <skipTests>true</skipTests>
+                    <executable>true</executable>
                 </configuration>
             </plugin>
 		</plugins>

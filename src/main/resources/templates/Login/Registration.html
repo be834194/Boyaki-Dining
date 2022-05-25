@@ -19,7 +19,7 @@
 		        <div class="form-group">
 		            <label for="userName">ユーザ名</label>
 		            <input class="form-control" type="text" id="userName" name="userName" 
-		                   th:value="*{userName}" placeholder="2文字以上15字以下で入力してください">
+		                   th:value="*{userName}" placeholder="2~15文字で入力してください">
 		            <div th:if="${#fields.hasErrors('userName')}" 
 		                 th:errors="*{userName}" th:errorclass="error-messages"></div>
 		        </div>
@@ -50,8 +50,9 @@
 	        </div>      
 	    </div>
 	</form>
-	<br><a th:href="@{/login}">ログイン画面へ戻る</a>
-	<br><a th:href="@{/}">トップへ戻る</a>
+	<a th:href="@{/login}">ログイン画面へ戻る</a><br>
+	<a th:href="@{/}">トップへ戻る</a><br><br>
 </div>
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
 </html>

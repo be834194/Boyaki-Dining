@@ -56,7 +56,7 @@ public class FileUploadServiceCombinedTest {
 		fileUploadForm.setCreateAt(LocalDateTime.of(2022, 4, 20, 21, 04, 45));
 		
 		String fileName = fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads",null);
-		assertEquals("f3241f8f-006e-4429-8438-f42adb1d1869 2022-04-20 21-04-45.jpg",fileName);
+		assertEquals("2022-04-20 21-04-45 f3241f8f-006e-4429-8438-f42adb1d1869.jpg",fileName);
 		
 		fileName = fileUploadService.fileUpload(fileUploadForm, "spring-infra-wp-study/wp-content/uploads","hogehoge.jpg");
 		assertEquals("hogehoge.jpg",fileName);

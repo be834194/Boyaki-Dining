@@ -12,7 +12,7 @@
 
 <body>
 <div th:replace="flagment/header :: user-header"></div>
-<h2>投稿</h2>
+<h2>投稿する</h2>
 <div class="container">
 	<form class="form-height" th:action="@{/index/boyaki/post/insert}" method="POST" th:object="${postForm}">
 	<div class="col-sm-6">
@@ -33,20 +33,14 @@
 		        <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" th:errorclass="error-messages"></div>
 		    </div><br>
 		    <div class="form-button">
-			    <input class="btn btn-green" type="submit" value="投稿する" onClick="return check()">
+			    <input class="btn btn-green" type="submit" value="投稿する" onClick="return postConfirm()">
 			</div>
 		</div>
 	</div>
 	</form>
+	<br><a th:href="@{/index/boyaki}">投稿一覧へ戻る</a><br><br>
 </div>
-<script type="text/javascript">
-function check(){
-    if (confirm("投稿内容に不適切な内容がないか確認してください")) {
-        return true;
-    } else {
-        return false;
-    }
-}
-</script>
+<script th:src="@{/js/postCheck.js}"></script>
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
 </html>

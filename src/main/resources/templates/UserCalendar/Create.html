@@ -15,7 +15,6 @@
 <h2>食事記録登録</h2>
 <div class="container">
     <form class="form-height" id="category" th:action="@{/index/create/insert}" method="post" enctype="multipart/form-data">
-    <p th:text="${message}"></p>
     <div class="col-sm-6" th:object="${diaryRecordForm}">
 	    <div class="row card forms">
 	        <div class="form-group">
@@ -24,13 +23,13 @@
 			    	<option th:each="list:${lists}" 
 			                th:value="${list.categoryId}" th:text="${list.categoryName}"></option>
 			    </select>
-			    <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" th:errorclass="err"></div>
+			    <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" th:errorclass="error-messages"></div>
 			</div>
 			<div class="form-group">
-			    <label for="diaryDay">日付</label> 
+			    <label for="diaryDay">日付</label>
 			    <input class="form-control" type="date" id="diaryDay" name="diaryDay" 
-			           th:value="${#dates.format(new java.util.Date(),'yyyy-MM-dd')}">
-			    <div th:if="${#fields.hasErrors('diaryDay')}" th:errors="*{diaryDay}" th:errorclass="err"></div>
+			           th:value="*{diaryDay}">
+			    <div th:if="${#fields.hasErrors('diaryDay')}" th:errors="*{diaryDay}" th:errorclass="error-messages"></div>
 			</div>
 			<div class="form-group">
 			    <label for="record1">
@@ -67,7 +66,8 @@
 			</div>
 			<div th:object="${fileUploadForm}">
 		        <input type="file" th:field="*{multipartFile}" v-on:change="uploads">
-		        <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="err"></div>
+		        <div th:if="${#fields.hasErrors('multipartFile')}" th:errors="*{multipartFile}" th:errorclass="error-messages"></div>
+		        <p class="error-messages" th:text="${message}"></p>
 		    </div>
 			<div class="form-button">
 			    <button class="btn btn-green" type="submit">登録する</button>
@@ -75,10 +75,10 @@
 	    </div>
     </div>
 	</form>
-	<a th:href="@{/index}">カレンダーへ戻る</a>
+	<a th:href="@{/index}">カレンダーへ戻る</a><br><br>
 </div>
 
-<script th:src="@{/js/editDiaryRecord.js}">
-</script>
+<script th:src="@{/js/createDiaryRecord.js}"></script>
+<div th:replace="flagment/footer :: common-footer"></div>
 </body>
 </html>

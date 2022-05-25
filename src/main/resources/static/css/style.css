@@ -4,6 +4,17 @@ body{
 	color:#432;
 	background-color: #f6efdb;
 	}
+footer{
+	background:#99cc65;
+	text-align:center;
+	padding:4px 0;
+	position: absolute;
+    bottom: 0;
+}
+footer p{
+	color:#fff;
+	font-size:0.875rem;
+}
 h2 {
     margin: 20px 0 20px 0;
     color: gray;
@@ -61,7 +72,8 @@ aside pre { /*Profileのプロフィール*/
 	text-align: center;
 }
 .home-content p {
-	font-size:1.25rem;
+	color:#000;
+	font-size:24px;
 	margin:10px 0 20px;
 }
 .home-blocks {
@@ -87,6 +99,11 @@ a.btn-orange,button.btn-orange,input.btn-orange {
 	display:flex;
 	justify-content:space-between;
 }
+.pageFooter{
+    min-height: 15vh;
+    position: relative;
+    padding-bottom: 15px;
+}
 .blocks{
 	display:flex;
 	}
@@ -100,7 +117,7 @@ a.btn-orange,button.btn-orange,input.btn-orange {
 .form-height { /*フォーム内の行間*/
 	line-height:40px;	
 }
-.area{
+.area{ /*検索フォーム、投稿詳細、プロフィール*/
 	background-color: white;
 	padding: 10px; 
 	margin-bottom: 10px; 
@@ -118,7 +135,7 @@ a.btn-orange,button.btn-orange,input.btn-orange {
 	border: 0.5px solid #728742;
 	background-color:white;
 }
-.danger{
+.danger{ /*削除系*/
 	font-size: 32px;
 	color:red;
 }

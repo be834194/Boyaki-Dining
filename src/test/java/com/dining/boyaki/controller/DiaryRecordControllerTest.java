@@ -27,8 +27,6 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
-import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.ImageWriteException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -49,6 +47,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 
 import com.dining.boyaki.config.BeanConfig;
 import com.dining.boyaki.config.SuccessHandler;
@@ -294,24 +293,9 @@ public class DiaryRecordControllerTest {
 		}
 		
 		@Test
-		void fileUploadでImageWriteExceptionが発生する() throws Exception{
+		void fileUploadでSdkClientExceptionが発生する() throws Exception{
 			when(fileUploadService.fileValid(file)).thenReturn(true);
-			doThrow(new ImageWriteException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class), any());
-			
-			mockMvc.perform(post("/index/create/insert")
-						   .flashAttr("diaryRecordForm", form)
-						   .flashAttr("fileUploadForm", file)
-		                   .contentType(MediaType.MULTIPART_FORM_DATA)
-		                   .with(SecurityMockMvcRequestPostProcessors.csrf()))
-	               .andExpect(status().is2xxSuccessful())
-	               .andExpect(model().hasNoErrors())
-	               .andExpect(view().name("error/Other"));
-		}
-		
-		@Test
-		void fileUploadでImageReadExceptionが発生する() throws Exception{
-			when(fileUploadService.fileValid(file)).thenReturn(true);
-			doThrow(new ImageReadException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class), any());
+			doThrow(new SdkClientException("")).when(fileUploadService).fileUpload(any(FileUploadForm.class),any(String.class), any());
 			
 			mockMvc.perform(post("/index/create/insert")
 						   .flashAttr("diaryRecordForm", form)
