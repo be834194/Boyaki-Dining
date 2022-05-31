@@ -11,9 +11,13 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.dining.boyaki.model.entity.AccountUserDetails;
 
 @Aspect
 @Component
@@ -27,32 +31,39 @@ public class LoggingAdvice {
 	
 	@Before("within(com.dining.boyaki.controller.*)")
 	public void controllerInputLog(JoinPoint jp) {
-		String logMessage = "[" + getSessionId() + "]"
-				     + "start:" + getClassName(jp)
-				          + '.' + getSignatureName(jp)
-				     + " args:" + getArgs(jp);
+		
+		String logMessage = "[" + getSessionId() + "] " + getUserName() + getClassName(jp) 
+				                + getSignatureName(jp)  + getArgs(jp);
 		logger.info(logMessage);
 	}
 	
 	@AfterReturning(pointcut = "within(com.dining.boyaki.controller.*)",
 			        returning = "returnValue")
 	public void controllerOutputLog(JoinPoint jp,Object returnValue) {
-		String logMessage = "[" + getSessionId() + "]" 
-				     + " end :" + getClassName(jp)
-				          + '.' + getSignatureName(jp) + " "
-				     + "value:" + getReturnValue(returnValue);
+		String logMessage = "[" + getSessionId() + "] " + getUserName() + getClassName(jp)
+				                + getSignatureName(jp)  + getReturnValue(returnValue);
 		logger.info(logMessage);
 	}
 	
 	@AfterThrowing(value = "within(com.dining.boyaki.controller.*)",
 			       throwing = "e")
-	public void outputErrorLog(JoinPoint joinPoint, Throwable e) {
-        String logMessage = "[" + getSessionId() + "]"
-                     + "error:" + getClassName(joinPoint) 
-        		          + "." + getSignatureName(joinPoint)
-        		     + " args:" + getArgs(joinPoint);
+	public void outputErrorLog(JoinPoint jp, Throwable e) {
+        String logMessage = "[" + getSessionId() + "] " + getUserName() + getClassName(jp)
+        		                + getSignatureName(jp)  + getArgs(jp);
         logger.error(logMessage, e);
     }
+	
+	//メソッドを実行したユーザ名を取得
+	private String getUserName() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		if(auth.getPrincipal() instanceof AccountUserDetails) {
+			AccountUserDetails details = (AccountUserDetails) auth.getPrincipal();
+			return details.getUsername() + ':';
+		}else {
+			return "???:";
+		}
+	}
 	
 	//セッションIDの取得
 	private String getSessionId() {
@@ -72,7 +83,7 @@ public class LoggingAdvice {
 	
 	//メソッド名の取得
 	private String getSignatureName(JoinPoint joinPoint) {
-        return joinPoint.getSignature().getName();
+        return "." + joinPoint.getSignature().getName();
     }
 	
 	//引数の値を取得
@@ -82,15 +93,15 @@ public class LoggingAdvice {
 
 		Arrays.stream(arguments).map(s -> Objects.toString(s)) //mapは、集合データ内の各要素を変換するメソッド 
 		                        .forEach(s -> argumentStrings.add(s));
-		return String.join(",", argumentStrings);
+		return " args :" + String.join(",", argumentStrings);
 	}
 	
 	//返り値を取得
 	private String getReturnValue(Object returnValue) {
         if(returnValue != null) {
-        	return returnValue.toString();
+        	return " value:" + returnValue.toString();
         }
-        return "null";
+        return " value:null";
     }
 
 }
