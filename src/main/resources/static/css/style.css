@@ -73,8 +73,12 @@ aside pre { /*Profileのプロフィール*/
 }
 .home-content p {
 	color:#000;
-	font-size:24px;
+	font-size:28px;
 	margin:10px 0 20px;
+}
+.home-content span {
+	color:#000;
+	font-size:16px;
 }
 .home-blocks {
 	display:flex;
