@@ -16,15 +16,27 @@
         <br>
 		<p>日々の食事や運動をシンプルに記録できるアプリです。</p>
 		<p>ユーザ同士で健康の悩みを相談したり、グチを聞いてもらうことも出来ます。</p>
+		<div class="home-blocks">
+			<div>
+				<img th:src="@{/images/index1.gif}"><br><br>
+				<span>食事記録はカレンダー形式で表示されるので、<br>いつ何を食べたかスグに振り返ることが出来ます。</span>
+			</div>
+			<div>
+				<img th:src="@{/images/index2.gif}"><br><br>
+				<span>健康に関する悩みや知恵を相談,共有して、<br>日々の暮らしに役立てることが出来ます。</span>
+			</div>
+		</div>
 		<br>
 		<p>誰かに話を聞いてもらって、少しでも気持ちを軽くしてみませんか？</p>
 		<br>
 		<br>
-		<div class="home-blocks">
-			<a class="btn btn-orange" th:href="@{/login}">ログインする<br>(ゲストログインはこちら)</a>
-			<a class="btn btn-orange" th:href="@{/registration}">新規登録は<br>こちら</a>
-		</div>
-　　　　</div>
+	</div>
+	<br>
+	<div class="home-blocks">
+		<a class="btn btn-orange" th:href="@{/login}">ログインする<br>(ゲストログインはこちら)</a>
+		<a class="btn btn-orange" th:href="@{/registration}">新規登録は<br>こちら</a>
+	</div>
+　　　　
 </div>
 <div th:replace="flagment/footer :: common-footer"></div>
 </body>

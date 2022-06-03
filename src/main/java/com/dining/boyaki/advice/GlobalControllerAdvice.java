@@ -1,4 +1,4 @@
-package com.dining.boyaki.controller;
+package com.dining.boyaki.advice;
 
 import java.io.IOException;
 import java.lang.NumberFormatException;

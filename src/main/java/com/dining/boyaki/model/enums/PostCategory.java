@@ -11,7 +11,8 @@ public enum PostCategory {
 	LIPIDS(6,"中性脂肪・コレステロール"),
 	URICACID(7,"尿酸値"),
 	BLOOD(8,"血圧"),
-	OTHER(9,"その他");
+	SLEEP(9,"睡眠"),
+	OTHER(99,"その他");
 	
 	private int postId;
 	private String postName;
