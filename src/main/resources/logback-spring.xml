@@ -16,7 +16,7 @@
         
         <!-- ログのローテーション設定 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/opt/tomcat/logs/boyaki-dining.log-%d</fileNamePattern>
+            <fileNamePattern>/opt/tomcat/logs/boyaki-dining.log.%d</fileNamePattern>
             <maxHistory>7</maxHistory>
         </rollingPolicy>
 
