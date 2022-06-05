@@ -2,8 +2,10 @@
 + 同じような健康状態で悩んでいる人たちがどう過ごしているのか、どういう風に健康に気を使っているのか知りたい
 + 悩みを聞いてほしい、グチを吐き出してスッキリしたい
 
-というような、健康に関する悩み,ストレスを共有,質問できる食事記録管理アプリです。
-![MyVideo_1_AdobeCreativeCloudExpress (1)](https://user-images.githubusercontent.com/93772790/169694233-4b9b4f12-749f-416b-b651-b30b8b426588.gif)
+というような、健康に関する悩み,ストレスを共有,質問できる食事記録管理アプリです。  
+www.boyaki-dining.com
+
+![MyVideo_0_AdobeCreativeCloudExpress_AdobeCreativeCloudExpress](https://user-images.githubusercontent.com/93772790/172051867-73e0bab0-c922-478f-bbf9-4639abaf2498.gif)
 
 # 作成背景
 私事ですが、21年秋ごろの定期健診で尿酸値が高いと診断され、食事・運動に気を付けた生活を始めました。  
@@ -75,11 +77,11 @@ Boyaki-Diningを作成いたしました。
 # 工夫点・アピールポイント
 + 食事管理  
 　カレンダー形式で、いつ何を食べたか分かりやすく表示しました。
-![MyVideo_3_AdobeCreativeCloudExpress](https://user-images.githubusercontent.com/93772790/169641730-6a8e11b7-23bb-4ed2-a050-91c3971dafaf.gif)
+![MyVideo_1_AdobeCreativeCloudExpress_AdobeCreativeCloudExpress](https://user-images.githubusercontent.com/93772790/172051922-737ee060-7d5a-4911-b0cd-bb5610b6cb58.gif)
 
 + グチ・悩み投稿機能  
 　検索機能に加え、投稿にカテゴリを設け、より細かく絞り込んで情報を探せるようにしました。
-![MyVideo_3_AdobeCreativeCloudExpress (1)](https://user-images.githubusercontent.com/93772790/169694246-03928323-d8d6-44c3-bb10-9b864a744d0c.gif)
+![MyVideo_2_AdobeCreativeCloudExpress_AdobeCreativeCloudExpress](https://user-images.githubusercontent.com/93772790/172051936-5cbbe3f7-dd46-415d-9343-e95fda7bff83.gif)
 
 # データベース構成図
 ![database](https://user-images.githubusercontent.com/93772790/170302724-b2cfb9ff-d835-41c7-bf1d-ee0a5dc552dc.jpg)
